@@ -1,0 +1,10 @@
+.header {
+  height: var(--header-height);
+
+  &__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+  }
+}
