@@ -1,17 +1,16 @@
 import React from 'react';
-import './styles.scss';
+import styles from './styles.module.scss';
 import { HeaderMenu } from 'widgets/header-menu';
 import { UserToolbar } from 'widgets/user-toolbar';
 import { AppLogo } from 'widgets/app-logo';
+import { Box } from '@mui/material';
 
 export const Header = () => {
   return (
-    <header className="header">
-      <div className="header__container container">
-        <AppLogo />
-        <HeaderMenu />
-        <UserToolbar />
-      </div>
-    </header>
+    <Box component="header" className={styles.header}>
+      <AppLogo />
+      <HeaderMenu />
+      <UserToolbar />
+    </Box>
   )
 }

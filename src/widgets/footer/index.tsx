@@ -1,27 +1,37 @@
 import React from 'react';
+import styles from './styles.module.scss';
+import { Box, Link, List, ListItem, Typography } from '@mui/material';
 import { RssLogo } from 'widgets/rss-logo';
-import './styles.scss';
+
+const githubLinks = [
+  { 
+    href: '#', 
+    text: 'GithubLink1'
+  },
+  { 
+    href: '#', 
+    text: 'GithubLink2'
+  },
+  { 
+    href: '#', 
+    text: 'GithubLink3'
+  },
+];
 
 export const Footer = () => {
   return (
-    <footer className="footer">
-      <div className="footer__container container">
-        <div className="footer__year">
-          2022
-        </div>
-        <RssLogo />
-        <ul className="footer__github-links github-links">
-          <li className="github-links__item">
-            <a href="#">GithubLink1</a>
-          </li>
-          <li className="github-links__item">
-            <a href="#">GithubLink2</a>
-          </li>
-          <li className="github-links__item">
-            <a href="#">GithubLink3</a>
-          </li>
-        </ul>
-      </div>
-    </footer>
+    <Box component="footer" className={styles.footer} maxWidth="lg">
+      <Typography variant="body2">
+        2022
+      </Typography>
+      <RssLogo />
+      <List className={styles.githubLinksList}>
+        {githubLinks.map(({ href, text }, i) => (
+          <ListItem key={i}>
+            <Link href={href}>{text}</Link>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
   )
 }

@@ -1,10 +1,10 @@
-import './styles.scss';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Page } from 'pages/page';
 import { AppDispatch, useAppSelector } from 'app/store';
 import { fetchWords, WordCard } from 'entities/word';
 import { Loader } from 'widgets/loader/index';
+import { List, ListItem } from '@mui/material';
 
 export const TextbookPage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -22,11 +22,11 @@ export const TextbookPage = () => {
     content = <Loader />;
   } else if (status === 'succeeded') {
     const renderedItem = words.map((word) => (
-      <li className="words-list__item" key={word.id}>
+      <ListItem key={word.id} sx={{ width: 'auto' }}>
         <WordCard word={word}/>
-      </li>
+      </ListItem>
     ));
-    content = <ul className="words-list">{renderedItem}</ul>;
+    content = <List sx={{ display: 'flex', rowGap: 2, p: 0, m: 0, flexWrap: 'wrap' }}>{renderedItem}</List>;
   } else if (status === 'failed') {
     content = <div>Error! {error}</div>;
   }

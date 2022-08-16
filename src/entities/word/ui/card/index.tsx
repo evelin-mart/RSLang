@@ -1,6 +1,6 @@
-import './styles.scss';
 import React from 'react';
 import { Word } from 'entities/word/model';
+import { Paper, Typography, Card } from '@mui/material';
 
 export type WordCardProps = {
   word: Word;
@@ -10,9 +10,13 @@ export const WordCard = (props: WordCardProps) => {
   const { word } = props;
 
   return (
-    <div className="word-card">
-      <div>{word.word}</div>
-      <div>{word.wordTranslate}</div>
-    </div>
+    <Card sx={{ padding: 1 }}>
+      <Typography variant="subtitle1" component="p">
+        {word.word}
+      </Typography>
+      <Typography variant="subtitle1" component="p">
+        {word.wordTranslate}
+      </Typography>
+    </Card>
   )
 }

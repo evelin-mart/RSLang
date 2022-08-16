@@ -1,32 +1,45 @@
 import React from 'react';
-import './styles.scss';
+import styles from './styles.module.scss';
 import { NavLink } from 'react-router-dom';
+import { Box, List, ListItem } from '@mui/material';
 
+const links: { title: string, href: string }[] = [
+  {
+    title: 'Учебник',
+    href: '/textbook',
+  },
+  {
+    title: 'Статистика',
+    href: '/statistics',
+  },
+  {
+    title: 'Аудиовызов',
+    href: '/game/audio',
+  },
+  {
+    title: 'Спринт',
+    href: '/game/sprint',
+  },
+]
 
 export const HeaderMenu = () => {
-  const linkClassName = 'header-menu__item-link';
-  const linkActiveModificator = 'header-menu__item-link_active';
+  const { headerMenuItemLink, active, headerMenu } = styles;
 
   const checkActive = ({ isActive }: { isActive: boolean }) => isActive
-    ? `${linkClassName} ${linkActiveModificator}`
-    : linkClassName;
+    ? `${headerMenuItemLink} ${active}`
+    : headerMenuItemLink;
   
+  const linksRendered = links.map(({ title, href }, i) => (
+    <ListItem key={i}>
+      <NavLink className={checkActive} to={href}>{title}</NavLink>
+    </ListItem>
+  ));
+
   return (
-    <nav className="header__menu">
-      <ul className="header-menu">
-        <li className="header-menu__item">
-          <NavLink className={checkActive} to="/textbook">Учебник</NavLink>
-        </li>
-        <li className="header-menu__item">
-          <NavLink className={checkActive} to="/statistics">Статистика</NavLink>
-        </li>
-        <li className="header-menu__item">
-          <NavLink className={checkActive} to="/game/audio">Аудиовызов</NavLink>
-        </li>
-        <li className="header-menu__item">
-          <NavLink className={checkActive} to="/game/sprint">Спринт</NavLink>
-        </li>
-      </ul>
-    </nav>
+    <Box component="nav">
+      <List className={headerMenu}>
+        {linksRendered}
+      </List>
+    </Box>
   )
 }

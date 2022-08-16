@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { Word } from './interface';
 
 export const fetchWords = createAsyncThunk('words/fetchWords', async () => {
-  const res = await fetch('http://localhost:3000/words?group=0&page=0');
+  const res = await fetch('https://react-learnwords-jsfe2022.herokuapp.com/words?group=0&page=0');
   return (await res.json()) as Word[];
 });
 
