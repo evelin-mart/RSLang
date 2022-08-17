@@ -1,10 +1,6 @@
 .footer {
   height: var(--footer-height);
   position: absolute;
-  bottom: 0;
-  left: 24px;
-  width: calc(100% - 48px);
-  margin-top: var(--footer-margin-top);
   display: flex;
   align-items: center;
   justify-content: space-between;

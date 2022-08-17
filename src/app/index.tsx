@@ -2,13 +2,13 @@ import React from 'react';
 import './index.scss';
 import { withProviders } from './providers';
 import { Routing } from 'pages';
-import { Container } from '@mui/material';
+import { Grid } from '@mui/material';
 
 function App() {
   return (
-    <Container maxWidth="lg" className="app">
+    <Grid className="app" sx={{ pl: 2, pr: 2 }}>
       <Routing />
-    </Container>
+    </Grid>
   );
 }
 
