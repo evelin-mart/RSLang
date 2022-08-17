@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './styles.module.scss';
 import { Box, Link, List, ListItem, Theme, Typography } from '@mui/material';
-import { RssLogo } from 'widgets/rss-logo';
+import { RssLogo } from 'shared/components/rss-logo';
 
 const githubLinks = [
   { 

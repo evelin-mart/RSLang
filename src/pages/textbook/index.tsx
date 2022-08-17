@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Page } from 'pages/page';
 import { AppDispatch, useAppSelector } from 'app/store';
 import { fetchWords, WordCard } from 'entities/word';
-import { Loader } from 'widgets/loader/index';
+import { Loader } from 'shared/components/loader';
 import { List, ListItem } from '@mui/material';
 
 export const TextbookPage = () => {
