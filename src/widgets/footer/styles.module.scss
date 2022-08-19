@@ -3,9 +3,17 @@
   position: absolute;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .githubLinksList {
   display: flex;
+}
+
+@media (max-width: 767.7px) {
+  .githubLinksList {
+    font-size: 10px;
+  }
 }

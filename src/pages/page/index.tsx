@@ -1,7 +1,8 @@
 import { Typography, Grid } from '@mui/material';
+import Container from '@mui/material/Container';
 import React from 'react';
 import { Footer } from 'widgets/footer';
-import { Header } from 'widgets/header';
+import { ResponsiveAppBar } from 'widgets/header';
 
 export type PageProps = {
   pageClassName: string;
@@ -14,15 +15,17 @@ export const Page = (props: PageProps) => {
   const isFooter = pageClassName !== 'game';
   return (
     <>
-      <Header />
-      <main>
-        <Typography component="h2" variant="h4" marginTop={2} marginBottom={2}>
-          {title}
-        </Typography>
-        <Grid>
-          {children}
-        </Grid>
-      </main>
+      <ResponsiveAppBar />
+      <Container maxWidth={'xl'}>
+        <main>
+          <Typography component="h2" variant="h4" marginTop={2} marginBottom={2}>
+            {title}
+          </Typography>
+          <Grid>
+            {children}
+          </Grid>
+        </main>
+      </Container>
       {isFooter && <Footer />}
     </>
   )
