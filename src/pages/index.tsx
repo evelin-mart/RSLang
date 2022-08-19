@@ -4,7 +4,6 @@ import { MainPage } from "./main";
 import { TextbookPage } from "./textbook";
 import { StatisticsPage } from './statistics/index';
 import { NotFoundPage } from "./not-found";
-import { AuthPage } from "./auth";
 
 export const Routing = () => {
   return (
@@ -13,7 +12,6 @@ export const Routing = () => {
       <Route path="/game/:gameId" element={<GamePage />}/>
       <Route path="/textbook" element={<TextbookPage />}/>
       <Route path="/statistics" element={<StatisticsPage />}/>
-      <Route path="/auth" element={<AuthPage />}/>
       <Route path="*" element={<NotFoundPage />}/>
     </Routes>
   );

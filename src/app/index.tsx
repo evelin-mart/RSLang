@@ -3,12 +3,16 @@ import './index.scss';
 import { withProviders } from './providers';
 import { Routing } from 'pages';
 import { Grid } from '@mui/material';
+import { AuthModal } from 'pages/auth/modal';
 
 function App() {
   return (
-    <Grid className="app" sx={{ pl: 2, pr: 2 }}>
-      <Routing />
-    </Grid>
+    <>
+      <AuthModal />
+      <Grid className="app" sx={{ pl: 2, pr: 2 }}>
+        <Routing />
+      </Grid>
+    </>
   );
 }
 
