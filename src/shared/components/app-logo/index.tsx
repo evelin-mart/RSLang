@@ -10,6 +10,7 @@ export const AppLogo = (props: {isMobile: boolean}) => {
             variant="h6"
             noWrap
             component='span'
+            color='primary' 
             sx={{
               mr: 2,
               display: props.isMobile ? { xs: 'flex', md: 'none' } : {xs: 'none', md: 'flex'},

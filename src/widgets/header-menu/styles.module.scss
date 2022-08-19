@@ -9,6 +9,10 @@
 .headerMenuItemLink {
   display: block;
   position: relative;
+  color: var(--primary-color-1);
+}
+.headerMenuItemLink:visited {
+  color: var(--primary-color-1);
 }
 
 .active {

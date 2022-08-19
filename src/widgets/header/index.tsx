@@ -14,6 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { AppLogo } from 'shared/components/app-logo';
 import { HeaderMenu } from 'widgets/header-menu';
+import { palette } from '@mui/system';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -38,7 +39,7 @@ export const ResponsiveAppBar = () => {
   };
 
   return (
-    <AppBar position="static" style={{backgroundColor: 'white'}}>
+    <AppBar position="static" color='secondary'>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AppLogo isMobile={false}/>

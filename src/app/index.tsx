@@ -6,9 +6,9 @@ import { Grid } from '@mui/material';
 
 function App() {
   return (
-    <Grid className="app">
-      <Routing />
-    </Grid>
+      <Grid className="app">
+        <Routing />
+      </Grid>
   );
 }
 
