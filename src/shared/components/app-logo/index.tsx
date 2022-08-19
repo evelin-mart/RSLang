@@ -9,9 +9,6 @@ export const AppLogo = (props: {isMobile: boolean}) => {
       <Typography
             variant="h6"
             noWrap
-            // если оставить component = 'a', в консоль вываливается ошибка: Warning: validateDOMNesting(...): <a> cannot appear as a descendant of <a>. (Ссылка в ссылке?..)
-            // component="a"
-            // href="/"
             component='span'
             sx={{
               mr: 2,
