@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, ThunkDispatch, AnyAction } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { authorizeUser } from 'entities/user';
 import { toggleAuthModal } from 'pages/auth/modal/model';
 import { UserData } from 'entities/user';

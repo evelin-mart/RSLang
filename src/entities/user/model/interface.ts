@@ -1,3 +1,5 @@
+import { LoadingState } from 'shared/lib';
+
 export interface UserData {
   userId: string;
   name: string;
@@ -6,7 +8,16 @@ export interface UserData {
   refreshToken: string;
 }
 
-export interface UserState {
+export const isUserData = (data: unknown): data is UserData => {
+  const requiredProps = ['userId', 'name', 'email', 'token', 'refreshToken'];
+  return (
+    data !== null
+    && typeof data === 'object'
+    && requiredProps.every((prop) => data.hasOwnProperty(prop))
+  );
+}
+
+export interface UserState extends LoadingState {
   data: UserData;
   isAuthorized: boolean;
 }
