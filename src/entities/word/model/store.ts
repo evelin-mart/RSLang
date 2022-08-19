@@ -1,8 +1,9 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { baseUrl } from '../../../constants';
 import { Word } from './interface';
 
 export const fetchWords = createAsyncThunk('words/fetchWords', async () => {
-  const res = await fetch('https://react-learnwords-jsfe2022.herokuapp.com/words?group=0&page=0');
+  const res = await fetch(`${baseUrl}words?group=0&page=0`);
   return (await res.json()) as Word[];
 });
 
@@ -16,7 +17,7 @@ const initialState: WordsState = {
   value: [],
   status: 'idle',
   error: null,
-}
+};
 
 export const wordsSlice = createSlice({
   name: 'words',
@@ -34,6 +35,6 @@ export const wordsSlice = createSlice({
       .addCase(fetchWords.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || '';
-      })
-  }
-})
+      });
+  },
+});

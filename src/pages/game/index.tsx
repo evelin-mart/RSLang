@@ -17,9 +17,9 @@ export const GamePage = () => {
 
   useEffect(() => {
     if (gameId !== undefined && !games[gameId]) {
-      navigate("/*", { replace: true });
+      navigate('/*', { replace: true });
     }
-  }, [gameId]);
+  }, [gameId, navigate]);
 
   const title = (gameId && games[gameId]) ? games[gameId].title : '';
 
