@@ -2,7 +2,7 @@ import React from 'react';
 import { LoginForm } from 'features/user/login';
 import { Modal } from '@mui/material';
 import { useAppSelector, AppDispatch } from 'app/store';
-import { toggleAuthModal } from 'pages/auth/modal/model';
+import { toggleAuthModal } from 'pages/user/auth-modal/model';
 import { useDispatch } from 'react-redux';
 import { RegistrationForm } from 'features/user/registration';
 

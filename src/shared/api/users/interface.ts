@@ -10,6 +10,15 @@ export interface UserLoginResult extends UserTokens {
   error: string | null;
 }
 
+export const defaultLoginResult: UserLoginResult = {
+  token: '',
+  refreshToken: '',
+  message: '',
+  userId: '',
+  name: '',
+  error: null,
+}
+
 export interface UserLoginData {
   email: string;
   password: string;
@@ -29,8 +38,23 @@ export interface UserRegistrationResult {
   error: UserRegistrationError | string | null;
 }
 
+export const defaultRegistartionResult: UserRegistrationResult = {
+  id: '',
+  email: '',
+  name: '',
+  error: null,
+}
+
 export interface UserRegistrationData {
   name: string;
   email: string;
   password: string;
+}
+
+export const isUserRegistrationData = (obj: unknown): obj is UserRegistrationData => {
+  return (
+    obj !== null 
+    && typeof obj === 'object' 
+    && obj.hasOwnProperty('name')
+  );
 }

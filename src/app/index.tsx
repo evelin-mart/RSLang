@@ -3,7 +3,7 @@ import './index.scss';
 import { withProviders } from './providers';
 import { Routing } from 'pages';
 import { Grid } from '@mui/material';
-import { AuthModal } from 'pages/auth/modal';
+import { AuthModal } from 'pages/user/auth-modal';
 
 function App() {
   return (

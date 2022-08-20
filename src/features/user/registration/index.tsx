@@ -3,11 +3,11 @@ import { useDispatch } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { Box, TextField, Typography } from '@mui/material';
 import { PersonAdd as PersonAddIcon } from '@mui/icons-material';
-import { resetRegistrationForm, submitRegistrationForm } from '../model';
-import { setFormType } from 'pages/auth/modal/model';
+import { setFormType } from 'pages/user/auth-modal/model';
 import { AppDispatch, useAppSelector } from 'app/store';
 import { FormFrame } from 'shared/components/form-frame';
 import * as usersApi from 'shared/api/users';
+import { resetForm, submitForm } from 'entities/user';
 
 const defaultInputsState: usersApi.UserRegistrationData = {
   name: '',
@@ -30,13 +30,14 @@ const defaulValidationState: RegistrationFormValidationState = {
 export const RegistrationForm = () => {
   const [ inputsState, setInputsState ] = React.useState<usersApi.UserRegistrationData>(defaultInputsState);
   const [ inputsErrors, setInputsErrors ] = React.useState<RegistrationFormValidationState>(defaulValidationState);
-  const { status, error, submitResult } = useAppSelector((state) => state.registrationForm);
+  const { requestState, error } = useAppSelector((state) => state.user.formLoading);
+  const loading = requestState.status === 'loading';
 
   const dispatch: AppDispatch = useDispatch();
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    dispatch(submitRegistrationForm({...inputsState}));
+    dispatch(submitForm({...inputsState}));
   };
 
   const handleChange = (key: keyof usersApi.UserRegistrationData) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +47,7 @@ export const RegistrationForm = () => {
 
   const handleRegistrationClick = () => {
     dispatch(setFormType('login'));
-    dispatch(resetRegistrationForm());
+    dispatch(resetForm());
   };
 
   const renderErrors = (errors: { path: string, message: string }[]) => {
@@ -61,14 +62,15 @@ export const RegistrationForm = () => {
       ));
   };
 
-  const resultError = submitResult.error;
-  const errorText = error || (resultError && typeof resultError === 'object'
-    ? renderErrors(resultError.error.errors)
-    : resultError);
+  const errorText = error
+    ? typeof error === 'string'
+      ? error
+      : renderErrors(error.error.errors)
+    : error;
 
   return (
     <FormFrame
-      loading={status === 'loading'}
+      loading={loading}
       handleButtonClick={handleRegistrationClick}
       title="Регистрация"
       buttonText="Уже зарегистрирован? Войти">
@@ -111,7 +113,7 @@ export const RegistrationForm = () => {
         />
         <LoadingButton
           type="submit"
-          loading={status === 'loading'}
+          loading={loading}
           loadingPosition="center"
           startIcon={<PersonAddIcon />}
           variant="contained"

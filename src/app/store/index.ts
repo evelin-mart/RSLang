@@ -1,9 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { wordsSlice } from 'entities/word';
-import { authModalSlice } from 'pages/auth/modal/model';
-import { loginFormSlice } from 'features/user/login';
+import { authModalSlice } from 'pages/user/auth-modal/model';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
-import { registrationFormSlice } from 'features/user/registration';
 import { userSlice, loadUserFromStorage } from 'entities/user';
 import { handleAuthorizationChange } from 'entities/user';
 
@@ -11,8 +9,6 @@ export const store = configureStore({
   reducer: {
     [wordsSlice.name]: wordsSlice.reducer,
     [authModalSlice.name]: authModalSlice.reducer,
-    [loginFormSlice.name]: loginFormSlice.reducer,
-    [registrationFormSlice.name]: registrationFormSlice.reducer,
     [userSlice.name]: userSlice.reducer,
   }
 });

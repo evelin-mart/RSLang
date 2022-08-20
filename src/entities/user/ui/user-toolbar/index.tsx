@@ -3,16 +3,16 @@ import { Box, IconButton, Typography } from '@mui/material';
 import { Login as LoginIcon, Logout as LogoutIcon } from '@mui/icons-material';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
-import { toggleAuthModal } from 'pages/auth/modal/model';
+import { toggleAuthModal } from 'pages/user/auth-modal/model';
 import { useUser } from 'entities/user';
-import { deauthorizeUser } from 'entities/user';
+import { deauthorize } from 'entities/user';
 
 export const UserToolbar = () => {
   const dispatch: AppDispatch = useDispatch();
   const user = useUser();
 
   const handleLogout = () => {
-    dispatch(deauthorizeUser());
+    dispatch(deauthorize());
   }
 
   const handleOpenModal = (e: React.MouseEvent<HTMLElement>) => {

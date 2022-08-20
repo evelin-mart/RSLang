@@ -1,3 +1,4 @@
+import { UserRegistrationError } from 'shared/api/users';
 import { LoadingState } from 'shared/lib';
 
 export interface UserData {
@@ -17,7 +18,14 @@ export const isUserData = (data: unknown): data is UserData => {
   );
 }
 
-export interface UserState extends LoadingState {
+export type FormLoadingError = UserRegistrationError | string | null;
+
+export interface UserState {
+  startupLoading: LoadingState,
+  formLoading: {
+    requestState: LoadingState,
+    error: FormLoadingError,
+  },
   data: UserData;
   isAuthorized: boolean;
 }

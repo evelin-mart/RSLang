@@ -3,11 +3,11 @@ import { useDispatch } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { Box, TextField, Typography } from '@mui/material';
 import { Login as LoginIcon } from '@mui/icons-material';
-import { resetLoginForm, submitLoginForm } from '../model';
-import { setFormType } from 'pages/auth/modal/model';
+import { setFormType } from 'pages/user/auth-modal/model';
 import { AppDispatch, useAppSelector } from 'app/store';
 import { FormFrame } from 'shared/components/form-frame';
 import { UserLoginData } from 'shared/api/users';
+import { resetForm, submitForm } from 'entities/user';
 
 const defaultInputsState: UserLoginData = {
   email: '',
@@ -27,13 +27,14 @@ const defaulValidationState: LoginFormValidationState = {
 export const LoginForm = () => {
   const [ inputsState, setInputsState ] = React.useState<UserLoginData>(defaultInputsState);
   const [ inputsErrors, setInputsErrors ] = React.useState<LoginFormValidationState>(defaulValidationState);
-  const { status, error, submitResult } = useAppSelector((state) => state.loginForm);
-  const errorText = error || submitResult.error;
+  const { requestState, error } = useAppSelector((state) => state.user.formLoading);
+  const loading = requestState.status === 'loading';
+  const errorText = requestState.error || error as string;
   const dispatch: AppDispatch = useDispatch();
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    dispatch(submitLoginForm({...inputsState}));
+    dispatch(submitForm({...inputsState}));
   }
 
   const handleChange = (key: keyof UserLoginData) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,12 +44,12 @@ export const LoginForm = () => {
 
   const handleRegistrationClick = () => {
     dispatch(setFormType('registration'));
-    dispatch(resetLoginForm());
+    dispatch(resetForm());
   }
 
   return (
     <FormFrame
-      loading={status === 'loading'}
+      loading={loading}
       handleButtonClick={handleRegistrationClick}
       title="Авторизация"
       buttonText="Зарегистрироваться">
@@ -82,7 +83,7 @@ export const LoginForm = () => {
         />
         <LoadingButton
           type="submit"
-          loading={status === 'loading'}
+          loading={loading}
           loadingPosition="center"
           startIcon={<LoginIcon />}
           variant="contained"
