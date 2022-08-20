@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Page } from 'pages/page';
 import { AppDispatch, useAppSelector } from 'app/store';
@@ -7,12 +7,21 @@ import { Loader } from 'shared/components/loader';
 import { List, ListItem } from '@mui/material';
 import styles from './styles.module.scss';
 import { STATUS } from '../../constants';
+import { play, stop } from './utils';
 
 export const TextbookPage = () => {
   const dispatch: AppDispatch = useDispatch();
   const { value: words, status, error } = useAppSelector((state) => state.words);
+  const [sounds, setSounds] = useState<HTMLAudioElement[]>([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    sounds.length && play(sounds);
+    return () => {
+      sounds.length && stop(sounds);
+    };
+  }, [sounds]);
+
+  useEffect(() => {
     if (status === STATUS.IDLE) {
       dispatch(fetchWords());
     }
@@ -27,7 +36,7 @@ export const TextbookPage = () => {
   if (status === STATUS.SUCCESS) {
     const renderedItem = words.map((word) => (
       <ListItem key={word.id} sx={{ p: 0 }} className={styles.listItem}>
-        <WordCard word={word} />
+        <WordCard word={word} play={setSounds} />
       </ListItem>
     ));
     content = (

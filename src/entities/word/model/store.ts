@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { baseUrl } from '../../../constants';
+import { baseUrl, STATUS } from '../../../constants';
 import { Word } from './interface';
 
 export const fetchWords = createAsyncThunk('words/fetchWords', async () => {
@@ -9,13 +9,13 @@ export const fetchWords = createAsyncThunk('words/fetchWords', async () => {
 
 interface WordsState {
   value: Word[];
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  status: STATUS;
   error: string | null;
 }
 
 const initialState: WordsState = {
   value: [],
-  status: 'idle',
+  status: STATUS.IDLE,
   error: null,
 };
 
@@ -26,14 +26,14 @@ export const wordsSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(fetchWords.pending, (state, action) => {
-        state.status = 'loading';
+        state.status = STATUS.LOADING;
       })
       .addCase(fetchWords.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = STATUS.SUCCESS;
         state.value = action.payload;
       })
       .addCase(fetchWords.rejected, (state, action) => {
-        state.status = 'failed';
+        state.status = STATUS.FAIL;
         state.error = action.error.message || '';
       });
   },
