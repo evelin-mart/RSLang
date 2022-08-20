@@ -14,7 +14,7 @@ export const Page = (props: PageProps) => {
   const isFooter = pageClassName !== 'game';
   return (
     <>
-      {/* <Header /> */}
+      <Header />
       <main>
         <Typography component="h2" variant="h4" marginTop={2} marginBottom={2}>
           {title}
@@ -23,7 +23,7 @@ export const Page = (props: PageProps) => {
           {children}
         </Grid>
       </main>
-      {/* {isFooter && <Footer />} */}
+      {isFooter && <Footer />}
     </>
   )
 }
