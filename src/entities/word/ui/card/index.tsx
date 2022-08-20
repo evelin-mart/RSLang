@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
+import classNames from 'classnames';
 import {
   Typography,
   Card,
@@ -47,19 +48,18 @@ export const WordCard = (props: WordCardProps) => {
     play(sounds.map((audio) => new Audio(audio)));
   };
 
-  const wordClass = [
-    styles.container,
-    userWord && userWord.optional.isHard && styles.hard,
-    userWord && userWord.optional.isLearned && styles.learned,
-  ];
+  const wordClass = classNames(styles.container, {
+    [styles.hard]: userWord && userWord.optional.isHard,
+    [styles.learned]: userWord && userWord.optional.isLearned,
+  });
 
   const getWordProgress = ({ optional }: UserWord) => (optional.guessed * 100) / optional.totalUsed;
 
   // TODO
-  const toggleUserWord = () => true
+  const toggleUserWord = () => true;
 
   return (
-    <Card className={wordClass.join(' ')}>
+    <Card className={wordClass}>
       <CardHeader
         action={
           <IconButton color='primary' onClick={playSounds}>

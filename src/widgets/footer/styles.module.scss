@@ -1,11 +1,15 @@
 .footer {
-  height: var(--footer-height);
-  position: absolute;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  background-color: rgb(245, 245, 245);
 }
 
 .githubLinksList {
   display: flex;
+  flex-direction: column;
+}
+
+.description {
+  padding: 0.5rem;
+  color: var(--primary-color-1);
 }

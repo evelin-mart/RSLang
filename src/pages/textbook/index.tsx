@@ -40,7 +40,7 @@ export const TextbookPage = () => {
       </ListItem>
     ));
     content = (
-      <List sx={{ p: 0 }} className={styles.list}>
+      <List sx={{ p: 0, alignItems: 'flex-start' }} className={styles.list}>
         {renderedItem}
       </List>
     );
@@ -54,8 +54,10 @@ export const TextbookPage = () => {
     );
   }
 
+  const title = `Учебник \\ Раздел 1 \\ Страница 1`;
+
   return (
-    <Page pageClassName='textbook' title='Учебник'>
+    <Page pageClassName='textbook' title={title}>
       {content}
     </Page>
   );

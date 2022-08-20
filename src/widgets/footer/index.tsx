@@ -1,42 +1,41 @@
-import React from 'react';
 import styles from './styles.module.scss';
-import { Box, Link, List, ListItem, Theme, Typography } from '@mui/material';
+import { Box, Link, List, ListItem, Stack, Typography } from '@mui/material';
 import { RssLogo } from 'shared/components/rss-logo';
 
 const githubLinks = [
-  { 
-    href: '#', 
-    text: 'GithubLink1'
+  {
+    href: 'https://github.com/Color-zebra',
+    text: 'Dmitriy Romanenkov',
   },
-  { 
-    href: '#', 
-    text: 'GithubLink2'
+  {
+    href: 'https://github.com/evelin-mart',
+    text: 'Evelin Martsina',
   },
-  { 
-    href: '#', 
-    text: 'GithubLink3'
+  {
+    href: 'https://github.com/tretyakov-a',
+    text: 'Alexander Tretyakov',
   },
 ];
 
 export const Footer = () => {
-  const footerStyles = {
-    left: (theme: Theme) => theme.spacing(3),
-    bottom: 0,
-    width: (theme: Theme) => `calc(100% - ${theme.spacing(6)})`,
-  }
   return (
-    <Box component="footer" className={styles.footer} sx={footerStyles}>
-      <Typography variant="body2">
-        2022
-      </Typography>
-      <RssLogo />
+    <Box component='footer' className={styles.footer}>
+      <Stack direction='column' spacing={1}>
+        <Typography variant='body1' className={styles.description}>
+          © 2022 RSLang
+        </Typography>
+        <Stack direction='row' spacing={1}></Stack>
+      </Stack>
       <List className={styles.githubLinksList}>
         {githubLinks.map(({ href, text }, i) => (
           <ListItem key={i}>
-            <Link href={href}>{text}</Link>
+            <Link href={href} target='_blank' rel='noreferrer'>
+              {text}
+            </Link>
           </ListItem>
         ))}
       </List>
+      <RssLogo />
     </Box>
-  )
-}
+  );
+};

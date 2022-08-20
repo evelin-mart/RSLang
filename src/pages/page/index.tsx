@@ -16,7 +16,7 @@ export const Page = (props: PageProps) => {
     <>
       <Header />
       <main>
-        <Typography component="h2" variant="h4" marginTop={2} marginBottom={2}>
+        <Typography variant="h6" marginTop={1} marginBottom={2}>
           {title}
         </Typography>
         <Grid>
