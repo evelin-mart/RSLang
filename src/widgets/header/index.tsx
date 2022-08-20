@@ -15,6 +15,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import { AppLogo } from 'shared/components/app-logo';
 import { HeaderMenu } from 'widgets/header-menu';
 import { palette } from '@mui/system';
+import { Drawer } from '@mui/material';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -49,30 +50,24 @@ export const ResponsiveAppBar = () => {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="default"
+              color="primary"
             >
               <MenuIcon />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
+            <Drawer 
+              anchor='left' 
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
+              keepMounted
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: 'flex', md: 'none' },
+                bgcolor: 'primary'
               }}
             >
-              <HeaderMenu isColumn={true}/>
-            </Menu>
+              <div style={{height: '100%', display: 'flex', alignItems: 'center', padding: '20px'}}>
+                <HeaderMenu isColumn={true}/>
+              </div>
+            </Drawer>
           </Box>
           <AppLogo isMobile={true}/>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
