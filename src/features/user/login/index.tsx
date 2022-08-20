@@ -10,8 +10,8 @@ import { UserLoginData } from 'shared/api/users';
 import { resetForm, submitForm } from 'entities/user';
 
 const defaultInputsState: UserLoginData = {
-  email: '',
-  password: '',
+  email: 'test@test.ru',
+  password: '12345678',
 }
 
 export interface LoginFormValidationState {

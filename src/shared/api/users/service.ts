@@ -5,7 +5,8 @@ import {
   UserTokens,
   UserRegistrationResult,
   UserRegistrationData } from './interface';
-import { processRequest, processAuthorizedRequest, withToken } from '../lib';
+import { processRequest, processAuthorizedRequest, withToken, HttpError } from '../lib';
+import { UserData } from 'entities/user';
 
 const url = `${BASE_URL}/users`;
 const urlSignIn = `${BASE_URL}/signin`;
@@ -21,7 +22,7 @@ export const loginUser = async (userData: UserLoginData) => {
 }
 
 export const getUserTokens = async (userId: string, refreshToken: string) => {
-  return await processAuthorizedRequest<UserTokens>(
+  return await processRequest<UserTokens>(
     `${url}/${userId}/tokens`, 
     withToken(refreshToken)
   );
@@ -37,14 +38,23 @@ export const createUser = async (userData: UserRegistrationData) => {
   })
 }
 
-export const getUser = async (token: string) => {
-  
+export const getUser = async () => {
+  return await processAuthorizedRequest<UserData>();
 }
 
-export const updateUser = async (token: string) => {
-  
+export const updateUser = async (userData: Partial<UserData>) => {
+  return await processAuthorizedRequest<UserRegistrationResult>({
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify(userData),
+  });
 }
 
-export const deleteUser = async (token: string) => {
-  
+export const deleteUser = async () => {
+  return await processAuthorizedRequest<void>({
+    method: 'DELETE',
+  });
 }

@@ -38,6 +38,15 @@ export interface UserRegistrationResult {
   error: UserRegistrationError | string | null;
 }
 
+export const isUserRegistrationResult = (obj: unknown): obj is UserRegistrationResult => {
+  const props = ['id', 'email', 'name'];
+  return (
+    obj !== null 
+    && typeof obj === 'object' 
+    && props.every((prop) => obj.hasOwnProperty(prop))
+  );
+}
+
 export const defaultRegistartionResult: UserRegistrationResult = {
   id: '',
   email: '',

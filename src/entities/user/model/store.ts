@@ -6,6 +6,7 @@ import { RootState, AppDispatch, AsyncThunkConfig } from 'app/store';
 import { defaultLoadingState } from 'shared/lib';
 import { toggleAuthModal } from 'pages/user/auth-modal/model';
 import { HttpError } from 'shared/api/lib';
+import { isUserRegistrationResult, UserRegistrationResult, UserTokens } from 'shared/api/users';
 
 const initialState: UserState = {
   data: {
@@ -42,18 +43,20 @@ export const loadUserFromStorage = createAsyncThunk<void, void, AsyncThunkConfig
 
 type SubmitFormData = usersApi.UserLoginData | usersApi.UserRegistrationData;
 
-export const submitForm = createAsyncThunk<FormLoadingError, SubmitFormData, AsyncThunkConfig>(
+export const submitForm = createAsyncThunk<FormLoadingError | UserRegistrationResult, SubmitFormData, AsyncThunkConfig>(
   'user/submitForm', 
   async (
     formData,
     { dispatch, getState }
   ) => {
-  const { formType } = getState().authModal;
-  const error = formType === 'registration' && usersApi.isUserRegistrationData(formData)
-    ? await registerUser(dispatch, formData)
-    : await loginUser(dispatch, formData);
+  const { formType, show } = getState().authModal;
+  const error = !show
+    ? await updateUser(formData)
+    : formType === 'registration' && usersApi.isUserRegistrationData(formData)
+      ? await registerUser(dispatch, formData)
+      : await loginUser(dispatch, formData);
 
-  if (!error) dispatch(toggleAuthModal(false));
+  if (show && !error) dispatch(toggleAuthModal(false));
   return error;
 });
 
@@ -87,6 +90,37 @@ const registerUser = async (dispatch: AppDispatch, formData: usersApi.UserRegist
   return registerError;
 }
 
+const updateUser = async (formData: Partial<usersApi.UserRegistrationData>) => {
+  let registerError: FormLoadingError = null;
+  try {
+    const keys = Object.keys(formData) as (keyof usersApi.UserRegistrationData)[];
+    const dataToUpdate = keys.reduce((acc, key) => {
+      return formData[key] !== ''
+        ? { ...acc, [key]: formData[key] }
+        : acc;
+    }, {});
+    return await usersApi.updateUser(dataToUpdate);
+  } catch (err) {
+    if (!(err instanceof HttpError)) throw err;
+    const { error } = err;
+    registerError = typeof error === 'object'
+      ? error as usersApi.UserRegistrationError
+      : error as string;
+  }
+  return registerError;
+}
+
+export const getUser = createAsyncThunk<UserData, void, AsyncThunkConfig>('user/get', async () => {
+  const newUserData = await usersApi.getUser();
+  return newUserData;
+});
+
+export const deleteUser = createAsyncThunk<void, void, AsyncThunkConfig>(
+  'user/get', async (_, { dispatch }) => {
+  await usersApi.deleteUser();
+  dispatch(deauthorize());
+});
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -102,6 +136,11 @@ export const userSlice = createSlice({
     resetForm(state) {
       state.formLoading.error = null;
       state.formLoading.requestState = { ...defaultLoadingState };
+    },
+    updateTokens(state, action: PayloadAction<UserTokens>) {
+      const { token, refreshToken } = action.payload;
+      state.data.token = token;
+      state.data.refreshToken = refreshToken;
     }
   },
   extraReducers(builder) {
@@ -121,13 +160,27 @@ export const userSlice = createSlice({
       })
       .addCase(submitForm.fulfilled, (state, action) => {
         state.formLoading.requestState.status = 'succeeded';
-        state.formLoading.error = action.payload;
+        if (!isUserRegistrationResult(action.payload)) {
+          state.formLoading.error = action.payload;
+        } else {
+          state.formLoading.error = null;
+          state.data = { ...state.data, ...action.payload };
+        }
       })
       .addCase(submitForm.rejected, (state, action) => {
         state.formLoading.requestState.status = 'failed';
         state.formLoading.requestState.error = action.error.message || '';
       })
+      .addCase(getUser.fulfilled, (state, action) => {
+        const result = action.payload;
+        state.formLoading.requestState.status = 'succeeded';
+      })
   }
 })
 
-export const { authorize, deauthorize, resetForm } = userSlice.actions;
+export const {
+  authorize,
+  deauthorize,
+  resetForm,
+  updateTokens,
+} = userSlice.actions;

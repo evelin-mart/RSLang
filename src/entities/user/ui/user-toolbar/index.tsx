@@ -4,8 +4,9 @@ import { Login as LoginIcon, Logout as LogoutIcon } from '@mui/icons-material';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
 import { toggleAuthModal } from 'pages/user/auth-modal/model';
-import { useUser } from 'entities/user';
+import { useUser, resetForm } from 'entities/user';
 import { deauthorize } from 'entities/user';
+import { Link } from 'react-router-dom';
 
 export const UserToolbar = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -16,6 +17,7 @@ export const UserToolbar = () => {
   }
 
   const handleOpenModal = (e: React.MouseEvent<HTMLElement>) => {
+    dispatch(resetForm());
     dispatch(toggleAuthModal(true));
   };
 
@@ -26,9 +28,9 @@ export const UserToolbar = () => {
             <LoginIcon />
           </IconButton>
         : <>
-            <Typography component="span" color="info.dark" variant="body2">
+            <Link to="/profile">
               {user.data.email}
-            </Typography>
+            </Link>
             <IconButton onClick={handleLogout} color="primary" aria-label="Выйти">
               <LogoutIcon />
             </IconButton>
