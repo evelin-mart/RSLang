@@ -9,6 +9,11 @@
 .headerMenuItemLink {
   display: block;
   position: relative;
+  white-space: nowrap;
+  color: var(--primary-color-1);
+}
+.headerMenuItemLink:visited {
+  color: var(--primary-color-1);
 }
 
 .active {
@@ -21,4 +26,8 @@
     height: 2px;
     background-color: var(--primary-color-1);
   }
+}
+
+.column {
+  flex-direction: column;
 }
