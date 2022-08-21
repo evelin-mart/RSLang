@@ -1,12 +1,15 @@
 .wrapper {
   width: 280px;
   height: 400px;
+  position: relative;
 }
 .card {
   width: 260px;
   height: 400px;
   cursor: pointer;
   position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 
   &:hover {
     .front {
