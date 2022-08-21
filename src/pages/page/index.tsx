@@ -2,16 +2,17 @@ import { Typography, Grid } from '@mui/material';
 import React from 'react';
 import { Footer } from 'widgets/footer';
 import { Header } from 'widgets/header';
+import { PAGES } from '../../shared/components/constants';
 
 export type PageProps = {
-  pageClassName: string;
+  pageName: PAGES;
   title: string;
   children?: React.ReactNode;
 };
 
 export const Page = (props: PageProps) => {
-  const { pageClassName, title, children } = props;
-  const isFooter = pageClassName !== 'game';
+  const { pageName, title, children } = props;
+  const isFooter = pageName !== PAGES.GAME;
   return (
     <>
       <Header />

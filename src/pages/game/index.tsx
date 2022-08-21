@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import { Page } from 'pages/page';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Page } from 'pages/page';
+import { PAGES } from '../../shared/components/constants';
 
 const games: Record<string, { title: string }> = {
   audio: {
@@ -24,7 +25,7 @@ export const GamePage = () => {
   const title = (gameId && games[gameId]) ? games[gameId].title : '';
 
   return (
-    <Page pageClassName="game" title={title}>
+    <Page pageName={PAGES.GAME} title={title}>
       <div>Game: {gameId}</div>
     </Page>
   )

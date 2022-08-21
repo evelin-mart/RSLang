@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { baseUrl, STATUS } from '../../../constants';
+import { baseUrl, STATUS } from '../../../shared/components/constants';
 import { Word } from './interface';
 
 export const fetchWords = createAsyncThunk('words/fetchWords', async () => {

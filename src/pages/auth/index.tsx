@@ -1,10 +1,10 @@
-import React from 'react';
 import { Page } from 'pages/page';
+import { PAGES } from '../../shared/components/constants';
 
 export const AuthPage = () => {
   return (
-    <Page pageClassName="auth" title="Авторизация">
+    <Page pageName={PAGES.AUTH} title='Авторизация'>
       Форма авторизации
     </Page>
-  )
-}
+  );
+};

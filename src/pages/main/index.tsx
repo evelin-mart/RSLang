@@ -1,10 +1,10 @@
-import React from 'react';
 import { Page } from 'pages/page';
 import { Grid, Typography } from '@mui/material';
+import { PAGES } from '../../shared/components/constants';
 
 export const MainPage = () => {
   return (
-    <Page pageClassName="main" title="Главная">
+    <Page pageName={PAGES.MAIN} title="Главная">
       <Grid container component="section">
         <Typography variant="h5" component="h3">
           Возможности и преимуществ приложения
