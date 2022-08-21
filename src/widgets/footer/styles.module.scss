@@ -1,7 +1,13 @@
 .footer {
+  background-color: rgb(245, 245, 245);
+}
+
+.wrapper {
   display: flex;
   justify-content: space-between;
-  background-color: rgb(245, 245, 245);
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 }
 
 .githubLinksList {

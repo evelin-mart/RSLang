@@ -16,14 +16,14 @@ export const Page = (props: PageProps) => {
     <>
       <Header />
       <main>
-        <Typography variant="h6" marginTop={1} marginBottom={2}>
-          {title}
-        </Typography>
-        <Grid>
-          {children}
-        </Grid>
+        <div className='container'>
+          <Typography variant='h6' marginTop={1} marginBottom={2}>
+            {title}
+          </Typography>
+          <Grid>{children}</Grid>
+        </div>
       </main>
       {isFooter && <Footer />}
     </>
-  )
-}
+  );
+};

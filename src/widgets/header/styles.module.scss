@@ -1,4 +1,8 @@
 .header {
+  background-color: rgb(245, 245, 245);
+}
+
+.wrapper {
   height: var(--header-height);
   display: flex;
   justify-content: space-between;
