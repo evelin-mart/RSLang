@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Button, Paper, Typography } from '@mui/material';
 
-export type FormFrameProps = {
+type FormWrapperProps = {
   handleButtonClick: () => void;
   buttonText: string;
   title: string;
@@ -9,7 +9,7 @@ export type FormFrameProps = {
   loading: boolean;
 }
 
-export const FormFrame = (props: FormFrameProps) => {
+export const FormWrapper = (props: FormWrapperProps) => {
   const { handleButtonClick, title, children, buttonText, loading } = props;
   return (
     <Paper sx={{ p: 3, flexBasis: 400, flexShrink: 1 }}>

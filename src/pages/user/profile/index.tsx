@@ -7,10 +7,10 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import { Refresh as RefreshIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import * as usersApi from 'shared/api/users';
 import { LoadingButton } from '@mui/lab';
-
+import { FormErrors } from 'features/user/registration/ui';
 
 export const ProfilePage = () => {
-  const { data: { name, email, userId } } = useUser();
+  const { data: { name, email } } = useUser();
   const [ inputsState, setInputsState ] = React.useState<usersApi.UserRegistrationData>({
     name, email,
     password: '',
@@ -37,22 +37,10 @@ export const ProfilePage = () => {
     dispatch(deleteUser());
   }
 
-  const renderErrors = (errors: { path: string, message: string }[]) => {
-    return errors
-      .map(({ path, message }) => (
-        <Typography
-          component="span"
-          sx={{ display: "block", fontSize: 14 }}
-          key={path[0]}>
-          {message}
-        </Typography>
-      ));
-  };
-
   const errorText = error
     ? typeof error === 'string'
       ? error
-      : renderErrors(error.error.errors)
+      : <FormErrors errors={error.error.errors}/>
     : error;
 
   return (

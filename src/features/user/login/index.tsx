@@ -3,30 +3,14 @@ import { useDispatch } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import { Box, TextField, Typography } from '@mui/material';
 import { Login as LoginIcon } from '@mui/icons-material';
-import { setFormType } from 'pages/user/auth-modal/model';
 import { AppDispatch, useAppSelector } from 'app/store';
-import { FormFrame } from 'shared/components/form-frame';
 import { UserLoginData } from 'shared/api/users';
-import { resetForm, submitForm } from 'entities/user';
-
-const defaultInputsState: UserLoginData = {
-  email: 'test@test.ru',
-  password: '12345678',
-}
-
-export interface LoginFormValidationState {
-  email: boolean;
-  password: boolean;
-}
-
-const defaulValidationState: LoginFormValidationState = {
-  email: false,
-  password: false,
-}
+import { submitForm } from 'entities/user';
+import { defaultInputsState, defaulValidationState} from './model';
 
 export const LoginForm = () => {
-  const [ inputsState, setInputsState ] = React.useState<UserLoginData>(defaultInputsState);
-  const [ inputsErrors, setInputsErrors ] = React.useState<LoginFormValidationState>(defaulValidationState);
+  const [ inputsState, setInputsState ] = React.useState(defaultInputsState);
+  const [ inputsErrors, setInputsErrors ] = React.useState(defaulValidationState);
   const { requestState, error } = useAppSelector((state) => state.user.formLoading);
   const loading = requestState.status === 'loading';
   const errorText = requestState.error || error as string;
@@ -42,55 +26,44 @@ export const LoginForm = () => {
     setInputsErrors({ ...inputsErrors, [key]: e.target.value === ''});
   }
 
-  const handleRegistrationClick = () => {
-    dispatch(setFormType('registration'));
-    dispatch(resetForm());
-  }
-
   return (
-    <FormFrame
-      loading={loading}
-      handleButtonClick={handleRegistrationClick}
-      title="Авторизация"
-      buttonText="Зарегистрироваться">
-      <Box
-        sx={{ rowGap: 3, display: "flex", flexDirection: "column" }}
-        component="form"
-        autoComplete="off"
-        onSubmit={handleSubmit}
+    <Box
+      sx={{ rowGap: 3, display: "flex", flexDirection: "column" }}
+      component="form"
+      autoComplete="off"
+      onSubmit={handleSubmit}
+    >
+      {errorText && <Typography sx={{ color: "error.light" }}>
+        {errorText}
+      </Typography>}
+      <TextField
+        required
+        type="email"
+        label="Email"
+        placeholder="Email"
+        value={inputsState.email}
+        onChange={handleChange('email')}
+        error={inputsErrors.email}
+        autoFocus
+      />
+      <TextField
+        required
+        type="password"
+        label="Password"
+        placeholder="Password"
+        value={inputsState.password}
+        onChange={handleChange('password')}
+        error={inputsErrors.password}
+      />
+      <LoadingButton
+        type="submit"
+        loading={loading}
+        loadingPosition="center"
+        startIcon={<LoginIcon />}
+        variant="contained"
       >
-        {errorText && <Typography sx={{ color: "error.light" }}>
-          {errorText}
-        </Typography>}
-        <TextField
-          required
-          type="email"
-          label="Email"
-          placeholder="Email"
-          value={inputsState.email}
-          onChange={handleChange('email')}
-          error={inputsErrors.email}
-          autoFocus
-        />
-        <TextField
-          required
-          type="password"
-          label="Password"
-          placeholder="Password"
-          value={inputsState.password}
-          onChange={handleChange('password')}
-          error={inputsErrors.password}
-        />
-        <LoadingButton
-          type="submit"
-          loading={loading}
-          loadingPosition="center"
-          startIcon={<LoginIcon />}
-          variant="contained"
-        >
-          Вход
-        </LoadingButton>
-      </Box>
-    </FormFrame>
+        Вход
+      </LoadingButton>
+    </Box>
   )
 }

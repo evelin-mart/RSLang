@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-type FormType = 'login' | 'registration';
+export type FormType = 'login' | 'registration';
 
 interface AuthModalState {
   show: boolean;

@@ -2,9 +2,11 @@ import React from 'react';
 import { LoginForm } from 'features/user/login';
 import { Modal } from '@mui/material';
 import { useAppSelector, AppDispatch } from 'app/store';
-import { toggleAuthModal } from 'pages/user/auth-modal/model';
 import { useDispatch } from 'react-redux';
 import { RegistrationForm } from 'features/user/registration';
+import { FormWrapper } from './ui';
+import { setFormType, formData, FormType, toggleAuthModal } from './model';
+import { resetForm } from 'entities/user';
 
 const modalStyles = {
   display: 'flex',
@@ -16,11 +18,22 @@ const modalStyles = {
 export const AuthModal = () => {
   const { show, formType } = useAppSelector((state) => state.authModal);
   const dispatch: AppDispatch = useDispatch();
+  const { requestState } = useAppSelector((state) => state.user.formLoading);
+  const loading = requestState.status === 'loading';
+  const { title, buttonText } = formData[formType];
 
   const handleClose = () => {
     dispatch(toggleAuthModal(false));
   }
-  
+
+  const handleBottomButtonClick = () => {
+    const newFormType: FormType = formType === 'login'
+      ? 'registration'
+      : 'login';
+    dispatch(setFormType(newFormType));
+    dispatch(resetForm());
+  }
+
   return (
     <Modal
         sx={modalStyles}
@@ -28,9 +41,15 @@ export const AuthModal = () => {
         onClose={handleClose}
       >
       <>
-        {formType === 'login'
-          ? <LoginForm />
-          : <RegistrationForm />}
+        <FormWrapper
+          loading={loading}
+          handleButtonClick={handleBottomButtonClick}
+          title={title}
+          buttonText={buttonText}>
+          {formType === 'login'
+            ? <LoginForm />
+            : <RegistrationForm />}
+        </FormWrapper>
       </>
     </Modal>
   )
