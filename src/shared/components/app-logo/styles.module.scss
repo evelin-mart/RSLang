@@ -1,3 +1,13 @@
 .logo {
   color: var(--primary-color-1);
 }
+
+.logoText {
+  color: var(--primary-color-1);
+  font-weight: 700;
+  font-family: monospace;
+  letter-spacing: 0.3rem;
+  text-decoration: none;
+  margin: 0 0 0 2rem;
+  font-size: 1.25rem;
+}

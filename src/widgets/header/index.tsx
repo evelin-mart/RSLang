@@ -17,9 +17,6 @@ import { HeaderMenu } from 'widgets/header-menu';
 import { palette } from '@mui/system';
 import { Drawer } from '@mui/material';
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
 export const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
