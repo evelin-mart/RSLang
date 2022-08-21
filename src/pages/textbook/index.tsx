@@ -6,7 +6,7 @@ import { fetchWords, WordCard } from 'entities/word';
 import { Loader } from 'shared/components/loader';
 import { List, ListItem } from '@mui/material';
 import styles from './styles.module.scss';
-import { STATUS, PAGES } from '../../shared/components/constants';
+import { STATUS, PAGES } from '../../shared/constants';
 import { play, stop } from './utils';
 
 export const TextbookPage = () => {

@@ -2,7 +2,7 @@ import { Typography, Grid } from '@mui/material';
 import React from 'react';
 import { Footer } from 'widgets/footer';
 import { Header } from 'widgets/header';
-import { PAGES } from '../../shared/components/constants';
+import { PAGES } from '../../shared/constants';
 
 export type PageProps = {
   pageName: PAGES;

@@ -1,5 +1,5 @@
 import { Page } from 'pages/page';
-import { PAGES } from '../../shared/components/constants';
+import { PAGES } from '../../shared/constants';
 
 export const AuthPage = () => {
   return (

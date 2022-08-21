@@ -1,7 +1,7 @@
 import styles from './styles.module.scss';
 import { Link, List, ListItem, Stack, Typography } from '@mui/material';
 import { RssLogo } from 'shared/components/rss-logo';
-import { githubLinks } from 'shared/components/constants/team-github-links';
+import { githubLinks } from 'shared/constants/team-github-links';
 import classNames from 'classnames';
 
 export const Footer = () => {

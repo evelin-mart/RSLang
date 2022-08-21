@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import DoneIcon from '@mui/icons-material/Done';
-import { makeAbsUrl } from '../../../../shared/components/constants';
+import { makeAbsUrl } from '../../../../shared/constants';
 import { Word, UserWord } from 'entities/word/model';
 import styles from './styles.module.scss';
 

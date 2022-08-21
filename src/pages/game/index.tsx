@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Page } from 'pages/page';
-import { PAGES } from '../../shared/components/constants';
+import { PAGES } from '../../shared/constants';
 
 const games: Record<string, { title: string }> = {
   audio: {

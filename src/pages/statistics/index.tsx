@@ -1,6 +1,6 @@
 import { Page } from 'pages/page';
 import { Grid, Typography } from '@mui/material';
-import { PAGES } from '../../shared/components/constants';
+import { PAGES } from '../../shared/constants';
 
 export const StatisticsPage = () => {
   return (
