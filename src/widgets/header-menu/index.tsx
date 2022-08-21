@@ -2,25 +2,7 @@ import React from 'react';
 import styles from './styles.module.scss';
 import { NavLink } from 'react-router-dom';
 import { Box, List, ListItem } from '@mui/material';
-
-const links: { title: string, href: string }[] = [
-  {
-    title: 'Учебник',
-    href: '/textbook',
-  },
-  {
-    title: 'Статистика',
-    href: '/statistics',
-  },
-  {
-    title: 'Аудиовызов',
-    href: '/game/audio',
-  },
-  {
-    title: 'Спринт',
-    href: '/game/sprint',
-  },
-]
+import { links } from 'shared/constants/menu-links';
 
 export const HeaderMenu = (props: {isColumn: boolean}) => {
   const { headerMenuItemLink, active, headerMenu, column } = styles;

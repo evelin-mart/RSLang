@@ -7,7 +7,7 @@ export const ourTeam = [
   },
   {
     image: 'avatar-placeholder.jpg',
-    name: 'Александр Третяков',
+    name: 'Александр Третьяков',
     description: `Some text about developer
     Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, repellendus!`,
   },

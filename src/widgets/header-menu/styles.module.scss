@@ -9,6 +9,7 @@
 .headerMenuItemLink {
   display: block;
   position: relative;
+  white-space: nowrap;
   color: var(--primary-color-1);
 }
 .headerMenuItemLink:visited {

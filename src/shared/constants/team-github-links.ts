@@ -1,7 +1,7 @@
 export const githubLinks = [
   { 
     href: 'https://github.com/evelin-mart', 
-    text: 'Evelin Martinova'
+    text: 'Evelin Martina'
   },
   { 
     href: 'https://github.com/tretyakov-a', 
