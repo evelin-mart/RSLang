@@ -1,22 +1,12 @@
 import { Middleware } from '@reduxjs/toolkit';
-import { UserTokens } from '../users/interface';
 import { updateTokens, UserData } from 'entities/user';
 import { getUserTokens } from '../users';
 import { store } from 'app/store';
 import { deauthorize } from 'entities/user';
 import { BASE_URL } from 'shared/config';
+import { HttpError } from './errors';
 
-export class HttpError extends Error {
-  public status: number;
-  public error: string | Object;
-
-  constructor(res: Response, error: string | Object) {
-    super(`Http error: ${res.statusText}`);
-    this.status = res.status;
-    this.error = error;
-  } 
-}
-
+const authorizationErrors = [401, 402, 403];
 let authorizedUserData: UserData;
 
 export const saveTokensMiddleware: Middleware = (store) => (next) => (action) => {
@@ -24,9 +14,7 @@ export const saveTokensMiddleware: Middleware = (store) => (next) => (action) =>
     const user = action.payload as UserData;
     authorizedUserData = user;
   } else if (action.type === 'user/updateTokens') {
-    const { token, refreshToken } = action.payload as UserTokens;
-    authorizedUserData.token = token;
-    authorizedUserData.refreshToken = refreshToken;
+    authorizedUserData = { ...authorizedUserData, ...action.payload };
   }
 
   return next(action);
@@ -48,34 +36,41 @@ export const getResponseBody = async (res: Response): Promise<string | Object> =
 
 export const processRequest = async <T>(url: string, requestInit: RequestInit = {}): Promise<T> => {
   const res = await fetch(url, requestInit);
-
-  if (!res.ok) {     
+  if (!res.ok) {
     const error = await getResponseBody(res);
     throw new HttpError(res, error);
   }
   return (await getResponseBody(res)) as T;
 }
 
-const getUrl = () => {
+const getAuthorizedRequestUrl = () => {
   const { userId } = authorizedUserData;
   return `${BASE_URL}/users/${userId}`;
 }
 
-export const processAuthorizedRequest = async <T>(requestInit: RequestInit = {}): Promise<T> => {
+export const processTokensUpdate = async (): Promise<boolean> => {
+  try {
+    const { userId, refreshToken } = authorizedUserData;
+    const newTokens = await getUserTokens(userId, refreshToken);
+    store.dispatch(updateTokens(newTokens));
+    return true;
+  } catch (error) {
+    store.dispatch(deauthorize());
+    throw error;
+  }
+}
+
+export const processAuthorizedRequest = async <T>(requestInit: RequestInit = {}, urlPath: string = ''): Promise<T> => {
   try {
     const { token } = authorizedUserData;
-    return processRequest<T>(getUrl(), withToken(token, requestInit));
+    const url = `${getAuthorizedRequestUrl()}${urlPath}`;
+    return await processRequest<T>(url, withToken(token, requestInit));
     
   } catch (error) {
-    if (error instanceof HttpError && [401, 402, 403].includes(error.status)) {
-      try {
-        const { userId, refreshToken } = authorizedUserData;
-        const newTokens = await getUserTokens(userId, refreshToken);
-        store.dispatch(updateTokens(newTokens));
-        return processAuthorizedRequest(requestInit);
-      } catch {
-        store.dispatch(deauthorize());
-      }
+    if (error instanceof HttpError
+        && authorizationErrors.includes(error.status)
+        && await processTokensUpdate()) {
+      return await processAuthorizedRequest<T>(requestInit, urlPath);
     }
     throw error;
   }

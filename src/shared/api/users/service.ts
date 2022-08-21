@@ -5,7 +5,7 @@ import {
   UserTokens,
   UserRegistrationResult,
   UserRegistrationData } from './interface';
-import { processRequest, processAuthorizedRequest, withToken, HttpError } from '../lib';
+import { processRequest, processAuthorizedRequest, withToken } from '../lib';
 import { UserData } from 'entities/user';
 
 const url = `${BASE_URL}/users`;
