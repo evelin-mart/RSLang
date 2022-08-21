@@ -1,14 +1,14 @@
 export const githubLinks = [
   { 
-    href: '#', 
-    text: 'GithubLink1'
+    href: 'https://github.com/evelin-mart', 
+    text: 'Evelin Martinova'
   },
   { 
-    href: '#', 
-    text: 'GithubLink2'
+    href: 'https://github.com/tretyakov-a', 
+    text: 'Alexander Tretyakov'
   },
   { 
-    href: '#', 
-    text: 'GithubLink3'
+    href: 'https://github.com/Color-zebra', 
+    text: 'Dmitriy Romanenkov'
   },
 ];

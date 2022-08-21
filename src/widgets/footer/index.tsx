@@ -14,7 +14,7 @@ export const Footer = () => {
       <List className={styles.githubLinksList}>
         {githubLinks.map(({ href, text }, i) => (
           <ListItem key={i}>
-            <Link href={href}>{text}</Link>
+            <Link href={href} className={styles.githubLink}>{text}</Link>
           </ListItem>
         ))}
       </List>
