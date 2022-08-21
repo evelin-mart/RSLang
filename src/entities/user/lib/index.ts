@@ -1,32 +1,19 @@
 import { Middleware } from "@reduxjs/toolkit";
-import { RootState } from "app/store";
-import { isUserRegistrationResult, UserTokens } from "shared/api/users";
-import { UserData } from "../model";
+import { isUserRegistrationResult } from "shared/api/users";
 
-let isAuthorized: boolean;
-
-export const handleAuthorizationChange = ({ user }: RootState) => {
-  const prevValue = isAuthorized;
-  isAuthorized = user.isAuthorized;
-
-  if (prevValue !== isAuthorized) {
-    if (isAuthorized) {
-      localStorage.setItem('user', JSON.stringify(user.data));
-    } else {
-      localStorage.removeItem('user');
-    }
-  }
-}
-
-export const saveDataToStoreMiddleware: Middleware = (store) => (next) => (action) => {
+export const saveDataToStoreMiddleware: Middleware = () => (next) => (action) => {
   let newData = null;
-  
-  if (action.type === 'user/updateTokens') {
+  if (action.type === 'user/authorize') {
+    localStorage.setItem('user', JSON.stringify(action.payload));
+  } else if (action.type === 'user/deauthorize') {
+    localStorage.removeItem('user');
+  } else if (action.type === 'user/updateTokens') {
     newData = action.payload;
-  } else if (action.type === 'user/submitForm/fulfilled') {
-    if (isUserRegistrationResult(action.payload)) {
-      newData = action.payload;
-    }
+  } else if (
+    action.type === 'user/submitForm/fulfilled'
+    && isUserRegistrationResult(action.payload)
+  ) {
+    newData = action.payload;
   }
   
   if (newData !== null) {

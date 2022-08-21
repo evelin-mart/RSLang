@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { FormLoadingError, isUserData, UserData, UserState } from './interface';
 import * as usersApi from 'shared/api/users';
-import { handleAuthorizationChange } from '../lib';
-import { RootState, AppDispatch, AsyncThunkConfig } from 'app/store';
+import { AppDispatch, AsyncThunkConfig } from 'app/store';
 import { defaultLoadingState } from 'shared/lib';
 import { toggleAuthModal } from 'pages/user/auth-modal/model';
 import { HttpError } from 'shared/api/lib';
@@ -25,19 +24,22 @@ const initialState: UserState = {
 }
 
 export const loadUserFromStorage = createAsyncThunk<void, void, AsyncThunkConfig>(
-  'user/loadFromStore', 
+  'user/loadFromStorage', 
   async (
-    _, { dispatch, getState }
+    _, { dispatch }
   ) => {
-  const userRawData = localStorage.getItem('user');
-  handleAuthorizationChange(getState());
-  if (userRawData) {
-    const userData: UserData = JSON.parse(userRawData);
-    if (isUserData(userData)) {
-      const { refreshToken, userId } = userData;
-      const newTokens = await usersApi.getUserTokens(userId, refreshToken);
-      dispatch(authorize({ ...userData, ...newTokens }));
+  try {    
+    const userRawData = localStorage.getItem('user');
+    if (userRawData) {
+      const userData: UserData = JSON.parse(userRawData);
+      if (isUserData(userData)) {
+        const { refreshToken, userId } = userData;
+        const newTokens = await usersApi.getUserTokens(userId, refreshToken);
+        dispatch(authorize({ ...userData, ...newTokens }));        
+      }
     }
+  } catch (error) {
+    dispatch(deauthorize());
   }
 });
 
@@ -50,64 +52,49 @@ export const submitForm = createAsyncThunk<FormLoadingError | UserRegistrationRe
     { dispatch, getState }
   ) => {
   const { formType, show } = getState().authModal;
-  const error = !show
-    ? await updateUser(formData)
-    : formType === 'registration' && usersApi.isUserRegistrationData(formData)
-      ? await registerUser(dispatch, formData)
-      : await loginUser(dispatch, formData);
+  let submitFormError: FormLoadingError = null;
+  try {
+    if (!show) {
+      return await updateUser(formData)
+    } else if (formType === 'registration' && usersApi.isUserRegistrationData(formData)) {
+      await registerUser(dispatch, formData)
+    } else {
+      await loginUser(dispatch, formData);
+    }
+  } catch (err) {
+    if (!(err instanceof HttpError)) throw err;
+    if (formType === 'login') return 'Incorrect login or password';
+    const { error } = err;
+    submitFormError = typeof error === 'object'
+      ? error as usersApi.UserRegistrationError
+      : error as string;
+  }
+  if (show && !submitFormError) dispatch(toggleAuthModal(false));
 
-  if (show && !error) dispatch(toggleAuthModal(false));
-  return error;
+  return submitFormError;
 });
 
 const loginUser = async (dispatch: AppDispatch, formData: usersApi.UserLoginData) => {
-  let error: FormLoadingError = null;
-  try {
-    const loginResult = await usersApi.loginUser(formData);
-    const { email } = formData;
-    const { token, refreshToken, userId, name } = loginResult;
-    const userData: UserData = { token, refreshToken, userId, name, email };
-    dispatch(authorize(userData));
-  } catch (err) {
-    if (!(err instanceof HttpError)) throw err;
-    error = 'Incorrect login or password';
-  }
-  return error;
+  const loginResult = await usersApi.loginUser(formData);
+  const { email } = formData;
+  const { token, refreshToken, userId, name } = loginResult;
+  const userData: UserData = { token, refreshToken, userId, name, email };
+  dispatch(authorize(userData));
 }
 
 const registerUser = async (dispatch: AppDispatch, formData: usersApi.UserRegistrationData) => {
-  let registerError: FormLoadingError = null;
-  try {
-    await usersApi.createUser(formData);
-    await loginUser(dispatch, formData);
-  } catch (err) {
-    if (!(err instanceof HttpError)) throw err;
-    const { error } = err;
-    registerError = typeof error === 'object'
-      ? error as usersApi.UserRegistrationError
-      : error as string;
-  }
-  return registerError;
+  await usersApi.createUser(formData);
+  await loginUser(dispatch, formData);
 }
 
 const updateUser = async (formData: Partial<usersApi.UserRegistrationData>) => {
-  let registerError: FormLoadingError = null;
-  try {
-    const keys = Object.keys(formData) as (keyof usersApi.UserRegistrationData)[];
-    const dataToUpdate = keys.reduce((acc, key) => {
-      return formData[key] !== ''
-        ? { ...acc, [key]: formData[key] }
-        : acc;
-    }, {});
-    return await usersApi.updateUser(dataToUpdate);
-  } catch (err) {
-    if (!(err instanceof HttpError)) throw err;
-    const { error } = err;
-    registerError = typeof error === 'object'
-      ? error as usersApi.UserRegistrationError
-      : error as string;
-  }
-  return registerError;
+  const keys = Object.keys(formData) as (keyof usersApi.UserRegistrationData)[];
+  const dataToUpdate = keys.reduce((acc, key) => {
+    return formData[key] !== ''
+      ? { ...acc, [key]: formData[key] }
+      : acc;
+  }, {});
+  return await usersApi.updateUser(dataToUpdate);
 }
 
 export const getUser = createAsyncThunk<UserData, void, AsyncThunkConfig>('user/get', async () => {
@@ -116,7 +103,7 @@ export const getUser = createAsyncThunk<UserData, void, AsyncThunkConfig>('user/
 });
 
 export const deleteUser = createAsyncThunk<void, void, AsyncThunkConfig>(
-  'user/get', async (_, { dispatch }) => {
+  'user/delete', async (_, { dispatch }) => {
   await usersApi.deleteUser();
   dispatch(deauthorize());
 });
