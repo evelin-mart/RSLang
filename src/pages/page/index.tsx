@@ -16,7 +16,7 @@ export const Page = (props: PageProps) => {
   return (
     <>
       <ResponsiveAppBar />
-      <Container maxWidth={'xl'}>
+      <Container sx={{p: 2}} maxWidth={'xl'}>
         <main>
           <Typography component="h2" variant="h4" marginTop={2} marginBottom={2}>
             {title}

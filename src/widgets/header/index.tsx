@@ -14,8 +14,8 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { AppLogo } from 'shared/components/app-logo';
 import { HeaderMenu } from 'widgets/header-menu';
-import { palette } from '@mui/system';
 import { Drawer } from '@mui/material';
+import styles from './styles.module.scss';
 
 export const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -38,8 +38,8 @@ export const ResponsiveAppBar = () => {
 
   return (
     <AppBar position="static" color='secondary'>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
+      <Container maxWidth="xl" className={styles.header}>
+        <Toolbar disableGutters sx={{height: 1}}>
           <AppLogo isMobile={false}/>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
