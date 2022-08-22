@@ -4,15 +4,13 @@
   height: 80px;
 }
 
-.ldsDualRing:after {
+.ldsDualRing::after {
   content: " ";
   display: block;
   width: 32px;
   height: 32px;
   margin: 8px;
   border-radius: 50%;
-  border: 6px solid var(--primary-color-1);
-  border-color: var(--primary-color-1) transparent var(--primary-color-1) transparent;
   animation: ldsDualRing 1.2s linear infinite;
 }
 

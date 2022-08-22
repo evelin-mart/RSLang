@@ -8,12 +8,13 @@ import * as usersApi from 'shared/api/users';
 import { submitForm } from 'entities/user';
 import { defaultInputsState, defaulValidationState } from './model';
 import { FormErrors } from './ui';
+import { STATUS } from 'shared/constants';
 
 export const RegistrationForm = () => {
   const [ inputsState, setInputsState ] = React.useState(defaultInputsState);
   const [ inputsErrors, setInputsErrors ] = React.useState(defaulValidationState);
   const { requestState, error } = useAppSelector((state) => state.user.formLoading);
-  const loading = requestState.status === 'loading';
+  const loading = requestState.status === STATUS.LOADING;
 
   const dispatch: AppDispatch = useDispatch();
 

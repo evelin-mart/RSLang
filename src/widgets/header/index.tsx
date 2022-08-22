@@ -1,4 +1,3 @@
-import styles from './styles.module.scss';
 import { HeaderMenu } from 'widgets/header-menu';
 import { UserToolbar } from 'entities/user';
 import { AppLogo } from 'shared/components/app-logo';
@@ -18,6 +17,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Drawer } from '@mui/material';
+import styles from './styles';
 
 export const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -39,18 +39,17 @@ export const ResponsiveAppBar = () => {
   };
 
   return (
-    <Box component='header' className={styles.header}>
-      <div className={classNames('container', styles.wrapper)}>
-        <AppBar position="static" color='secondary'>
-        <Toolbar disableGutters sx={{height: 1}}>
+    <AppBar position="static" color="primary" sx={{ height: "var(--header-height)" }}>
+      <Container maxWidth="lg" sx={{ height: "100%" }}>
+        <Toolbar disableGutters sx={{height: 1, width: "100%"}}>
           <AppLogo isMobile={false}/>
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="primary"
+              sx={{ color: "primary.contrastText" }}
             >
               <MenuIcon />
             </IconButton>
@@ -64,19 +63,18 @@ export const ResponsiveAppBar = () => {
                 bgcolor: 'primary'
               }}
             >
-              <div style={{height: '100%', display: 'flex', alignItems: 'center', padding: '20px'}}>
+              <Box sx={styles.headerMenuBoxColumn}>
                 <HeaderMenu isColumn={true}/>
-              </div>
+              </Box>
             </Drawer>
           </Box>
           <AppLogo isMobile={true}/>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={styles.headerMenuBox}>
             <HeaderMenu isColumn={false}/>
           </Box>
-          <div style={{color: 'red', fontSize: '12px', width: '50px'}}>Auth placeholder</div>
+          <UserToolbar />
         </Toolbar>
+      </Container>
     </AppBar>
-      </div>
-    </Box>
   );
 };

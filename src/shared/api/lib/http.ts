@@ -1,9 +1,8 @@
 import { Middleware } from '@reduxjs/toolkit';
 import { updateTokens, UserData } from 'entities/user';
-import { getUserTokens } from '../users';
+import { getUserTokens, usersUrl } from '../users';
 import { store } from 'app/store';
 import { deauthorize } from 'entities/user';
-import { BASE_URL } from 'shared/config';
 import { HttpError } from './errors';
 
 const authorizationErrors = [401, 402, 403];
@@ -45,7 +44,7 @@ export const processRequest = async <T>(url: string, requestInit: RequestInit = 
 
 const getAuthorizedRequestUrl = () => {
   const { userId } = authorizedUserData;
-  return `${BASE_URL}/users/${userId}`;
+  return `${usersUrl}/${userId}`;
 }
 
 export const processTokensUpdate = async (): Promise<boolean> => {

@@ -18,14 +18,14 @@ export const Page = (props: PageProps) => {
     <>
       <ResponsiveAppBar />
       <main>
-        <div className='container'>
+        <Container maxWidth="lg">
           <Typography variant='h6' marginTop={1} marginBottom={2}>
             {title}
           </Typography>
           <Grid>
             {children}
           </Grid>
-        </div>
+        </Container>
       </main>
       {isFooter && <Footer />}
     </>

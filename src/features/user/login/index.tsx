@@ -7,12 +7,13 @@ import { AppDispatch, useAppSelector } from 'app/store';
 import { UserLoginData } from 'shared/api/users';
 import { submitForm } from 'entities/user';
 import { defaultInputsState, defaulValidationState} from './model';
+import { STATUS } from 'shared/constants';
 
 export const LoginForm = () => {
   const [ inputsState, setInputsState ] = React.useState(defaultInputsState);
   const [ inputsErrors, setInputsErrors ] = React.useState(defaulValidationState);
   const { requestState, error } = useAppSelector((state) => state.user.formLoading);
-  const loading = requestState.status === 'loading';
+  const loading = requestState.status === STATUS.LOADING;
   const errorText = requestState.error || error as string;
   const dispatch: AppDispatch = useDispatch();
 

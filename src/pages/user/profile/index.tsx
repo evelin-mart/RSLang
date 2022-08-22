@@ -8,7 +8,7 @@ import { Refresh as RefreshIcon, Delete as DeleteIcon } from '@mui/icons-materia
 import * as usersApi from 'shared/api/users';
 import { LoadingButton } from '@mui/lab';
 import { FormErrors } from 'features/user/registration/ui';
-import { PAGES } from 'shared/constants';
+import { PAGES, STATUS } from 'shared/constants';
 
 export const ProfilePage = () => {
   const { data: { name, email } } = useUser();
@@ -17,7 +17,7 @@ export const ProfilePage = () => {
     password: '',
   });
   const { requestState, error } = useAppSelector((state) => state.user.formLoading);
-  const loading = requestState.status === 'loading';
+  const loading = requestState.status === STATUS.LOADING;
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -46,7 +46,7 @@ export const ProfilePage = () => {
 
   return (
     <Page pageName={PAGES.PROFILE} title="Личный кабинет">
-      <Box sx={{ width: "100%", display: "flex" }}>
+      <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
         <Box
           sx={{ flexBasis: 400, rowGap: 3, display: "flex", flexDirection: "column" }}
           component="form"
