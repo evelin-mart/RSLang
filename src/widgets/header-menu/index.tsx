@@ -2,28 +2,15 @@ import React from 'react';
 import styles from './styles.module.scss';
 import { NavLink } from 'react-router-dom';
 import { Box, List, ListItem } from '@mui/material';
+import { links } from 'shared/constants/menu-links';
 
-const links: { title: string, href: string }[] = [
-  {
-    title: 'Учебник',
-    href: '/textbook',
-  },
-  {
-    title: 'Статистика',
-    href: '/statistics',
-  },
-  {
-    title: 'Аудиовызов',
-    href: '/game/audio',
-  },
-  {
-    title: 'Спринт',
-    href: '/game/sprint',
-  },
-]
+export const HeaderMenu = (props: {isColumn: boolean}) => {
+  const { headerMenuItemLink, active, headerMenu, column } = styles;
 
-export const HeaderMenu = () => {
-  const { headerMenuItemLink, active, headerMenu } = styles;
+  const checkDirection = (isColumn: boolean): string => {
+    return isColumn 
+    ? `${headerMenu} ${column}`
+    : headerMenu}
 
   const checkActive = ({ isActive }: { isActive: boolean }) => isActive
     ? `${headerMenuItemLink} ${active}`
@@ -37,7 +24,7 @@ export const HeaderMenu = () => {
 
   return (
     <Box component="nav">
-      <List className={headerMenu}>
+      <List className={checkDirection(props.isColumn)}>
         {linksRendered}
       </List>
     </Box>

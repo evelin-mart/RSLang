@@ -1,7 +1,8 @@
 import { Typography, Grid } from '@mui/material';
+import Container from '@mui/material/Container';
 import React from 'react';
+import { ResponsiveAppBar } from 'widgets/header';
 import { Footer } from 'widgets/footer';
-import { Header } from 'widgets/header';
 import { PAGES } from '../../shared/constants';
 
 export type PageProps = {
@@ -15,13 +16,15 @@ export const Page = (props: PageProps) => {
   const isFooter = pageName !== PAGES.GAME;
   return (
     <>
-      <Header />
+      <ResponsiveAppBar />
       <main>
         <div className='container'>
           <Typography variant='h6' marginTop={1} marginBottom={2}>
             {title}
           </Typography>
-          <Grid>{children}</Grid>
+          <Grid>
+            {children}
+          </Grid>
         </div>
       </main>
       {isFooter && <Footer />}
