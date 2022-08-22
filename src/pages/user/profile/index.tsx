@@ -45,7 +45,7 @@ export const ProfilePage = () => {
 
   return (
     <Page pageClassName="profile" title="Личный кабинет">
-      <Box sx={{ width: "100%", display: "flex" }}>
+      <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
         <Box
           sx={{ flexBasis: 400, rowGap: 3, display: "flex", flexDirection: "column" }}
           component="form"

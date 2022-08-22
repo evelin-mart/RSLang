@@ -1,18 +1,24 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-import { Box, TextField, Typography } from '@mui/material';
-import { PersonAdd as PersonAddIcon } from '@mui/icons-material';
+import { Avatar, Box, IconButton, TextField, Typography } from '@mui/material';
+import {
+  Person as PersonIcon,
+  PersonAdd as PersonAddIcon,
+  AddAPhoto as AddAPhotoIcon
+} from '@mui/icons-material';
 import { AppDispatch, useAppSelector } from 'app/store';
 import * as usersApi from 'shared/api/users';
 import { submitForm } from 'entities/user';
-import { defaultInputsState, defaulValidationState } from './model';
+import { apiUrl, defaultInputsState, defaulValidationState } from './model';
 import { FormErrors } from './ui';
 
 export const RegistrationForm = () => {
+  const [ selectedFile, setSelectedFile ] = React.useState<File | null>(null);
   const [ inputsState, setInputsState ] = React.useState(defaultInputsState);
   const [ inputsErrors, setInputsErrors ] = React.useState(defaulValidationState);
   const { requestState, error } = useAppSelector((state) => state.user.formLoading);
+  const fileUploadRef = useRef<HTMLInputElement>(null);
   const loading = requestState.status === 'loading';
 
   const dispatch: AppDispatch = useDispatch();
@@ -26,6 +32,27 @@ export const RegistrationForm = () => {
     setInputsState({ ...inputsState, [key]: e.target.value });
     setInputsErrors({ ...inputsErrors, [key]: e.target.value === ''});
   };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const el = e.target;
+    if (el.files !== null) {
+      setSelectedFile(el.files[0]);
+    }
+
+    if (selectedFile === null) return;
+    const formData = new FormData();
+    
+    formData.append('image', selectedFile);
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      body: formData,
+    });
+    const data = await response.json();
+  }
+
+  const handleUploadClick = () => {
+    fileUploadRef.current?.click();
+  }
 
   const errorText = error
     ? typeof error === 'string'
@@ -43,6 +70,30 @@ export const RegistrationForm = () => {
       {errorText && <Typography sx={{ color: "error.light" }}>
         {errorText}
       </Typography>}
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Box sx={{ position: "relative" }}>
+          <Avatar sx={{ width: 120, height: 120 }} src={selectedFile ? URL.createObjectURL(selectedFile) : ''}>
+            <PersonIcon sx={{ width: 100, height: 100 }} />
+          </Avatar>
+          <input
+            style={{ display: "none"}}
+            ref={fileUploadRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange} />
+          <IconButton
+            color="primary"
+            sx={{
+              position: "absolute",
+              right: 0,
+              bottom: 0,
+              bgcolor: "action.focus"
+            }}
+            onClick={handleUploadClick}>
+            <AddAPhotoIcon/>
+          </IconButton>
+        </Box>
+      </Box>
       <TextField
         required
         type="text"
