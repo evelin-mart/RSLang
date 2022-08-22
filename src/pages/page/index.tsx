@@ -1,5 +1,4 @@
 import { Typography, Grid } from '@mui/material';
-import Container from '@mui/material/Container';
 import React from 'react';
 import { ResponsiveAppBar } from 'widgets/header';
 import { Footer } from 'widgets/footer';
@@ -14,6 +13,7 @@ export type PageProps = {
 export const Page = (props: PageProps) => {
   const { pageName, title, children } = props;
   const isFooter = pageName !== PAGES.GAME;
+  
   return (
     <>
       <ResponsiveAppBar />
