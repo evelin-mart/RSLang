@@ -12,7 +12,24 @@ export const Footer = () => {
           <Typography variant='body1' className={styles.description}>
             © 2022 RSLang
           </Typography>
-          <Stack direction='row' spacing={1}></Stack>
+          <Stack direction='row' spacing={1} sx={{ 'margin-top': 0 }}>
+            <a
+              href='https://github.com/Color-zebra/RSLang/tree/main'
+              target='_blank'
+              rel='noreferrer'
+              title='source code'
+            >
+              <div className={styles.github}></div>
+            </a>
+            <a
+              href='https://www.youtube.com/'
+              target='_blank'
+              rel='noreferrer'
+              title='presentation'
+            >
+              <div className={styles.youtube}></div>
+            </a>
+          </Stack>
         </Stack>
         <List className={styles.githubLinksList}>
           {githubLinks.map(({ href, text }, i) => (
