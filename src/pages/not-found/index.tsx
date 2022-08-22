@@ -1,9 +1,9 @@
-import React from 'react';
 import { Page } from 'pages/page';
+import { PAGES } from '../../shared/constants';
 
 export const NotFoundPage = () => {
   return (
-    <Page pageClassName="not-found page" title="Такой страницы нет">
+    <Page pageName={PAGES.NOT_FOUND} title="Такой страницы нет">
       404
     </Page>
   )

@@ -1,3 +1,9 @@
+import styles from './styles.module.scss';
+import { HeaderMenu } from 'widgets/header-menu';
+import { UserToolbar } from 'widgets/user-toolbar';
+import { AppLogo } from 'shared/components/app-logo';
+import { Box } from '@mui/material';
+import classNames from 'classnames';
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -37,8 +43,9 @@ export const ResponsiveAppBar = () => {
   };
 
   return (
-    <AppBar position="static" color='secondary'>
-      <Container maxWidth="xl" className={styles.header}>
+    <Box component='header' className={styles.header}>
+      <div className={classNames('container', styles.wrapper)}>
+        <AppBar position="static" color='secondary'>
         <Toolbar disableGutters sx={{height: 1}}>
           <AppLogo isMobile={false}/>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -71,38 +78,9 @@ export const ResponsiveAppBar = () => {
             <HeaderMenu isColumn={false}/>
           </Box>
           <div style={{color: 'red', fontSize: '12px', width: '50px'}}>Auth placeholder</div>
-
-          {/* <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box> */}
         </Toolbar>
-      </Container>
     </AppBar>
+      </div>
+    </Box>
   );
 };

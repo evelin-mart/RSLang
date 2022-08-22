@@ -1,0 +1,16 @@
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.listItem {
+  flex-basis: 32%;
+  @media (max-width: 1056px) {
+    flex-basis: 40%;
+  }
+  @media (max-width: 768px) {
+    flex-basis: 80%;
+  }
+}

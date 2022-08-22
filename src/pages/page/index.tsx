@@ -1,32 +1,33 @@
 import { Typography, Grid } from '@mui/material';
 import Container from '@mui/material/Container';
 import React from 'react';
-import { Footer } from 'widgets/footer';
 import { ResponsiveAppBar } from 'widgets/header';
+import { Footer } from 'widgets/footer';
+import { PAGES } from '../../shared/constants';
 
 export type PageProps = {
-  pageClassName: string;
+  pageName: PAGES;
   title: string;
   children?: React.ReactNode;
 };
 
 export const Page = (props: PageProps) => {
-  const { pageClassName, title, children } = props;
-  const isFooter = pageClassName !== 'game';
+  const { pageName, title, children } = props;
+  const isFooter = pageName !== PAGES.GAME;
   return (
     <>
       <ResponsiveAppBar />
-      <Container sx={{p: 2}} maxWidth={'xl'}>
-        <main>
-          <Typography component="h2" variant="h4" marginTop={2} marginBottom={2}>
+      <main>
+        <div className='container'>
+          <Typography variant='h6' marginTop={1} marginBottom={2}>
             {title}
           </Typography>
           <Grid>
             {children}
           </Grid>
-        </main>
-      </Container>
+        </div>
+      </main>
       {isFooter && <Footer />}
     </>
-  )
-}
+  );
+};
