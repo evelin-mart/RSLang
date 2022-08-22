@@ -27,7 +27,7 @@ export const withToken = (token: string, requestInit: RequestInit = {}) => {
   }}
 }
 
-export const getResponseBody = async (res: Response): Promise<string | Object> => {
+export const getResponseBody = async (res: Response): Promise<string | unknown> => {
   const contentType = res.headers.get('Content-Type');
   if (!contentType) return '';
   const isJson = contentType?.includes('application/json');
@@ -60,10 +60,10 @@ export const processTokensUpdate = async (): Promise<boolean> => {
   }
 }
 
-export const processAuthorizedRequest = async <T>(requestInit: RequestInit = {}, urlPath: string = ''): Promise<T> => {
+export const processAuthorizedRequest = async <T>(requestInit: RequestInit = {}, urlPath?: string): Promise<T> => {
   try {
     const { token } = authorizedUserData;
-    const url = `${getAuthorizedRequestUrl()}${urlPath}`;
+    const url = `${getAuthorizedRequestUrl()}${urlPath || ''}`;
     return await processRequest<T>(url, withToken(token, requestInit));
     
   } catch (error) {

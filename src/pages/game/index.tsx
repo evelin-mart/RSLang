@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import { Page } from 'pages/page';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Page } from 'pages/page';
+import { PAGES } from '../../shared/constants';
 
 const games: Record<string, { title: string }> = {
   audio: {
@@ -17,14 +18,14 @@ export const GamePage = () => {
 
   useEffect(() => {
     if (gameId !== undefined && !games[gameId]) {
-      navigate("/*", { replace: true });
+      navigate('/*', { replace: true });
     }
-  }, [gameId]);
+  }, [gameId, navigate]);
 
   const title = (gameId && games[gameId]) ? games[gameId].title : '';
 
   return (
-    <Page pageClassName="game" title={title}>
+    <Page pageName={PAGES.GAME} title={title}>
       <div>Game: {gameId}</div>
     </Page>
   )

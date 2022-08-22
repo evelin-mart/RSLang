@@ -14,3 +14,14 @@ export interface Word {
   textMeaningTranslate: string;
   textExampleTranslate: string;
 }
+
+export interface UserWord {
+  difficulty: string;
+  optional: {
+    totalUsed: number;
+    guessed: number;
+    chain: number;
+    isLearned: boolean;
+    isHard: boolean;
+  };
+}

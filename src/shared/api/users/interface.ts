@@ -43,7 +43,7 @@ export const isUserRegistrationResult = (obj: unknown): obj is UserRegistrationR
   return (
     obj !== null 
     && typeof obj === 'object' 
-    && props.every((prop) => obj.hasOwnProperty(prop))
+    && props.every((prop) => Object.prototype.hasOwnProperty.call(obj, prop))
   );
 }
 
@@ -64,6 +64,6 @@ export const isUserRegistrationData = (obj: unknown): obj is UserRegistrationDat
   return (
     obj !== null 
     && typeof obj === 'object' 
-    && obj.hasOwnProperty('name')
+    && Object.prototype.hasOwnProperty.call(obj, 'name')
   );
 }

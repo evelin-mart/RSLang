@@ -16,7 +16,7 @@ export const isUserData = (data: unknown): data is UserData => {
   return (
     data !== null
     && typeof data === 'object'
-    && requiredProps.every((prop) => data.hasOwnProperty(prop))
+    && requiredProps.every((prop) => Object.prototype.hasOwnProperty.call(data, prop))
   );
 }
 

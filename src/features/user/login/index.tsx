@@ -44,7 +44,6 @@ export const LoginForm = () => {
         value={inputsState.email}
         onChange={handleChange('email')}
         error={inputsErrors.email}
-        autoFocus
       />
       <TextField
         required

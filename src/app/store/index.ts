@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { wordsSlice } from 'entities/word';
 import { authModalSlice } from 'pages/user/auth-modal/model';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
-import { userSlice, loadUserFromStorage, saveDataToStoreMiddleware } from 'entities/user';
+import { userSlice, saveDataToStoreMiddleware } from 'entities/user';
 import { saveTokensMiddleware } from 'shared/api/lib';
 
 export const store = configureStore({
@@ -18,8 +18,6 @@ export const store = configureStore({
     )
   }
 });
-
-// store.dispatch(loadUserFromStorage());
 
 export type RootState = ReturnType<typeof store.getState>;
 

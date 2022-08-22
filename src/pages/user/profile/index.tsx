@@ -8,6 +8,7 @@ import { Refresh as RefreshIcon, Delete as DeleteIcon } from '@mui/icons-materia
 import * as usersApi from 'shared/api/users';
 import { LoadingButton } from '@mui/lab';
 import { FormErrors } from 'features/user/registration/ui';
+import { PAGES } from 'shared/constants';
 
 export const ProfilePage = () => {
   const { data: { name, email } } = useUser();
@@ -44,7 +45,7 @@ export const ProfilePage = () => {
     : error;
 
   return (
-    <Page pageClassName="profile" title="Личный кабинет">
+    <Page pageName={PAGES.PROFILE} title="Личный кабинет">
       <Box sx={{ width: "100%", display: "flex" }}>
         <Box
           sx={{ flexBasis: 400, rowGap: 3, display: "flex", flexDirection: "column" }}
@@ -61,7 +62,6 @@ export const ProfilePage = () => {
             placeholder="Name"
             value={inputsState.name}
             onChange={handleChange('name')}
-            autoFocus
           />
           <TextField
             type="email"

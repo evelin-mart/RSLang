@@ -159,7 +159,6 @@ export const userSlice = createSlice({
         state.formLoading.requestState.error = action.error.message || '';
       })
       .addCase(getUser.fulfilled, (state, action) => {
-        const result = action.payload;
         state.formLoading.requestState.status = 'succeeded';
       })
   }

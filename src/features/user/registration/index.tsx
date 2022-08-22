@@ -51,7 +51,6 @@ export const RegistrationForm = () => {
         value={inputsState.name}
         onChange={handleChange('name')}
         error={inputsErrors.name}
-        autoFocus
       />
       <TextField
         required
