@@ -19,7 +19,7 @@ export const store = configureStore({
   }
 });
 
-store.dispatch(loadUserFromStorage());
+// store.dispatch(loadUserFromStorage());
 
 export type RootState = ReturnType<typeof store.getState>;
 
