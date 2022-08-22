@@ -1,6 +1,13 @@
+import { useTheme } from '@mui/material';
 import './styles.scss';
 
 export const RssLogo = () => {
+
+  const { palette: { primary } } = useTheme();
+  const svgStyle = {
+    color: primary.contrastText,
+    fill: primary.contrastText,
+  }
   return (
     <a
       className="rsschool-logo"
@@ -10,6 +17,7 @@ export const RssLogo = () => {
       rel="noreferrer"
     >
       <svg
+        style={svgStyle}
         id="Layer_1"
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"

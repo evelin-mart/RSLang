@@ -3,7 +3,7 @@ import { baseUrl, STATUS } from '../../../shared/constants';
 import { Word } from './interface';
 
 export const fetchWords = createAsyncThunk('words/fetchWords', async () => {
-  const res = await fetch(`${baseUrl}words?group=0&page=0`);
+  const res = await fetch(`${baseUrl}/words?group=0&page=0`);
   return (await res.json()) as Word[];
 });
 
