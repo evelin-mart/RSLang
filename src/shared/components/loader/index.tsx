@@ -3,8 +3,10 @@ import React from 'react';
 import { Theme, Box } from '@mui/material';
 
 const ldsDualRing = {
-  border: ({ palette: { primary }}: Theme) => `6px solid ${primary}`,
-  borderColor: ({ palette: { primary }}: Theme) => `${primary} transparent ${primary} transparent`,
+  '&::after': {
+    border: ({ palette: { primary }}: Theme) => `6px solid ${primary}`,
+    borderColor: ({ palette: { primary }}: Theme) => `${primary} transparent ${primary} transparent`,
+  }
 }
 
 export const Loader = () => {
