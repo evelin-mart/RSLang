@@ -3,14 +3,12 @@ import { Grid, Typography, Container, Box } from '@mui/material';
 import { Advantages } from 'widgets/advantages';
 import { AboutTeam } from 'widgets/about-team';
 import styles from './styles.module.scss';
-import { ResponsiveAppBar } from 'widgets/header';
-import { Footer } from 'widgets/footer';
+import { PAGES } from 'shared/constants';
 
 export const MainPage = () => {
   return (
-    <>
-      <ResponsiveAppBar />
-      <Box component="main" sx={{ position: "relative" }}>
+    <Page pageName={PAGES.MAIN}>
+      <Box sx={{ position: "relative" }}>
         <div className={styles.background}></div>
         <Container maxWidth="lg">
           <Grid>
@@ -26,8 +24,7 @@ export const MainPage = () => {
           </Grid>
         </Container>
       </Box>
-      <Footer />
-    </>
+    </Page>
   )
 }
 

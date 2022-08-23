@@ -8,10 +8,6 @@ export const links: { title: string, href: string }[] = [
     href: '/textbook',
   },
   {
-    title: 'Статистика',
-    href: '/statistics',
-  },
-  {
     title: 'Аудиовызов',
     href: '/game/audio',
   },

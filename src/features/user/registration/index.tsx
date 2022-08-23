@@ -32,7 +32,7 @@ export const RegistrationForm = () => {
     ? typeof error === 'string'
       ? error
       : <FormErrors errors={error.error.errors}/>
-    : error;
+    : requestState.error || error;
 
   return (
     <Box

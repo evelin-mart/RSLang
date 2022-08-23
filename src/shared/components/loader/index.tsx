@@ -4,8 +4,10 @@ import { Theme, Box } from '@mui/material';
 
 const ldsDualRing = {
   '&::after': {
-    border: ({ palette: { primary }}: Theme) => `6px solid ${primary}`,
-    borderColor: ({ palette: { primary }}: Theme) => `${primary} transparent ${primary} transparent`,
+    border: ({ palette: { primary }}: Theme) => `6px solid ${primary.main}`,
+    borderColor: ({ palette: { primary }}: Theme) => (
+      `${primary.main} transparent ${primary.main} transparent`
+    ),
   }
 }
 

@@ -22,6 +22,7 @@ const initialState: UserState = {
     requestState: { ...defaultLoadingState },
     error: null,
   },
+  isHeaderMenuOpened: false,
 }
 
 export const loadUserFromStorage = createAsyncThunk<void, void, AsyncThunkConfig>(
@@ -70,7 +71,11 @@ export const submitForm = createAsyncThunk<FormLoadingError | UserRegistrationRe
       ? error as usersApi.UserRegistrationError
       : error as string;
   }
-  if (show && !submitFormError) dispatch(toggleAuthModal(false));
+  
+  if (show && !submitFormError) {
+    dispatch(toggleAuthModal(false));
+    dispatch(toggleHeaderMenu(false));
+  }
 
   return submitFormError;
 });
@@ -129,6 +134,9 @@ export const userSlice = createSlice({
       const { token, refreshToken } = action.payload;
       state.data.token = token;
       state.data.refreshToken = refreshToken;
+    },
+    toggleHeaderMenu(state, action: PayloadAction<boolean>) {
+      state.isHeaderMenuOpened = action.payload;
     }
   },
   extraReducers(builder) {
@@ -170,4 +178,5 @@ export const {
   deauthorize,
   resetForm,
   updateTokens,
+  toggleHeaderMenu,
 } = userSlice.actions;
