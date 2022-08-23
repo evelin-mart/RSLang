@@ -9,8 +9,6 @@ export interface UserData {
   refreshToken: string;
 }
 
-export type UserDataNoTokens = Omit<UserData, 'token' | 'refreshToken'>;
-
 export const isUserData = (data: unknown): data is UserData => {
   const requiredProps = ['userId', 'name', 'email', 'token', 'refreshToken'];
   return (
