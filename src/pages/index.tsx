@@ -1,4 +1,4 @@
-import { Navigate, Route, RouteProps, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { GamePage } from "./game";
 import { MainPage } from "./main";
 import { TextbookPage } from "./textbook";
@@ -22,7 +22,10 @@ export const Routing = () => {
       <Route path="/" element={<MainPage />}/>
       <Route path="/game/:gameId" element={<GamePage />}/>
       <Route path="/textbook" element={<TextbookPage />}/>
-      <Route path="/statistics" element={<StatisticsPage />}/>
+      <Route path="/statistics" element={
+        <ProtectedRoute>
+          <StatisticsPage />
+        </ProtectedRoute>}/>
       <Route path="/profile" element={
         <ProtectedRoute>
           <ProfilePage />

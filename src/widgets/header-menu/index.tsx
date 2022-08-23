@@ -3,18 +3,28 @@ import { Link, useLocation } from 'react-router-dom';
 import { matchPath } from 'react-router';
 import { Box, List, ListItem, Typography, useTheme } from '@mui/material';
 import { links } from 'shared/constants/menu-links';
+import { AppDispatch } from 'app/store';
+import { useDispatch } from 'react-redux';
 import styles from './styles';
+import { toggleHeaderMenu } from 'entities/user';
+import { useNavigate } from "react-router-dom";
 
 export const HeaderMenu = (props: {isColumn: boolean}) => {
+  const navigate = useNavigate();
+  const dispatch: AppDispatch = useDispatch();
   const { isColumn } = props;
   const { palette } = useTheme();
   const location = useLocation();
+
+  React.useEffect(() => {
+    dispatch(toggleHeaderMenu(false));
+  }, [location]);
 
   const linksRendered = links.map(({ title, href }, i) => {
     const isActive = matchPath(href, location.pathname) !== null;
     return (
       <ListItem key={i}>
-        <Link 
+        <Link
           style={{
             color: palette.primary.contrastText
           }}

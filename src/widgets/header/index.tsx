@@ -1,5 +1,5 @@
 import { HeaderMenu } from 'widgets/header-menu';
-import { UserToolbar } from 'entities/user';
+import { UserToolbar, useUser, toggleHeaderMenu } from 'entities/user';
 import { AppLogo } from 'shared/components/app-logo';
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
@@ -9,20 +9,41 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import { Box, Drawer } from '@mui/material';
 import styles from './styles';
+import { useScrollbarWidth } from 'shared/lib';
+import { AppDispatch, useAppSelector } from 'app/store';
+import { useDispatch } from 'react-redux';
 
 export const ResponsiveAppBar = () => {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  const { show: isAuthModalShowed } = useAppSelector((state) => state.authModal);
+  const { hasScrollBar, scrollbarWidth } = useScrollbarWidth();
+  const dispatch: AppDispatch = useDispatch();
+  const { isHeaderMenuOpened } = useUser();
+  const [ anchorElNav, setAnchorElNav ] = React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+    dispatch(toggleHeaderMenu(true));
     setAnchorElNav(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
+    dispatch(toggleHeaderMenu(false));
     setAnchorElNav(null);
   };
 
+  const menuOpened = {
+    position: "fixed",
+    top: 0,
+    pr: `${scrollbarWidth}px`,
+  }
+
   return (
-    <AppBar position="static" color="primary" sx={{ height: "var(--header-height)" }}>
+    <AppBar
+      position="static"
+      color="primary"
+      sx={[
+        { height: "var(--header-height)",  },
+        ((isHeaderMenuOpened && hasScrollBar) || isAuthModalShowed) && menuOpened,
+      ]}>
       <Container maxWidth="lg" sx={{ height: "100%" }}>
         <Toolbar disableGutters sx={{height: 1, width: "100%"}}>
           <AppLogo isMobile={false}/>
