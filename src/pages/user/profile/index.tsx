@@ -45,7 +45,7 @@ export const ProfilePage = () => {
     : error;
 
   return (
-    <Page pageName={PAGES.PROFILE} title="Личный кабинет">
+    <Page pageName={PAGES.PROFILE}>
       <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
         <Box
           sx={{ flexBasis: 400, rowGap: 3, display: "flex", flexDirection: "column" }}
