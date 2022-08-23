@@ -1,5 +1,5 @@
-// export const baseUrl = 'http://localhost:3000';
-export const baseUrl = 'https://react-learnwords-jsfe2022.herokuapp.com';
+export const baseUrl = 'http://localhost:3001';
+// export const baseUrl = 'https://react-learnwords-jsfe2022.herokuapp.com';
 
 export const makeAbsUrl = (url: string) => `${baseUrl}/${url}`;
 

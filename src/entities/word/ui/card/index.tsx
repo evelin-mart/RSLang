@@ -79,7 +79,12 @@ export const WordCard = (props: WordCardProps) => {
         />
       )}
 
-      <CardMedia component='img' image={makeAbsUrl(word.image)} alt={word.word} />
+      <CardMedia
+        component='img'
+        image={makeAbsUrl(word.image)}
+        alt={word.word}
+        sx={{ height: 200 }}
+      />
 
       <CardContent>
         <Typography variant='subtitle1'>Значение:</Typography>
@@ -97,7 +102,7 @@ export const WordCard = (props: WordCardProps) => {
       </CardContent>
 
       {userWord && (
-        <Stack direction='row' spacing={2} sx={{ justifyContent: 'center', pb: 2 }}>
+        <Stack direction='row' spacing={2} sx={{ justifyContent: 'center', pb: 2, mt: 'auto' }}>
           <Chip
             label={userWord.optional.isLearned ? 'в изученных' : 'в изученные'}
             onClick={toggleUserWord}

@@ -35,12 +35,12 @@ export const TextbookPage = () => {
 
   if (status === STATUS.SUCCESS) {
     const renderedItem = words.map((word) => (
-      <ListItem key={word.id} sx={{ p: 0 }} className={styles.listItem}>
+      <ListItem key={word.id} sx={{ p: 0, alignItems: 'stretch' }} className={styles.listItem}>
         <WordCard word={word} play={setSounds} />
       </ListItem>
     ));
     content = (
-      <List sx={{ p: 0, alignItems: 'flex-start' }} className={styles.list}>
+      <List sx={{ p: 0 }} className={styles.list}>
         {renderedItem}
       </List>
     );

@@ -13,12 +13,13 @@
 }
 
 .description {
-  padding: 1rem 0.5rem 0.5rem;
+  padding: 1rem 1rem 0;
+  color: white;
 }
 
 .github {
   background: url('../../shared/images/github.svg');
-  filter: invert(87%) sepia(1%) saturate(0%) hue-rotate(91deg) brightness(97%) contrast(87%);
+  filter: invert(87%) sepia(1%) saturate(0%) hue-rotate(91deg) brightness(102%) contrast(87%);
 }
 
 .youtube {
