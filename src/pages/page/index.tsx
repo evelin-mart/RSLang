@@ -1,8 +1,11 @@
-import { Typography, Grid, Container } from '@mui/material';
+import { Typography, Grid, Container, Box } from '@mui/material';
 import React from 'react';
 import { ResponsiveAppBar } from 'widgets/header';
 import { Footer } from 'widgets/footer';
 import { PAGES } from 'shared/constants';
+import pagesBackgrounds from 'app/styles/pages-backgrounds';
+import { useNoScrollFit } from 'shared/lib';
+import styles from './style';
 
 export type PageProps = {
   pageName: PAGES;
@@ -11,23 +14,36 @@ export type PageProps = {
 };
 
 export const Page = (props: PageProps) => {
+  const { isNoScrollFit, scrollbarWidth } = useNoScrollFit();
   const { pageName, title, children } = props;
   const isFooter = pageName !== PAGES.GAME;
   
+  const { bg = '', filter = '' } = pagesBackgrounds[pageName] || {};
+
   return (
     <>
       <ResponsiveAppBar />
-      <main>
-        <Container maxWidth="lg">
-          {title &&
-            <Typography variant='h6' marginTop={1} marginBottom={2}>
-              {title}
-            </Typography>}
-          <Grid sx={{ pt: title ? 0 : 3 }}>
-            {children}
-          </Grid>
-        </Container>
-      </main>
+      <Box component="main" sx={[
+        { display: "flex" },
+        isNoScrollFit && styles.menuOpenedMainStyles,
+      ]}>
+        <Box sx={[
+          { background: bg, flexGrow: 1 },
+          isNoScrollFit && styles.menuOpenedBgStyles(scrollbarWidth),
+        ]}>
+          <Box sx={{ backdropFilter: filter }}>
+            <Container maxWidth="lg" sx={{ pb: 5, pt: title ? 2 : 0 }}>
+              {title &&
+                <Typography variant='h6' marginBottom={2}>
+                  {title}
+                </Typography>}
+              <Grid sx={{ pt: title ? 0 : 3 }}>
+                {children}
+              </Grid>
+            </Container>
+          </Box>
+        </Box>
+      </Box>
       {isFooter && <Footer />}
     </>
   );
