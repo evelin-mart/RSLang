@@ -13,7 +13,7 @@ export const MainPage = () => {
         <Container maxWidth="lg">
           <Grid>
             <Grid container className={styles.mainPage} component="section">
-              <Typography sx={{width: 1, m: '5vh 0', typography: { xs: 'h5', md: 'h3'}}}>
+              <Typography sx={{width: 1, m: '0 0 5vh', typography: { xs: 'h5', md: 'h3'}}}>
                 RSLang - удобное приложение для изучения английского языка!
               </Typography>
               <Advantages/>

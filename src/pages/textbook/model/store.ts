@@ -3,7 +3,7 @@ import { STATUS } from 'shared/constants';
 import { Word } from 'entities/word';
 import * as wordsApi from 'shared/api/words';
 import { AsyncThunkConfig } from 'app/store';
-import { getLastSeenPage, initialState } from './interface';
+import { getLastSeenPage, initialState, setLastSeenPage } from './interface';
 
 export const getWords = createAsyncThunk<Word[], void, AsyncThunkConfig>(
   'words/getWords',
@@ -18,16 +18,18 @@ export const textbookSlice = createSlice({
   initialState,
   reducers: {
     setPage(state, action: PayloadAction<number>) {
+      setLastSeenPage(state.group, action.payload);
       state.page = action.payload;
     },
     setGroup(state, action: PayloadAction<number>) {
       state.group = action.payload;
+      localStorage.setItem('group', action.payload.toString());
       state.page = getLastSeenPage(state.group)[1];
     },
   },
   extraReducers(builder) {
     builder
-      .addCase(getWords.pending, (state, action) => {
+      .addCase(getWords.pending, (state, _) => {
         state.status = STATUS.LOADING;
       })
       .addCase(getWords.fulfilled, (state, action) => {

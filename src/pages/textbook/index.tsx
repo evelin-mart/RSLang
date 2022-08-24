@@ -4,17 +4,12 @@ import { Page } from 'pages/page';
 import { AppDispatch, useAppSelector } from 'app/store';
 import { WordCard } from 'entities/word';
 import { Loader } from 'shared/components/loader';
-import {
-  List,
-  ListItem,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
-} from '@mui/material';
+import { List, ListItem, Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import Pagination from '@mui/material/Pagination';
 import styles from './styles.module.scss';
 import { STATUS, PAGES } from '../../shared/constants';
 import { play, stop } from './utils';
-import { getWords, setGroup } from './model';
+import { getWords, setGroup, setPage } from './model';
 
 export const TextbookPage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -37,6 +32,10 @@ export const TextbookPage = () => {
     dispatch(setGroup(groupId));
   };
 
+  const handlePageChange = (_: React.ChangeEvent<unknown>, pageId: number) => {
+    dispatch(setPage(pageId - 1));
+  };
+
   let content: JSX.Element | undefined;
 
   if (status === STATUS.LOADING) {
@@ -50,7 +49,7 @@ export const TextbookPage = () => {
       </ListItem>
     ));
     content = (
-      <List sx={{ p: 0 }} className={styles.list}>
+      <List sx={{ pt: 3 }} className={styles.list}>
         {renderedItem}
       </List>
     );
@@ -66,16 +65,24 @@ export const TextbookPage = () => {
 
   return (
     <Page pageName={PAGES.TEXTBOOK}>
-      <Select value={String(group)} onChange={handleGroupChange}>
+      <Select value={String(group)} sx={{ width: 250, m: 1 }} onChange={handleGroupChange}>
         <MenuItem value={0}>Раздел 1</MenuItem>
         <MenuItem value={1}>Раздел 2</MenuItem>
         <MenuItem value={2}>Раздел 3</MenuItem>
         <MenuItem value={3}>Раздел 4</MenuItem>
         <MenuItem value={4}>Раздел 5</MenuItem>
         <MenuItem value={5}>Раздел 6</MenuItem>
-        <MenuItem value={6}>Сложные слова</MenuItem>
+        {/* <MenuItem value={6}>Сложные слова</MenuItem> */}
       </Select>
+      <strong>Страница {page + 1}</strong>
       {content}
+      <Pagination
+        className={styles.pagination}
+        color='primary'
+        count={30}
+        defaultPage={page + 1}
+        onChange={handlePageChange}
+      />
     </Page>
   );
 };

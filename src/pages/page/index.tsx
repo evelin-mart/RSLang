@@ -23,7 +23,7 @@ export const Page = (props: PageProps) => {
             <Typography variant='h6' marginTop={1} marginBottom={2}>
               {title}
             </Typography>}
-          <Grid sx={{ pt: title ? 0 : 3 }}>
+          <Grid sx={{ pt: title ? 0 : 3, pb: 3 }}>
             {children}
           </Grid>
         </Container>
