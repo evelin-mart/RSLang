@@ -1,4 +1,4 @@
-export default {
+const styles = {
   headerMenu: {
     display: 'flex',
     listStyle: 'none',
@@ -20,8 +20,7 @@ export default {
 
     '&:visited': {
       color: 'inherit',
-    }
-
+    },
   },
 
   headerMenuLink_active: {
@@ -34,5 +33,7 @@ export default {
       height: 2,
       backgroundColor: 'primary.contrastText',
     },
-  }
+  },
 };
+
+export default styles;

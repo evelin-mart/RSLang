@@ -2,16 +2,17 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Page } from 'pages/page';
 import { AppDispatch, useAppSelector } from 'app/store';
-import { fetchWords, WordCard } from 'entities/word';
+import { WordCard } from 'entities/word';
 import { Loader } from 'shared/components/loader';
-import { List, ListItem } from '@mui/material';
+import { Button, List, ListItem, Typography } from '@mui/material';
 import styles from './styles.module.scss';
 import { STATUS, PAGES } from '../../shared/constants';
 import { play, stop } from './utils';
+import { getWords, setGroup } from './model';
 
 export const TextbookPage = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { value: words, status, error } = useAppSelector((state) => state.words);
+  const { words, status, error, page, group } = useAppSelector((state) => state.textbook);
   const [sounds, setSounds] = useState<HTMLAudioElement[]>([]);
 
   useEffect(() => {
@@ -22,10 +23,12 @@ export const TextbookPage = () => {
   }, [sounds]);
 
   useEffect(() => {
-    if (status === STATUS.IDLE) {
-      dispatch(fetchWords());
-    }
-  }, [status, dispatch]);
+    dispatch(getWords());
+  }, [page, group, dispatch]);
+
+  const handleGroupChange = (groupId: number) => {
+    dispatch(setGroup(groupId));
+  }
 
   let content: JSX.Element | undefined;
 
@@ -58,6 +61,19 @@ export const TextbookPage = () => {
 
   return (
     <Page pageName={PAGES.TEXTBOOK} title={title}>
+      <Typography variant="subtitle1">Group: {group}</Typography>
+      <Typography variant="subtitle1">Page: {page}</Typography>
+      <List sx={{display: "flex"}}>
+        <ListItem>
+          <Button onClick={() => handleGroupChange(0)}>Group1</Button>
+        </ListItem>
+        <ListItem>
+          <Button onClick={() => handleGroupChange(1)}>Group2</Button>
+        </ListItem>
+        <ListItem>
+          <Button onClick={() => handleGroupChange(2)}>Group3</Button>
+        </ListItem>
+      </List>
       {content}
     </Page>
   );

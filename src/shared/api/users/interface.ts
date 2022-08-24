@@ -1,12 +1,9 @@
-export interface UserTokens {
-  token: string;
-  refreshToken: string;
-}
+import { UserData } from "entities/user";
 
-export interface UserLoginResult extends UserTokens {
+export type UserTokens = Pick<UserData, 'token' | 'refreshToken'>;
+
+export interface UserLoginResult extends Omit<UserData, 'email'> {
   message: string;
-  userId: string;
-  name: string;
   error: string | null;
 }
 
@@ -19,8 +16,7 @@ export const defaultLoginResult: UserLoginResult = {
   error: null,
 }
 
-export interface UserLoginData {
-  email: string;
+export interface UserLoginData extends Pick<UserData, 'email'> {
   password: string;
 }
 
@@ -31,10 +27,8 @@ export interface UserRegistrationError {
   }
 }
 
-export interface UserRegistrationResult {
+export interface UserRegistrationResult extends Pick<UserData, 'email' | 'name'> {
   id: string,
-  email: string,
-  name: string;
   error: UserRegistrationError | string | null;
 }
 
@@ -54,10 +48,8 @@ export const defaultRegistartionResult: UserRegistrationResult = {
   error: null,
 }
 
-export interface UserRegistrationData {
+export interface UserRegistrationData extends UserLoginData {
   name: string;
-  email: string;
-  password: string;
 }
 
 export const isUserRegistrationData = (obj: unknown): obj is UserRegistrationData => {

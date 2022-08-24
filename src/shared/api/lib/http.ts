@@ -39,7 +39,7 @@ export const processRequest = async <T>(url: string, requestInit: RequestInit = 
     const error = await getResponseBody(res);
     throw new HttpError(res, error);
   }
-  return (await getResponseBody(res)) as T;
+  return await getResponseBody(res) as T;
 }
 
 const getAuthorizedRequestUrl = () => {
