@@ -1,16 +1,16 @@
-export default {
+const styles = {
   header: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     height: 'var(--header-height)',
   },
-  
+
   headerMenuBox: {
     flexGrow: 1,
     display: {
       xs: 'none',
-      md: 'flex'
+      md: 'flex',
     },
   },
 
@@ -20,5 +20,7 @@ export default {
     alignItems: 'flex-start',
     padding: 3,
     backgroundColor: 'primary.dark',
-  }
-}
+  },
+};
+
+export default styles;

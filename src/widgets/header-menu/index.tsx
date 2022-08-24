@@ -7,10 +7,8 @@ import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
 import styles from './styles';
 import { toggleHeaderMenu } from 'entities/user';
-import { useNavigate } from "react-router-dom";
 
 export const HeaderMenu = (props: {isColumn: boolean}) => {
-  const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
   const { isColumn } = props;
   const { palette } = useTheme();
@@ -18,7 +16,7 @@ export const HeaderMenu = (props: {isColumn: boolean}) => {
 
   React.useEffect(() => {
     dispatch(toggleHeaderMenu(false));
-  }, [location]);
+  }, [location, dispatch]);
 
   const linksRendered = links.map(({ title, href }, i) => {
     const isActive = matchPath(href, location.pathname) !== null;
