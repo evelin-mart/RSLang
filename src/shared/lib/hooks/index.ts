@@ -1,1 +1,1 @@
-export { useScrollbarWidth } from  './scrollbar-width';
+export { useScrollbarWidth, useNoScrollFit } from  './scrollbar-width';

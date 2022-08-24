@@ -23,6 +23,6 @@ export enum PAGES {
 }
 
 export enum GAME {
-  AUDIO = 'audiocall',
+  AUDIO = 'audio',
   SPRINT = 'sprint',
 }

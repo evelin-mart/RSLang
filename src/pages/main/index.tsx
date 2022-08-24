@@ -1,29 +1,27 @@
 import { Page } from 'pages/page';
-import { Grid, Typography, Container, Box } from '@mui/material';
+import { Grid, Theme, Typography } from '@mui/material';
 import { Advantages } from 'widgets/advantages';
 import { AboutTeam } from 'widgets/about-team';
-import styles from './styles.module.scss';
 import { PAGES } from 'shared/constants';
 
 export const MainPage = () => {
   return (
     <Page pageName={PAGES.MAIN}>
-      <Box sx={{ position: "relative" }}>
-        <div className={styles.background}></div>
-        <Container maxWidth="lg">
-          <Grid>
-            <Grid container className={styles.mainPage} component="section">
-              <Typography sx={{width: 1, m: '5vh 0', typography: { xs: 'h5', md: 'h3'}}}>
-                RSLang - удобное приложение для изучения английского языка!
-              </Typography>
-              <Advantages/>
-            </Grid>
-            <Grid className={styles.mainPage} container component="section">
-              <AboutTeam/>
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
+      <Grid sx={{ color: "grey.50" }}>
+        <Typography component="h2" sx={{
+          textShadow: ({ palette }: Theme) => `1px 1px 3px ${palette.text.primary}`,
+          mt: 5, mb: 5,
+          typography: { xs: 'h5', md: 'h3'}
+        }}>
+          RSLang - удобное приложение для изучения английского языка!
+        </Typography>
+        <Grid component="section">
+          <Advantages/>
+        </Grid>
+        <Grid component="section">
+          <AboutTeam/>
+        </Grid>
+      </Grid>
     </Page>
   )
 }

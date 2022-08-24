@@ -1,6 +1,6 @@
 import { WordsQueryOptions } from "../words";
 import { Word } from 'entities/word';
-import { UserWord } from 'shared/api/user-words';
+import { UserWord } from 'shared/api/users-words';
 import { WORDS_PER_PAGE } from "shared/constants";
 
 export interface AggregatedWordsQueryOptions extends WordsQueryOptions {

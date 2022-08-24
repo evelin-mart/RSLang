@@ -1,5 +1,5 @@
 import { processAuthorizedRequest } from "../lib";
-import { UserWordDifficulty } from "../user-words";
+import { UserWordDifficulty } from "../users-words";
 import {
   AggregatedWordsQueryOptions,
   AggregatedWordsResult,
@@ -8,8 +8,8 @@ import {
 
 const queryOptionsToString = ({ wordsPerPage, group = 0, page = 0, filter }: AggregatedWordsQueryOptions) => {
   const resultFilter = filter !== undefined
-  ? filter
-  : JSON.stringify({ $and: [ { page }, { group } ] });
+    ? filter
+    : JSON.stringify({ $and: [ { page }, { group } ] });
   
   const params = [`filter=${resultFilter}`];
   if (wordsPerPage !== undefined) params.push(`wordsPerPage=${wordsPerPage}`);
