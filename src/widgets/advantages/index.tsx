@@ -10,7 +10,7 @@ export const Advantages = () => {
       <Typography sx={{typography: { xs: 'h6', md: 'h4'}}}>
         Наши преимущества:
       </Typography>
-      <div style={{margin: '5vh auto', width: '80vw'}}>
+      <div style={{margin: '5vh auto', width: '80%'}}>
         {advantages.map((item, index) => {
           return (
             <Accordion sx={{mb: 1}} key={index}>
