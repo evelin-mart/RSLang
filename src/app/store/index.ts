@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { wordsSlice } from 'entities/word';
+import { textbookSlice } from 'pages/textbook/model';
 import { authModalSlice } from 'pages/user/auth-modal/model';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import { userSlice, saveDataToStoreMiddleware, loadUserFromStorage } from 'entities/user';
@@ -7,7 +7,7 @@ import { saveTokensMiddleware } from 'shared/api/lib';
 
 export const store = configureStore({
   reducer: {
-    [wordsSlice.name]: wordsSlice.reducer,
+    [textbookSlice.name]: textbookSlice.reducer,
     [authModalSlice.name]: authModalSlice.reducer,
     [userSlice.name]: userSlice.reducer,
   },
