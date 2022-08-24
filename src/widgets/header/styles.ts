@@ -12,6 +12,8 @@ const styles = {
       xs: 'none',
       md: 'flex',
     },
+    justifyContent: 'flex-end',
+    marginRight: 3,
   },
 
   headerMenuBoxColumn: {
@@ -21,6 +23,12 @@ const styles = {
     padding: 3,
     backgroundColor: 'primary.dark',
   },
-};
+
+  menuOpenedStyles: (scrollbarWidth: number) => ({
+    position: 'fixed',
+    top: 0,
+    pr: `${scrollbarWidth}px`,
+  })
+}
 
 export default styles;
