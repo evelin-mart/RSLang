@@ -1,20 +1,12 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Page } from 'pages/page';
-import { PAGES } from '../../shared/constants';
-
-const games: Record<string, { title: string }> = {
-  audio: {
-    title: 'Аудиовызов',
-  },
-  sprint: {
-    title: 'Спринт',
-  }
-}
+import { GAME, PAGES } from 'shared/constants';
+import { games } from 'shared/constants/games';
 
 export const GamePage = () => {
   const navigate = useNavigate();
-  const { gameId } = useParams();
+  const { gameId } = useParams<{ gameId: GAME }>();
 
   useEffect(() => {
     if (gameId !== undefined && !games[gameId]) {

@@ -1,5 +1,5 @@
 
-export type  QueryOptions = Record<string, string | number>
+export type  QueryOptions = Record<string, string | number | undefined>
 
 export function queryOptionsToString(queryOptions: QueryOptions): string {
   return Object.entries(queryOptions)
