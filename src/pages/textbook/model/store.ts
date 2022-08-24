@@ -3,15 +3,15 @@ import { STATUS } from 'shared/constants';
 import { Word } from 'entities/word';
 import * as wordsApi from 'shared/api/words';
 import { AsyncThunkConfig } from 'app/store';
-import { initialState } from './interface';
+import { getLastSeenPage, initialState } from './interface';
 
 export const getWords = createAsyncThunk<Word[], void, AsyncThunkConfig>(
   'words/getWords',
-  async ( _, { getState } ) => {
-  
-  const { page, group } = getState().textbook;
-  return wordsApi.getWords({ page, group });
-});
+  async (_, { getState }) => {
+    const { page, group } = getState().textbook;
+    return wordsApi.getWords({ page, group });
+  },
+);
 
 export const textbookSlice = createSlice({
   name: 'textbook',
@@ -22,7 +22,7 @@ export const textbookSlice = createSlice({
     },
     setGroup(state, action: PayloadAction<number>) {
       state.group = action.payload;
-      state.page = 0;
+      state.page = getLastSeenPage(state.group)[1];
     },
   },
   extraReducers(builder) {

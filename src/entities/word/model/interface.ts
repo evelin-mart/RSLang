@@ -13,6 +13,7 @@ export interface Word {
   wordTranslate: string;
   textMeaningTranslate: string;
   textExampleTranslate: string;
+  userWord?: UserWord;
 }
 
 export interface UserWord {

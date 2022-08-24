@@ -4,7 +4,13 @@ import { Page } from 'pages/page';
 import { AppDispatch, useAppSelector } from 'app/store';
 import { WordCard } from 'entities/word';
 import { Loader } from 'shared/components/loader';
-import { Button, List, ListItem, Typography } from '@mui/material';
+import {
+  List,
+  ListItem,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+} from '@mui/material';
 import styles from './styles.module.scss';
 import { STATUS, PAGES } from '../../shared/constants';
 import { play, stop } from './utils';
@@ -26,9 +32,10 @@ export const TextbookPage = () => {
     dispatch(getWords());
   }, [page, group, dispatch]);
 
-  const handleGroupChange = (groupId: number) => {
+  const handleGroupChange = (event: SelectChangeEvent) => {
+    const groupId = +event.target.value;
     dispatch(setGroup(groupId));
-  }
+  };
 
   let content: JSX.Element | undefined;
 
@@ -57,23 +64,17 @@ export const TextbookPage = () => {
     );
   }
 
-  const title = `Учебник \\ Раздел 1 \\ Страница 1`;
-
   return (
-    <Page pageName={PAGES.TEXTBOOK} title={title}>
-      <Typography variant="subtitle1">Group: {group}</Typography>
-      <Typography variant="subtitle1">Page: {page}</Typography>
-      <List sx={{display: "flex"}}>
-        <ListItem>
-          <Button onClick={() => handleGroupChange(0)}>Group1</Button>
-        </ListItem>
-        <ListItem>
-          <Button onClick={() => handleGroupChange(1)}>Group2</Button>
-        </ListItem>
-        <ListItem>
-          <Button onClick={() => handleGroupChange(2)}>Group3</Button>
-        </ListItem>
-      </List>
+    <Page pageName={PAGES.TEXTBOOK}>
+      <Select value={String(group)} onChange={handleGroupChange}>
+        <MenuItem value={0}>Раздел 1</MenuItem>
+        <MenuItem value={1}>Раздел 2</MenuItem>
+        <MenuItem value={2}>Раздел 3</MenuItem>
+        <MenuItem value={3}>Раздел 4</MenuItem>
+        <MenuItem value={4}>Раздел 5</MenuItem>
+        <MenuItem value={5}>Раздел 6</MenuItem>
+        <MenuItem value={6}>Сложные слова</MenuItem>
+      </Select>
       {content}
     </Page>
   );
