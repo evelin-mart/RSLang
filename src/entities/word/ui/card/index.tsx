@@ -15,7 +15,7 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import DoneIcon from '@mui/icons-material/Done';
 import { makeAbsUrl } from '../../../../shared/constants';
 import { Word } from 'entities/word/model';
-import { UserWord, UserWordDifficulty } from 'shared/api/user-words';
+import { UserWord, UserWordDifficulty } from 'shared/api/users-words';
 import styles from './styles.module.scss';
 
 export type WordCardProps = {
