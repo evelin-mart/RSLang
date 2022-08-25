@@ -1,5 +1,5 @@
 export interface UserWord {
-  difficulty: UserWordDifficulty;
+  difficulty?: UserWordDifficulty;
   optional: {
     totalUsed: number;
     guessed: number;

@@ -2,14 +2,17 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { STATUS } from 'shared/constants';
 import { Word } from 'entities/word';
 import * as wordsApi from 'shared/api/words';
+import { getAggregatedWords } from 'shared/api/users-aggregated-words';
 import { AsyncThunkConfig } from 'app/store';
-import { getLastSeenPage, initialState, setLastSeenPage } from './interface';
+import { getLastSeenPage, initialState } from './interface';
 
-export const getWords = createAsyncThunk<Word[], void, AsyncThunkConfig>(
+export const getWords = createAsyncThunk<Word[], boolean, AsyncThunkConfig>(
   'words/getWords',
-  async (_, { getState }) => {
+  async (isAuth: boolean, { getState }) => {
     const { page, group } = getState().textbook;
-    return wordsApi.getWords({ page, group });
+    return isAuth
+      ? getAggregatedWords({ page, group, wordsPerPage: 20 })
+      : wordsApi.getWords({ page, group });
   },
 );
 

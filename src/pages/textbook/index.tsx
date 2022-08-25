@@ -10,10 +10,12 @@ import styles from './styles.module.scss';
 import { STATUS, PAGES } from '../../shared/constants';
 import { play, stop } from './utils';
 import { getWords, setGroup, setLastSeenPage, setPage } from './model';
+import { useUser } from 'entities/user/model/hooks';
 
 export const TextbookPage = () => {
   const dispatch: AppDispatch = useDispatch();
   const { words, status, error, page, group } = useAppSelector((state) => state.textbook);
+  const { isAuthorized } = useUser();
   const [sounds, setSounds] = useState<HTMLAudioElement[]>([]);
 
   useEffect(() => {
@@ -24,9 +26,9 @@ export const TextbookPage = () => {
   }, [sounds]);
 
   useEffect(() => {
-    dispatch(getWords());
+    dispatch(getWords(isAuthorized));
     setLastSeenPage(group, page);
-  }, [page, group, dispatch]);
+  }, [page, group, dispatch, isAuthorized]);
 
   const handleGroupChange = (event: SelectChangeEvent) => {
     const groupId = +event.target.value;

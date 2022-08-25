@@ -15,29 +15,21 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import DoneIcon from '@mui/icons-material/Done';
 import { makeAbsUrl } from '../../../../shared/constants';
 import { Word } from 'entities/word/model';
-import { UserWord, UserWordDifficulty } from 'shared/api/users-words';
+import { UserWord, defaultUserWord } from 'shared/api/users-words';
 import styles from './styles.module.scss';
+import { useUser } from 'entities/user/model/hooks';
 
 export type WordCardProps = {
   word: Word;
   play: Dispatch<SetStateAction<HTMLAudioElement[]>>;
-  userWord?: UserWord;
 };
 
 export const WordCard = (props: WordCardProps) => {
   const { word, play } = props;
+  const { isAuthorized } = useUser();
 
   //! mock
-  const userWord: UserWord = {
-    difficulty: UserWordDifficulty.EASY,
-    optional: {
-      totalUsed: 8,
-      guessed: 6,
-      chain: 5,
-      isLearned: true,
-      isHard: false,
-    },
-  };
+  const userWord = 'userWord' in word ? word.userWord! : defaultUserWord;
 
   const sounds = [
     makeAbsUrl(word.audio),
@@ -50,11 +42,11 @@ export const WordCard = (props: WordCardProps) => {
   };
 
   const wordClass = classNames(styles.container, {
-    [styles.hard]: userWord && userWord.optional.isHard,
-    [styles.learned]: userWord && userWord.optional.isLearned,
+    [styles.hard]: isAuthorized && userWord.optional.isHard,
+    [styles.learned]: isAuthorized && userWord.optional.isLearned,
   });
 
-  const getWordProgress = ({ optional }: UserWord) => (optional.guessed * 100) / optional.totalUsed;
+  const getWordProgress = ({ optional }: UserWord) => (optional.guessed * 100) / (optional.totalUsed || Infinity);
 
   // TODO
   const toggleUserWord = () => true;
@@ -71,9 +63,9 @@ export const WordCard = (props: WordCardProps) => {
         subheader={word.wordTranslate}
       />
 
-      {userWord && (
+      {isAuthorized && (
         <LinearProgress
-          color='success'
+          color='primary'
           variant='determinate'
           sx={{ height: 12 }}
           value={getWordProgress(userWord)}
@@ -102,7 +94,7 @@ export const WordCard = (props: WordCardProps) => {
         <Typography variant='body2'>{word.textExampleTranslate}</Typography>
       </CardContent>
 
-      {userWord && (
+      {isAuthorized && (
         <Stack direction='row' spacing={2} sx={{ justifyContent: 'center', pb: 2, mt: 'auto' }}>
           <Chip
             label={userWord.optional.isLearned ? 'в изученных' : 'в изученные'}

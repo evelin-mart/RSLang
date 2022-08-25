@@ -1,3 +1,5 @@
+import { UserWord } from "shared/api/users-words";
+
 export interface Word {
   id: string;
   group: number;
@@ -15,4 +17,3 @@ export interface Word {
   textExampleTranslate: string;
   userWord?: UserWord;
 }
-
