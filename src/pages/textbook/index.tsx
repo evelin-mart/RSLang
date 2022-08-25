@@ -4,11 +4,12 @@ import { Page } from 'pages/page';
 import { AppDispatch, useAppSelector } from 'app/store';
 import { WordCard } from 'entities/word';
 import { Loader } from 'shared/components/loader';
-import { Button, List, ListItem, Typography } from '@mui/material';
+import { List, ListItem, Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import Pagination from '@mui/material/Pagination';
 import styles from './styles.module.scss';
 import { STATUS, PAGES } from '../../shared/constants';
 import { play, stop } from './utils';
-import { getWords, setGroup } from './model';
+import { getWords, setGroup, setLastSeenPage, setPage } from './model';
 
 export const TextbookPage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -24,11 +25,17 @@ export const TextbookPage = () => {
 
   useEffect(() => {
     dispatch(getWords());
+    setLastSeenPage(group, page);
   }, [page, group, dispatch]);
 
-  const handleGroupChange = (groupId: number) => {
+  const handleGroupChange = (event: SelectChangeEvent) => {
+    const groupId = +event.target.value;
     dispatch(setGroup(groupId));
-  }
+  };
+
+  const handlePageChange = (_: React.ChangeEvent<unknown>, pageId: number) => {
+    dispatch(setPage(pageId - 1));
+  };
 
   let content: JSX.Element | undefined;
 
@@ -38,14 +45,23 @@ export const TextbookPage = () => {
 
   if (status === STATUS.SUCCESS) {
     const renderedItem = words.map((word) => (
-      <ListItem key={word.id} sx={{ p: 0 }} className={styles.listItem}>
+      <ListItem key={word.id} sx={{ p: 0, alignItems: 'stretch' }} className={styles.listItem}>
         <WordCard word={word} play={setSounds} />
       </ListItem>
     ));
     content = (
-      <List sx={{ p: 0, alignItems: 'flex-start' }} className={styles.list}>
-        {renderedItem}
-      </List>
+      <>
+        <List sx={{ pt: 3 }} className={styles.list}>
+          {renderedItem}
+        </List>
+        <Pagination
+          className={styles.pagination}
+          color='primary'
+          count={30}
+          page={page + 1}
+          onChange={handlePageChange}
+        />
+      </>
     );
   }
 
@@ -57,23 +73,17 @@ export const TextbookPage = () => {
     );
   }
 
-  const title = `Учебник \\ Раздел 1 \\ Страница 1`;
-
   return (
-    <Page pageName={PAGES.TEXTBOOK} title={title}>
-      <Typography variant="subtitle1">Group: {group}</Typography>
-      <Typography variant="subtitle1">Page: {page}</Typography>
-      <List sx={{display: "flex"}}>
-        <ListItem>
-          <Button onClick={() => handleGroupChange(0)}>Group1</Button>
-        </ListItem>
-        <ListItem>
-          <Button onClick={() => handleGroupChange(1)}>Group2</Button>
-        </ListItem>
-        <ListItem>
-          <Button onClick={() => handleGroupChange(2)}>Group3</Button>
-        </ListItem>
-      </List>
+    <Page pageName={PAGES.TEXTBOOK}>
+      <Select value={String(group)} sx={{ width: 250, m: 1 }} onChange={handleGroupChange}>
+        <MenuItem value={0}>Раздел 1</MenuItem>
+        <MenuItem value={1}>Раздел 2</MenuItem>
+        <MenuItem value={2}>Раздел 3</MenuItem>
+        <MenuItem value={3}>Раздел 4</MenuItem>
+        <MenuItem value={4}>Раздел 5</MenuItem>
+        <MenuItem value={5}>Раздел 6</MenuItem>
+      </Select>
+      <strong>Страница {page + 1}</strong>
       {content}
     </Page>
   );
