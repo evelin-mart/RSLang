@@ -12,8 +12,8 @@ export interface GameState {
   gameId: GAME | null;
   gamePhase: GAME_PHASE;
   words: AggregatedWord[];
-  sound: boolean;
-  fullscreen: boolean;
+  isSound: boolean;
+  isFullscreen: boolean;
   source: 'headerMenu' | 'textbook';
   results: Record<string, boolean>;
 }
