@@ -4,41 +4,48 @@ import {
   AggregatedWordsQueryOptions,
   AggregatedWordsResult,
   defaultQueryOptions,
-  AggregatedWord } from "./interface";
+  AggregatedWord, 
+  AggregatedWordInResponse} from "./interface";
 
-const queryOptionsToString = ({ wordsPerPage, group = 0, page = 0, filter }: AggregatedWordsQueryOptions) => {
+const queryOptionsToString = ({ wordsPerPage, group, page, filter }: AggregatedWordsQueryOptions) => {
   const resultFilter = filter !== undefined
     ? filter
     : JSON.stringify({ $and: [ { page }, { group } ] });
   
   const params = [`filter=${resultFilter}`];
-  if (wordsPerPage !== undefined) params.push(`wordsPerPage=${wordsPerPage}`);
+  params.push(`wordsPerPage=${wordsPerPage}`);
 
   return params.join('&');
 }
 
+const transformId = (word: AggregatedWordInResponse): AggregatedWord => {
+  const id = word._id || '';
+  delete word._id;
+  return { ...word, id };
+}
+
 export const urlPath = `/aggregatedWords`;
 
-export const getAggregatedWords = async (queryOptions: AggregatedWordsQueryOptions = { ...defaultQueryOptions }) => {
-  const url = `${urlPath}?${queryOptionsToString(queryOptions)}`;
+export const getAggregatedWords = async (queryOptions: AggregatedWordsQueryOptions) => {
+  const url = `${urlPath}?${queryOptionsToString({...defaultQueryOptions, ...queryOptions})}`;
   const [{ paginatedResults }] = await processAuthorizedRequest<AggregatedWordsResult>({
     method: 'GET',
     headers: {
       'Accept': 'application/json',
     },
   }, url);
-  return paginatedResults;
+  return paginatedResults.map(transformId);
 }
 
 export const getAggregatedWordById = async (wordId: string) => {
   const url = `${urlPath}/${wordId}`;
-  const [word] = await processAuthorizedRequest<[AggregatedWord]>({
+  const [word] = await processAuthorizedRequest<[AggregatedWordInResponse]>({
     method: 'GET',
     headers: {
       'Accept': 'application/json',
     },
   }, url);
-  return word;
+  return transformId(word);
 }
 
 export const getAggregatedWordsByDifficulty = async (difficulty: UserWordDifficulty) => {
