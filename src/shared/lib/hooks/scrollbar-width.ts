@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useUser } from 'entities/user/model/hooks';
+import { useAppSelector } from 'app/store';
 
 export const useScrollbarWidth = () => {
   const hasScrollBar = window.innerWidth > document.body.clientWidth;
@@ -29,3 +31,14 @@ export const useScrollbarWidth = () => {
     scrollbarWidth,
   };
 };
+
+export const useNoScrollFit = () => {
+  const { isHeaderMenuOpened } = useUser();
+  const { hasScrollBar, scrollbarWidth } = useScrollbarWidth();
+  const { show: isAuthModalShowed } = useAppSelector((state) => state.authModal);
+
+  return {
+    scrollbarWidth,
+    isNoScrollFit: (isHeaderMenuOpened && hasScrollBar) || isAuthModalShowed,
+  }
+}

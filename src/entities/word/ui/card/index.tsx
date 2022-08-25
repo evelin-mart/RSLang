@@ -14,7 +14,8 @@ import {
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import DoneIcon from '@mui/icons-material/Done';
 import { makeAbsUrl } from '../../../../shared/constants';
-import { Word, UserWord } from 'entities/word/model';
+import { Word } from 'entities/word/model';
+import { UserWord, UserWordDifficulty } from 'shared/api/users-words';
 import styles from './styles.module.scss';
 
 export type WordCardProps = {
@@ -28,7 +29,7 @@ export const WordCard = (props: WordCardProps) => {
 
   //! mock
   const userWord: UserWord = {
-    difficulty: 'easy',
+    difficulty: UserWordDifficulty.EASY,
     optional: {
       totalUsed: 8,
       guessed: 6,

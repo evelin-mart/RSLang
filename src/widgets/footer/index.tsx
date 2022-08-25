@@ -2,17 +2,28 @@ import styles from './styles.module.scss';
 import { Container, Link, List, ListItem, Stack, Typography, Box } from '@mui/material';
 import { RssLogo } from 'shared/components/rss-logo';
 import { githubLinks } from 'shared/constants/team-github-links';
+import { useNoScrollFit } from 'shared/lib';
+import React from 'react';
 
 export const Footer = () => {
+  const { isNoScrollFit } = useNoScrollFit();
+  const footerContainer = React.useRef<HTMLElement | null>(null);
+
+  const menuOpenedStyles = {
+    position: "fixed",
+    bottom: `calc(-1 * ${footerContainer.current?.offsetHeight}px)`,
+  }
+
   return (
-    <Box sx={{ bgcolor: 'primary.dark' }}>
-      <Container
-        maxWidth='lg'
-        sx={{
-          display: 'flex',
-          justifyContent: { xs: 'center', sm: 'space-between' },
-          flexDirection: { xs: 'column', sm: 'row' },
-        }}>
+    <Box ref={footerContainer} sx={[
+      { bgcolor: "primary.dark" },
+      isNoScrollFit && menuOpenedStyles
+    ]}>
+      <Container maxWidth="lg" sx={{
+        display: "flex",
+        justifyContent: { xs: "center", sm: "space-between" },
+        flexDirection: { xs: "column", sm: "row" }
+      }}>
         <Stack direction='column' spacing={1}>
           <Typography variant='body1' className={styles.description}>
             © 2022 RSLang
