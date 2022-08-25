@@ -38,7 +38,7 @@ export const GameStartScreen = () => {
 
   return (
     <GameInformationWrapper title={title}>
-      <Typography variant="body1" sx={{ fontSize: 18, color: "gray.600" }}>{description}</Typography>
+      <Typography variant="body1" sx={{ fontSize: 18, color: "grey.700" }}>{description}</Typography>
       <Box sx={{ width: "100%" }}>
         <FormControl fullWidth variant="standard" color="secondary" sx={{ mb: 3 }}>
           <Select
@@ -48,6 +48,7 @@ export const GameStartScreen = () => {
             value={group}
             label="Сложность"
             onChange={handleGroupChange}
+            sx={{ fontSize: "1.2rem", color: "grey.900"}}
           >
             {renderDifficultyOptions()}
           </Select>

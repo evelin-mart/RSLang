@@ -2,7 +2,7 @@ import { Typography, Paper } from '@mui/material';
 import React from 'react';
 
 type GameInformationWrapperProps = React.PropsWithChildren & {
-  title: string;
+  title?: string;
 }
 
 export const GameInformationWrapper = ({ title, children }: GameInformationWrapperProps) => {
@@ -11,15 +11,16 @@ export const GameInformationWrapper = ({ title, children }: GameInformationWrapp
       flexBasis: 400, 
       display: "flex", 
       flexDirection: "column", 
-      rowGap: 3, p: 3, 
+      rowGap: 2, p: 4,
       height: "fit-content",
     }}>
-      <Typography variant="h2" sx={{ 
-        textAlign: "center",
-        fontSize: "3rem",
-      }}>
-        {title}
-      </Typography>
+      {title &&
+        <Typography variant="h2" sx={{ 
+          textAlign: "center",
+          fontSize: "3rem",
+        }}>
+          {title}
+        </Typography>}
       {children}
     </Paper>
   )

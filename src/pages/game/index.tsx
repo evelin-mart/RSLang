@@ -4,16 +4,13 @@ import { Page } from 'pages/page';
 import { GAME, PAGES } from 'shared/constants';
 import { games } from 'shared/constants/games';
 import { GAME_PHASE, resetGame, setGameId, useGame } from 'entities/game';
-import { useUser } from 'entities/user';
-import { AppDispatch, useAppSelector } from 'app/store';
+import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
 import { GameStartScreen, GameResults, GameInterface } from 'entities/game';
 
 export const GamePage = () => {
   const dispatch: AppDispatch = useDispatch();
-  const user = useUser();
   const { gamePhase } = useGame();
-  const textbook = useAppSelector((state) => state.textbook);
   const navigate = useNavigate();
   const { gameId } = useParams<{ gameId: GAME }>();
   
@@ -28,7 +25,7 @@ export const GamePage = () => {
     return () => {
       dispatch(resetGame());
     }
-  }, [gameId, navigate]);
+  }, [gameId, navigate, dispatch]);
 
   return (
     <Page pageName={PAGES.GAME}>
