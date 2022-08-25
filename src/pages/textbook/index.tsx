@@ -49,9 +49,18 @@ export const TextbookPage = () => {
       </ListItem>
     ));
     content = (
-      <List sx={{ pt: 3 }} className={styles.list}>
-        {renderedItem}
-      </List>
+      <>
+        <List sx={{ pt: 3 }} className={styles.list}>
+          {renderedItem}
+        </List>
+        <Pagination
+          className={styles.pagination}
+          color='primary'
+          count={30}
+          defaultPage={page + 1}
+          onChange={handlePageChange}
+        />
+      </>
     );
   }
 
@@ -72,17 +81,9 @@ export const TextbookPage = () => {
         <MenuItem value={3}>Раздел 4</MenuItem>
         <MenuItem value={4}>Раздел 5</MenuItem>
         <MenuItem value={5}>Раздел 6</MenuItem>
-        {/* <MenuItem value={6}>Сложные слова</MenuItem> */}
       </Select>
       <strong>Страница {page + 1}</strong>
       {content}
-      <Pagination
-        className={styles.pagination}
-        color='primary'
-        count={30}
-        defaultPage={page + 1}
-        onChange={handlePageChange}
-      />
     </Page>
   );
 };
