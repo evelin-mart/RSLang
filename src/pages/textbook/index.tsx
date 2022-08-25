@@ -9,7 +9,7 @@ import Pagination from '@mui/material/Pagination';
 import styles from './styles.module.scss';
 import { STATUS, PAGES } from '../../shared/constants';
 import { play, stop } from './utils';
-import { getWords, setGroup, setPage } from './model';
+import { getWords, setGroup, setLastSeenPage, setPage } from './model';
 
 export const TextbookPage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -25,6 +25,7 @@ export const TextbookPage = () => {
 
   useEffect(() => {
     dispatch(getWords());
+    setLastSeenPage(group, page);
   }, [page, group, dispatch]);
 
   const handleGroupChange = (event: SelectChangeEvent) => {
@@ -57,7 +58,7 @@ export const TextbookPage = () => {
           className={styles.pagination}
           color='primary'
           count={30}
-          defaultPage={page + 1}
+          page={page + 1}
           onChange={handlePageChange}
         />
       </>

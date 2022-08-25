@@ -18,12 +18,10 @@ export const textbookSlice = createSlice({
   initialState,
   reducers: {
     setPage(state, action: PayloadAction<number>) {
-      setLastSeenPage(state.group, action.payload);
       state.page = action.payload;
     },
     setGroup(state, action: PayloadAction<number>) {
       state.group = action.payload;
-      localStorage.setItem('group', action.payload.toString());
       state.page = getLastSeenPage(state.group)[1];
     },
   },
