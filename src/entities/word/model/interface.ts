@@ -14,4 +14,3 @@ export interface Word {
   textMeaningTranslate: string;
   textExampleTranslate: string;
 }
-
