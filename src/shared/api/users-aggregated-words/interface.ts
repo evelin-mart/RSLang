@@ -14,13 +14,17 @@ export const defaultQueryOptions: AggregatedWordsQueryOptions = {
   wordsPerPage: WORDS_PER_PAGE,
 }
 
-export interface AggregatedWord extends Omit<Word, 'id'> {
-  _id: string;
+export interface AggregatedWordInResponse extends Omit<Word, 'id'> {
+  _id?: string;
+  userWord?: UserWord;
+}
+
+export interface AggregatedWord extends Word {
   userWord?: UserWord;
 }
 
 export type AggregatedWordsResult = [{
-  paginatedResults: AggregatedWord[];
+  paginatedResults: AggregatedWordInResponse[];
   totalCount: [{
     count: number;
   }];
