@@ -1,5 +1,5 @@
 export interface UserWord {
-  difficulty: UserWordDifficulty;
+  difficulty?: UserWordDifficulty;
   optional: {
     totalUsed: number;
     guessed: number;
@@ -15,7 +15,7 @@ export enum UserWordDifficulty {
 }
 
 export const defaultUserWord: UserWord = {
-  difficulty: UserWordDifficulty.EASY,
+  // difficulty: UserWordDifficulty.EASY,
   optional: {
     totalUsed: 0,
     guessed: 0,

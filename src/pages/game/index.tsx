@@ -3,10 +3,18 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Page } from 'pages/page';
 import { GAME, PAGES } from 'shared/constants';
 import { games } from 'shared/constants/games';
-import { GAME_PHASE, resetGame, setGameId, useGame } from 'entities/game';
+import {
+  GAME_PHASE,
+  resetGame,
+  setGameId,
+  useGame,
+  GameStartScreen,
+  GameResults,
+  GameInterface,
+  GameCountdown,
+} from 'entities/game';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
-import { GameStartScreen, GameResults, GameInterface } from 'entities/game';
 
 export const GamePage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -20,10 +28,8 @@ export const GamePage = () => {
         navigate('/*', { replace: true });
       } else {
         dispatch(setGameId(gameId));
+        dispatch(resetGame());
       }
-    }
-    return () => {
-      dispatch(resetGame());
     }
   }, [gameId, navigate, dispatch]);
 
@@ -31,6 +37,7 @@ export const GamePage = () => {
     <Page pageName={PAGES.GAME}>
       <GameInterface>
         {gamePhase === GAME_PHASE.START && <GameStartScreen />}
+        {gamePhase === GAME_PHASE.COUNTDOWN && <GameCountdown />}
         {gamePhase === GAME_PHASE.RESULTS && <GameResults />}
       </GameInterface>
     </Page>

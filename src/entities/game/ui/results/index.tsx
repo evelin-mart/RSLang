@@ -1,4 +1,4 @@
-import { useGameResults, replayGame, resetGame } from 'entities/game';
+import { useGameResults, resetGame } from 'entities/game';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
 import { Box, Typography, Button, Divider } from '@mui/material';
@@ -19,10 +19,10 @@ export const GameResults = () => {
   const navigate = useNavigate();
 
   const handleReplay = () => {
-    dispatch(replayGame());
+    dispatch(resetGame());
   }
 
-  const handleToTextbookClick = () => {
+  const handleTextbookClick = () => {
     dispatch(resetGame());
     navigate('/textbook', { replace: true });
   }
@@ -50,14 +50,14 @@ export const GameResults = () => {
       </Box>
       <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
         <Button
-          onClick={handleToTextbookClick}
-          variant="contained"
+          onClick={handleTextbookClick}
+          variant="outlined"
           color="secondary">
           Учебник
         </Button>
         <Button 
           onClick={handleReplay}
-          variant="contained" 
+          variant="outlined" 
           color="secondary">
           Сыграть еще раз
         </Button>

@@ -2,7 +2,7 @@ import { UserLoginData } from "shared/api/users";
 
 export const defaultInputsState: UserLoginData = {
   email: 'test@test.ru',
-  password: '12345678',
+  password: '',
 }
 
 export interface ValidationState {
