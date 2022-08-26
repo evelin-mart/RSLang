@@ -17,7 +17,7 @@ export const GameResults = () => {
   const [sound, setSound] = React.useState<Sound>(null);
   const { correctWords, failedWords } = useGameResults();
   const navigate = useNavigate();
-
+  
   const handleReplay = () => {
     dispatch(resetGame());
   }

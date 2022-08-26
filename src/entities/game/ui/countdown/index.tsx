@@ -1,4 +1,4 @@
-import { setGamePhase, GAME_PHASE } from 'entities/game';
+import { finishGame, setGamePhase, GAME_PHASE } from 'entities/game';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
 import { Typography } from '@mui/material';
@@ -26,7 +26,8 @@ export const GameCountdown = () => {
 
   React.useEffect(() => {
     if (counter === 0) {
-      dispatch(setGamePhase(GAME_PHASE.RESULTS));
+      dispatch(setGamePhase(GAME_PHASE.LOADING));
+      dispatch(finishGame());
     }
   }, [counter, dispatch]);
 

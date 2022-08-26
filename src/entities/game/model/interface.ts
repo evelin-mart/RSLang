@@ -7,6 +7,7 @@ export enum GAME_PHASE {
   COUNTDOWN = 'countdown',
   PLAYING = 'playing',
   RESULTS = 'results',
+  LOADING = 'loading',
 }
 
 export type GameSource = 'headerMenu' | 'textbook';

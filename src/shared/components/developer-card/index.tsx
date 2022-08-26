@@ -1,11 +1,12 @@
 import { Box, Theme } from '@mui/material';
 import React from 'react';
 import styles from './styles.module.scss';
+import iconReverseImg from 'shared/images/icon-reverse.svg';
 
 const front = {
   transform: 'perspective(600px) rotateY(0)',
   background: ({ palette : { primary }}: Theme) => (
-    `url('../../images/icon-reverse.svg') no-repeat center, linear-gradient(${primary.contrastText}, ${primary.dark})`
+    `url(${iconReverseImg}) no-repeat center, linear-gradient(${primary.contrastText}, ${primary.dark})`
   ),
 }
 

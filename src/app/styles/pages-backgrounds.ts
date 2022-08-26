@@ -7,7 +7,7 @@ const backgrounds: Partial<Record<PAGES, { bg?: string | ((theme: Theme) => stri
     bg: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${mainPageBgImg}) no-repeat 50% top fixed`,
   },
   [PAGES.GAME]: {
-    bg: ({ palette }: Theme) => `${palette.grey[100]}`
+    bg: ({ palette }: Theme) => `${palette.grey[50]}`
   }
 }
 

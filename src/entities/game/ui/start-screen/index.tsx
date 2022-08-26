@@ -5,10 +5,11 @@ import { useDispatch } from 'react-redux';
 import { Box, FormControl,  MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
 import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
 import React from 'react';
-import { loadGameWords, setGameGroup } from 'entities/game';
+import { startGame, setGameGroup } from 'entities/game';
 import { STATUS } from 'shared/constants';
 import { LoadingButton } from '@mui/lab';
 import { useUser } from 'entities/user';
+import { getRandomInt } from 'shared/lib';
 
 export const GameStartScreen = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -17,7 +18,8 @@ export const GameStartScreen = () => {
   
   React.useEffect(() => {
     if (loadingProcess.status === STATUS.SUCCESS) {
-      words.forEach(({ id }) => {
+      const random = getRandomInt(words.length / 2, words.length);
+      words.slice(0, random).forEach(({ id }) => {
         const result = Math.random() > 0.2;
         dispatch(addWordResult({ id, result }));
       });
@@ -35,7 +37,7 @@ export const GameStartScreen = () => {
   }
 
   const handleStartGame = async () => {
-    dispatch(loadGameWords());
+    dispatch(startGame());
   }
 
   const groups = ['Раздел 1', 'Раздел 2', 'Раздел 3', 'Раздел 4', 'Раздел 5', 'Раздел 6'];

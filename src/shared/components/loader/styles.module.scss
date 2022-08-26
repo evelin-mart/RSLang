@@ -1,14 +1,14 @@
 .ldsDualRing {
-  display: block;
-  width: 80px;
-  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .ldsDualRing::after {
   content: " ";
   display: block;
-  width: 32px;
-  height: 32px;
+  width: 50%;
+  height: 50%;
   margin: 8px;
   border-radius: 50%;
   animation: ldsDualRing 1.2s linear infinite;

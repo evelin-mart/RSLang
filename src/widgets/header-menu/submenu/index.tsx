@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { toggleHeaderMenu } from 'entities/user';
 import { setGameGroup, setGameSource } from 'entities/game';
 import { MenuLinkText } from '../link-text';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import styles from '../styles';
 
 type HeaderSubmenuProps = {
@@ -50,10 +51,12 @@ export const HeaderSubmenu = (props: HeaderSubmenuProps) => {
 
   return (
     <Box sx={{ flexGrow: 0 }}>
-      <Link onClick={handleOpenUserMenu} sx={styles.headerSubmenuMainLink}>
+      <Link onClick={handleOpenUserMenu} sx={[{ display: "flex" }, styles.headerSubmenuMainLink]}>
         <MenuLinkText title={link.title} isActive={false} isColumn={isColumn}/>
+        <ArrowDropDownIcon />
       </Link>
       <Menu
+        disableAutoFocusItem={true}
         sx={{ mt: '35px', width: 200 }}
         id="menu-appbar"
         anchorEl={anchorElUser}
