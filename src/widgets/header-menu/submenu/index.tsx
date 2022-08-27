@@ -6,7 +6,7 @@ import { MenuLink } from 'shared/constants/menu-links';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
 import { toggleHeaderMenu } from 'entities/user';
-import { setGameGroup, setGameSource } from 'entities/game';
+import { setGameSource } from 'entities/game';
 import { MenuLinkText } from '../link-text';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import styles from '../styles';
@@ -29,7 +29,6 @@ export const HeaderSubmenu = (props: HeaderSubmenuProps) => {
   };
   
   const handleCloseUserMenu = (path?: string) => {
-    dispatch(setGameGroup(0));
     dispatch(setGameSource('headerMenu'));
     dispatch(toggleHeaderMenu(false));
     setAnchorElUser(null);

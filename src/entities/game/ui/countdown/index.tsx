@@ -9,12 +9,10 @@ import { GAME_COUNTDOWN } from 'shared/constants';
 export const GameCountdown = () => {
   const dispatch: AppDispatch = useDispatch();
   const [counter, setCounter] = React.useState<number>(GAME_COUNTDOWN);
-  const countRef = React.useRef(counter);
-  countRef.current = counter;
 
   React.useEffect(() => {
     const timer = setInterval(() => {
-      setCounter(countRef.current - 1);
+      setCounter((prev) => prev - 1);
     }, 1000);
 
     return () => {

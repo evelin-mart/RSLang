@@ -1,6 +1,6 @@
 import { games } from 'shared/constants/games';
 import { addWordResult, GameInformationWrapper, GAME_PHASE, setGamePhase, useGame } from 'entities/game';
-import { AppDispatch } from 'app/store';
+import { AppDispatch, useAppSelector } from 'app/store';
 import { useDispatch } from 'react-redux';
 import { Box, FormControl,  MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
 import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
@@ -9,17 +9,22 @@ import { startGame, setGameGroup } from 'entities/game';
 import { STATUS } from 'shared/constants';
 import { LoadingButton } from '@mui/lab';
 import { useUser } from 'entities/user';
-import { getRandomInt } from 'shared/lib';
 
 export const GameStartScreen = () => {
   const dispatch: AppDispatch = useDispatch();
   const { gameId, loadingProcess, group, words, source } = useGame();
+  const { group: textbookGroup } = useAppSelector((state) => state.textbook);
   const user = useUser();
   
   React.useEffect(() => {
+    const currentGroup = source === 'textbook'
+      ? textbookGroup : 0;
+    dispatch(setGameGroup(currentGroup));
+  }, [dispatch, source, textbookGroup]);
+
+  React.useEffect(() => {
     if (loadingProcess.status === STATUS.SUCCESS) {
-      const random = getRandomInt(words.length / 2, words.length);
-      words.slice(0, random).forEach(({ id }) => {
+      words.forEach(({ id }) => {
         const result = Math.random() > 0.2;
         dispatch(addWordResult({ id, result }));
       });

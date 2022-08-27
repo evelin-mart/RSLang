@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { initialState, GAME_PHASE, GameSource } from './interface';
-import { GAME, LEARN_CHAIN, MAX_PAGE, STATUS } from 'shared/constants';
+import { GAME, LEARN_CHAIN, MAX_PAGE, MAX_WORDS_IN_GAME, STATUS } from 'shared/constants';
 import { AggregatedWord } from 'shared/api/users-aggregated-words';
 import { AsyncThunkConfig } from 'app/store';
 import * as agWordsApi from 'shared/api/users-aggregated-words';
@@ -9,6 +9,7 @@ import * as userWordsApi from 'shared/api/users-words';
 import * as userStatsApi from 'shared/api/users-statistics';
 import { dateToJson, getRandomInt } from 'shared/lib';
 import { defaultUserWord, UserWord } from 'shared/api/users-words';
+import { UserState } from 'entities/user';
 
 export const startGame = createAsyncThunk<AggregatedWord[] | void, void, AsyncThunkConfig>(
   'game/start', 
@@ -16,32 +17,53 @@ export const startGame = createAsyncThunk<AggregatedWord[] | void, void, AsyncTh
     _, { dispatch, getState }
   ) => {
   const {
-    textbook: { group: textbookGroup, page },
+    textbook: { page },
     game: { source, group },
     user,
   } = getState();
+
   const isFromTextbook = source === 'textbook';
-  const options = isFromTextbook
-    ? { group: textbookGroup, page }
-    : { group, page: getRandomInt(0, MAX_PAGE) };
 
-  let words: AggregatedWord[] = await (
-    user.isAuthorized
-      ? agWordsApi.getAggregatedWords(options)
-      : wordsApi.getWords(options)
-  );
-
-  if (isFromTextbook) {
-    dispatch(setGameGroup(textbookGroup));
-    if (user.isAuthorized) {
-      words = words.filter((word) => !word.userWord?.optional.isLearned);
-    }
-    console.log('Game words:', words)
-  } 
+  const words: AggregatedWord[] = await (
+    isFromTextbook
+      ? getWordsFromTextbook(group, page, user)
+      : getWordsFromRandomPage(group, user)
+  )
 
   if (words.length === 0) throw new Error('There are no words to use in game');
+  console.log('Game words:', words.length, words.map(({ word }) => word).join(','))
   dispatch(setWords(words));
 });
+
+const getWordsFromTextbook = async (group: number, page: number, user: UserState) => {
+  let words: AggregatedWord[] = [];
+  for (let pageNumber = page; pageNumber >= 0; pageNumber -= 1) {
+    const options = { group, page: pageNumber };
+    const currentPageWords: AggregatedWord[] = await (
+      user.isAuthorized
+        ? agWordsApi.getAggregatedWords(options)
+        : wordsApi.getWords(options)
+    );
+    words = words.concat(
+      user.isAuthorized
+        ? currentPageWords.filter((word) => !word.userWord?.optional.isLearned)
+        : currentPageWords
+    )
+    if (words.length >= MAX_WORDS_IN_GAME) {
+      return words.slice(0, MAX_WORDS_IN_GAME);
+    }
+  }
+  return words;
+}
+
+const getWordsFromRandomPage = async (group: number, user: UserState) => {
+  const page = getRandomInt(0, MAX_PAGE);
+  console.log(`Get words from group ${group}, page: ${page}`);
+  const options = { group, page };
+  return user.isAuthorized
+    ? agWordsApi.getAggregatedWords(options)
+    : wordsApi.getWords(options)
+}
 
 export const finishGame = createAsyncThunk<void, void, AsyncThunkConfig>(
   'game/finish', 
@@ -57,20 +79,9 @@ export const finishGame = createAsyncThunk<void, void, AsyncThunkConfig>(
     return;
   }
 
-  let newWordsCounter = 0;
-  const promises = words
-    .filter(({ id }) => results[id] !== undefined)
-    .map((word) => {
-      const { userWord, id } = word;
-      const wordResult = +results[id];
-      if (userWord === undefined) {
-        newWordsCounter += 1;
-        return processNewWord(id, wordResult);
-      } else {
-        return processExistingWord(id, wordResult, userWord);
-      }
-    });
-
+  const { stats, promises } = processWords(words, results);
+  const { newWordsCounter, correctAnswers, percent, learndWords } = stats;
+  console.log(`New: ${newWordsCounter}\nCorrect: ${correctAnswers}\nPercent: ${percent}\nLearned: ${learndWords}`);
   try {
     await Promise.all(promises);
     // update user statistics here
@@ -114,6 +125,40 @@ export const finishGame = createAsyncThunk<void, void, AsyncThunkConfig>(
   }
 });
 
+const processWords = (words: AggregatedWord[], results: Record<string, boolean>) => {
+  let newWordsCounter = 0;
+  let correctAnswers = 0;
+  let longestChain = 0;
+  let learndWords = 0;
+  const promises = words
+    .filter(({ id }) => results[id] !== undefined)
+    .map((word) => {
+      const { userWord, id } = word;
+      const wordResult = +results[id];
+      correctAnswers += wordResult;
+      if (userWord === undefined) {
+        newWordsCounter += 1;
+        return processNewWord(id, wordResult);
+      } else {
+        const { chain, learned, updatePromise } = processExistingWord(id, wordResult, userWord);
+        if (longestChain < chain) longestChain = chain;
+        learndWords += +learned;
+        return updatePromise;
+      }
+    });
+  const percent = Math.round(correctAnswers / Object.keys(results).length * 100);
+  return {
+    stats: {
+      newWordsCounter,
+      correctAnswers,
+      longestChain,
+      learndWords,
+      percent,
+    },
+    promises,
+  }
+}
+
 const processNewWord = (id: string, wordResult: number) => {
   return userWordsApi.addUserWord(id, {
     optional: {
@@ -129,17 +174,21 @@ const processExistingWord = (id: string, wordResult: number, userWord: UserWord)
   const { optional: { totalUsed, guessed, chain, learnDate, isHard } } = userWord;
   const newChain = wordResult ? chain + wordResult : 0;
   const newIsLearned = newChain >= LEARN_CHAIN;
-  return userWordsApi.updateUserWord(id, {
-    optional: {
-      ...userWord.optional,
-      totalUsed: totalUsed + 1,
-      guessed: guessed + wordResult,
-      chain: newChain,
-      isLearned: newIsLearned,
-      isHard: newIsLearned ? false : isHard,
-      learnDate: newIsLearned ? dateToJson(new Date()) : learnDate,
-    }
-  })
+  return {
+    chain: newChain,
+    learned: newIsLearned,
+    updatePromise: userWordsApi.updateUserWord(id, {
+      optional: {
+        ...userWord.optional,
+        totalUsed: totalUsed + 1,
+        guessed: guessed + wordResult,
+        chain: newChain,
+        isLearned: newIsLearned,
+        isHard: newIsLearned ? false : isHard,
+        learnDate: newIsLearned ? dateToJson(new Date()) : learnDate,
+      }
+    })
+  }
 }
 
 export const gameSlice = createSlice({

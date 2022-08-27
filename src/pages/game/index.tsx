@@ -15,7 +15,7 @@ import {
 } from 'entities/game';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
-import { Loader } from 'shared/components/loader';
+import { CircularProgress } from '@mui/material';
 
 export const GamePage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -40,7 +40,7 @@ export const GamePage = () => {
         {gamePhase === GAME_PHASE.START && <GameStartScreen />}
         {gamePhase === GAME_PHASE.COUNTDOWN && <GameCountdown />}
         {gamePhase === GAME_PHASE.RESULTS && <GameResults />}
-        {gamePhase === GAME_PHASE.LOADING && <Loader size={150}/>}
+        {gamePhase === GAME_PHASE.LOADING && <CircularProgress color="secondary" size={100} thickness={2}/>}
       </GameInterface>
     </Page>
   )
