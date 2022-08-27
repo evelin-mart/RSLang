@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { matchPath } from 'react-router';
-import { Box, MenuItem, Menu, Link, Collapse, List, ListItemButton, ListItemText, ListItem } from '@mui/material';
+import { MenuItem, Menu, Link, Collapse, List, ListItemButton, ListItemText, ListItem } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { MenuLink } from 'shared/constants/menu-links';
 import { AppDispatch } from 'app/store';
@@ -9,7 +9,6 @@ import { useDispatch } from 'react-redux';
 import { toggleHeaderMenu } from 'entities/user';
 import { setGameSource } from 'entities/game';
 import { MenuLinkText } from '../link-text';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import styles from '../styles';
 
 type HeaderSubmenuProps = {

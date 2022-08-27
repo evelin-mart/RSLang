@@ -1,19 +1,21 @@
 import { processAuthorizedRequest } from "../lib";
-import { UserStatistics } from './interface';
+import { UserStatistics, UserStatisticsResponse } from './interface';
 
 export const statisticsUrlPath = `/statistics`;
 
 export const getUserStatistics = async () => {
-  return await processAuthorizedRequest<UserStatistics>({
+  const result = await processAuthorizedRequest<UserStatisticsResponse>({
     method: 'GET',
     headers: {
       'Accept': 'application/json',
     },
   }, statisticsUrlPath);
+  delete result.id;
+  return result as UserStatistics;
 }
 
 export const updateUserStatistics = async (userStatistics: Partial<UserStatistics>) => {
-  return await processAuthorizedRequest<UserStatistics>({
+  return await processAuthorizedRequest<UserStatisticsResponse>({
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

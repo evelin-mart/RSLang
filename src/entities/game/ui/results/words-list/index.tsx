@@ -37,7 +37,7 @@ export const ResultsWordsList = ({ words, sound, setSound }: WordsListProps) => 
     return (
       <ListItem key={word.id} sx={{ p: 0, mb: 1 }} >
         <IconButton
-          disabled={sound !== null || !isSound}
+          disabled={sound !== null}
           size="small"
           onClick={() => handlePlay(word.audio)}
           sx={styles.playButton}>

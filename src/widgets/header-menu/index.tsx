@@ -1,13 +1,12 @@
 import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { matchPath } from 'react-router';
-import { Box, List, ListItem, useTheme, ListItemButton, ListItemText } from '@mui/material';
+import { Box, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import { links } from 'shared/constants/menu-links';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
 import styles from './styles';
 import { toggleHeaderMenu } from 'entities/user';
-import { setGameGroup, setGameSource } from 'entities/game';
 import { HeaderSubmenu } from './submenu';
 import { MenuLinkText } from './link-text';
 

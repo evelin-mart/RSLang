@@ -1,5 +1,5 @@
 import { games } from 'shared/constants/games';
-import { addWordResult, GameInformationWrapper, GAME_PHASE, setGamePhase, useGame } from 'entities/game';
+import { GameInformationWrapper, GAME_PHASE, setGamePhase, useGame } from 'entities/game';
 import { AppDispatch, useAppSelector } from 'app/store';
 import { useDispatch } from 'react-redux';
 import { Box, FormControl,  MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
@@ -24,10 +24,6 @@ export const GameStartScreen = () => {
 
   React.useEffect(() => {
     if (loadingProcess.status === STATUS.SUCCESS) {
-      words.forEach(({ id }) => {
-        const result = Math.random() > 0.2;
-        dispatch(addWordResult({ id, result }));
-      });
       dispatch(setGamePhase(GAME_PHASE.COUNTDOWN));
     }
   }, [loadingProcess, dispatch, words]);

@@ -8,6 +8,9 @@ const backgrounds: Partial<Record<PAGES, { bg?: string | ((theme: Theme) => stri
   },
   [PAGES.GAME]: {
     bg: ({ palette }: Theme) => `${palette.grey[50]}`
+  },
+  [PAGES.STATISTICS]: {
+    bg: ({ palette }: Theme) => `${palette.grey[50]}`
   }
 }
 
