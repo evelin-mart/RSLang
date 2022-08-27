@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { matchPath } from 'react-router';
-import { Box, List, ListItem, useTheme } from '@mui/material';
+import { Box, List, ListItem, useTheme, ListItemButton, ListItemText } from '@mui/material';
 import { links } from 'shared/constants/menu-links';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
@@ -11,41 +11,34 @@ import { setGameGroup, setGameSource } from 'entities/game';
 import { HeaderSubmenu } from './submenu';
 import { MenuLinkText } from './link-text';
 
-export const HeaderMenu = (props: {isColumn: boolean}) => {
+export const HeaderMenu = (props: {isColumn: boolean, handleCloseNavMenu?: () => void}) => {
   const dispatch: AppDispatch = useDispatch();
-  const { isColumn } = props;
-  const { palette } = useTheme();
+  const { isColumn, handleCloseNavMenu } = props;
   const location = useLocation();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     dispatch(toggleHeaderMenu(false));
   }, [location, dispatch]);
-
-  const handleGameClick = () => {
-    dispatch(setGameGroup(0));
-    dispatch(setGameSource('headerMenu'));
+  
+  const handleMenuItemClick = (path?: string) => {
+    if (path !== undefined && typeof path === 'string') {
+      navigate(path, { replace: true });
+    }
   }
-
+  
   const linksRendered = links.map((link, i) => {
     const { title, href, submenu } = link;
     const isActive = matchPath(href, location.pathname) !== null;
-    const isGameLink = href.includes('game');
-    return (
-      <ListItem key={i} sx={{ p: 1 }}>
-        {submenu !== undefined
-          ? <HeaderSubmenu isColumn={isColumn} link={link}/>
-          : <Link
-            style={{
-              color: palette.primary.contrastText,
-              pointerEvents: isActive ? "none" : "all",
-              cursor: isActive ? "default" : "pointer",
-            }}
-            to={href}
-            onClick={() => isGameLink && handleGameClick()}>
-            <MenuLinkText title={title} isActive={isActive} isColumn={isColumn}/>
-          </Link>}
-      </ListItem>
-    )
+    return (submenu !== undefined
+      ? <HeaderSubmenu key={i} isColumn={isColumn} link={link} handleCloseNavMenu={handleCloseNavMenu}/>
+      : <ListItem key={i} sx={{ p: 0 }}>
+          <ListItemButton 
+            onClick={() => handleMenuItemClick(href)}
+            sx={{ color: "primary.contrastText", pl: isColumn ? 3 : 1, pr: isColumn ? 3 : 1 }}>
+              <ListItemText primary={<MenuLinkText title={title} isActive={isActive} isColumn={isColumn}/>}/>
+          </ListItemButton>
+        </ListItem>)
   });
 
   return (

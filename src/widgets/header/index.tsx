@@ -60,7 +60,7 @@ export const ResponsiveAppBar = () => {
               }}
             >
               <Box sx={styles.headerMenuBoxColumn}>
-                <HeaderMenu isColumn={true}/>
+                <HeaderMenu isColumn={true} handleCloseNavMenu={handleCloseNavMenu}/>
               </Box>
             </Drawer>
           </Box>

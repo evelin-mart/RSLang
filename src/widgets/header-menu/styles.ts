@@ -6,7 +6,7 @@ const styles = {
     margin: 0,
     padding: 0,
     columnGap: 2,
-    rowGap: 1.5,
+    rowGap: 1,
     width: '100%',
   },
 

@@ -21,6 +21,8 @@ const styles = {
     display: 'flex',
     alignItems: 'flex-start',
     padding: 3,
+    pl: 0,
+    pr: 0,
     backgroundColor: 'primary.dark',
   },
 
