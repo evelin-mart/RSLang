@@ -17,6 +17,7 @@ import { makeAbsUrl } from '../../../../shared/constants';
 import { Word } from 'entities/word/model';
 import { UserWord, UserWordDifficulty } from 'shared/api/users-words';
 import styles from './styles.module.scss';
+import { dateToJson } from 'shared/lib';
 
 export type WordCardProps = {
   word: Word;
@@ -35,6 +36,7 @@ export const WordCard = (props: WordCardProps) => {
       guessed: 6,
       chain: 5,
       isLearned: true,
+      learnDate: dateToJson(new Date(0)),
       isHard: false,
     },
   };

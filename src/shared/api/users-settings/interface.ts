@@ -6,7 +6,7 @@ export interface UserSettings {
     dailyStats: {
       new: number;
       learned: number;
-      data: Date;
+      date: Date;
     }[]
   }
 }

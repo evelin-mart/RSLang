@@ -1,5 +1,4 @@
 import { processAuthorizedRequest } from "../lib";
-import { UserWordDifficulty } from "../users-words";
 import {
   AggregatedWordsQueryOptions,
   AggregatedWordsResult,
@@ -48,7 +47,7 @@ export const getAggregatedWordById = async (wordId: string) => {
   return transformId(word);
 }
 
-export const getAggregatedWordsByDifficulty = async (difficulty: UserWordDifficulty) => {
-  const filter = { "userWord.difficulty": difficulty };
+export const getHardAggregatedWords = async () => {
+  const filter = { "userWord.optional.isHard": "true" };
   return getAggregatedWords({ filter: JSON.stringify(filter) });
 }

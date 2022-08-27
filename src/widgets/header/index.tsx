@@ -37,9 +37,9 @@ export const ResponsiveAppBar = () => {
         isNoScrollFit && styles.menuOpenedStyles(scrollbarWidth),
       ]}>
       <Container maxWidth="lg" sx={{ height: "100%" }}>
-        <Toolbar disableGutters sx={{height: 1, width: "100%"}}>
+        <Toolbar disableGutters sx={{ height: 1, width: "100%" }}>
           <AppLogo isMobile={false}/>
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", sm: "none" } }}>
             <IconButton
               size='large'
               aria-controls='menu-appbar'
@@ -55,7 +55,7 @@ export const ResponsiveAppBar = () => {
               onClose={handleCloseNavMenu}
               keepMounted
               sx={{
-                display: { xs: 'flex', md: 'none' },
+                display: { xs: 'flex', sm: 'none' },
                 bgcolor: 'primary'
               }}
             >

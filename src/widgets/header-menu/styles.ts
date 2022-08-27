@@ -1,3 +1,4 @@
+
 const styles = {
   headerMenu: {
     display: 'flex',
@@ -20,10 +21,20 @@ const styles = {
 
     '&:visited': {
       color: 'inherit',
-    },
+    }
+  },
+
+  headerSubmenuMainLink: {
+    cursor: 'pointer',
+    color: 'primary.contrastText',
+    '&:hover': {
+      textDecoration: 'none'
+    }
   },
 
   headerMenuLink_active: {
+    backgroundColor: 'transparent',
+
     '&::after': {
       content: '""',
       position: 'absolute',

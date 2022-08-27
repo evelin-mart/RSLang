@@ -4,12 +4,14 @@ import { authModalSlice } from 'pages/user/auth-modal/model';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import { userSlice, saveDataToStoreMiddleware, loadUserFromStorage } from 'entities/user';
 import { saveTokensMiddleware } from 'shared/api/lib';
+import { gameSlice } from 'entities/game';
 
 export const store = configureStore({
   reducer: {
     [textbookSlice.name]: textbookSlice.reducer,
     [authModalSlice.name]: authModalSlice.reducer,
     [userSlice.name]: userSlice.reducer,
+    [gameSlice.name]: gameSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(
