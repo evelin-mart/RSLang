@@ -12,9 +12,9 @@ import {
 } from '@mui/material';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import DoneIcon from '@mui/icons-material/Done';
-import { getProgressbarColor, getWordProgress } from 'entities/word/model/utils';
+import { getProgressbarColor, getWordProgress, toggleWordState } from 'entities/word/model/utils';
 import { makeAbsUrl } from '../../../../shared/constants';
-import { addUserWord, defaultUserWord, updateUserWord } from 'shared/api/users-words';
+import { defaultUserWord } from 'shared/api/users-words';
 import { useUser } from 'entities/user/model/hooks';
 import { Word } from 'entities/word/model';
 import styles from './styles.module.scss';
@@ -49,42 +49,6 @@ export const WordCard = (props: WordCardProps) => {
   const progress = getWordProgress(userWord);
 
   const color = getProgressbarColor(progress);
-
-  // TODO
-  const toggleDifficulty = () => {
-    const difficulty = !userWord.optional.isHard;
-    const learned = difficulty ? false : userWord.optional.isLearned;
-    const newUserWord = {
-      ...userWord, optional: {
-        ...userWord.optional,
-        isLearned: learned,
-        isHard: difficulty,
-      }
-    }
-    if (word.userWord) {
-      updateUserWord(word.id, newUserWord);
-    } else {
-      addUserWord(word.id, newUserWord);
-    }
-  };
-
-    const toggleLearning = () => {
-      const learned = !userWord.optional.isLearned;
-      const difficulty = learned ? false : userWord.optional.isHard;
-      const newUserWord = {
-        ...userWord,
-        optional: {
-          ...userWord.optional,
-          isLearned: learned,
-          isHard: difficulty,
-        },
-      };
-      if (word.userWord) {
-        updateUserWord(word.id, newUserWord);
-      } else {
-        addUserWord(word.id, newUserWord);
-      }
-    };
 
   return (
     <Card className={wordClass}>
@@ -133,7 +97,7 @@ export const WordCard = (props: WordCardProps) => {
         <Stack direction='row' spacing={2} sx={{ justifyContent: 'center', pb: 2, mt: 'auto' }}>
           <Chip
             label={userWord.optional.isLearned ? 'в изученных' : 'в изученные'}
-            onClick={toggleLearning}
+            onClick={() => toggleWordState('isLearned', userWord, word)}
             icon={userWord.optional.isLearned ? <DoneIcon /> : undefined}
             size='small'
             color='success'
@@ -141,7 +105,7 @@ export const WordCard = (props: WordCardProps) => {
           />
           <Chip
             label={userWord.optional.isHard ? 'в сложных' : 'в сложные'}
-            onClick={toggleDifficulty}
+            onClick={() => toggleWordState('isHard', userWord, word)}
             icon={userWord.optional.isHard ? <DoneIcon /> : undefined}
             size='small'
             color='error'

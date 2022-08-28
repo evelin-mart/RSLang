@@ -9,12 +9,12 @@ import Pagination from '@mui/material/Pagination';
 import styles from './styles.module.scss';
 import { STATUS, PAGES } from '../../shared/constants';
 import { play, stop } from './utils';
-import { getWords, setGroup, setLastSeenPage, setPage } from './model';
+import { getHardWords, getWords, setGroup, setLastSeenPage, setPage } from './model';
 import { useUser } from 'entities/user/model/hooks';
 
 export const TextbookPage = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { words, status, error, page, group } = useAppSelector((state) => state.textbook);
+  const { words, status, error, page, group, totalPages } = useAppSelector((state) => state.textbook);
   const { isAuthorized } = useUser();
   const [sounds, setSounds] = useState<HTMLAudioElement[]>([]);
 
@@ -26,7 +26,11 @@ export const TextbookPage = () => {
   }, [sounds]);
 
   useEffect(() => {
-    dispatch(getWords(isAuthorized));
+    if (group === 6) {
+      dispatch(getHardWords());
+    } else {
+      dispatch(getWords(isAuthorized));
+    }
     setLastSeenPage(group, page);
   }, [page, group, dispatch, isAuthorized]);
 
@@ -59,7 +63,7 @@ export const TextbookPage = () => {
         <Pagination
           className={styles.pagination}
           color='primary'
-          count={30}
+          count={group === 6 ? totalPages : 30}
           page={page + 1}
           onChange={handlePageChange}
         />
@@ -84,6 +88,7 @@ export const TextbookPage = () => {
         <MenuItem value={3}>Раздел 4</MenuItem>
         <MenuItem value={4}>Раздел 5</MenuItem>
         <MenuItem value={5}>Раздел 6</MenuItem>
+        {isAuthorized && <MenuItem value={6}>Сложные слова</MenuItem>}
       </Select>
       <strong>Страница {page + 1}</strong>
       {content}
