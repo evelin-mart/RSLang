@@ -12,6 +12,7 @@ export const MenuLinkText = ({ isColumn, title, isActive }: MenuLinkTextProps) =
   return (
     <Typography
       component="span"
+      width="fit-content"
       variant={isColumn ? "h5" : "subtitle1"}
       sx={[
         styles.headerMenuLink,

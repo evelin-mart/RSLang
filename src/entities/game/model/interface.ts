@@ -10,6 +10,9 @@ export enum GAME_PHASE {
   LOADING = 'loading',
 }
 
+export type GameResultsData = Record<string, boolean>;
+export type GameStats = { results: GameResultsData, longestChain: number };
+
 export type GameSource = 'headerMenu' | 'textbook';
 
 export interface GameState {
@@ -20,7 +23,7 @@ export interface GameState {
   isSound: boolean;
   isFullscreen: boolean;
   source: GameSource;
-  results: Record<string, boolean>;
+  results: GameResultsData;
   loadingProcess: LoadingState;
 }
 

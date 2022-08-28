@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { initialState, GAME_PHASE, GameSource } from './interface';
+import { initialState, GAME_PHASE, GameSource, GameResultsData, GameStats } from './interface';
 import { GAME, LEARN_CHAIN, MAX_PAGE, MAX_WORDS_IN_GAME, STATUS } from 'shared/constants';
 import { AggregatedWord } from 'shared/api/users-aggregated-words';
 import { AsyncThunkConfig } from 'app/store';
@@ -10,6 +10,7 @@ import * as userStatsApi from 'shared/api/users-statistics';
 import { dateToJson, getRandomInt } from 'shared/lib';
 import { defaultUserWord, UserWord } from 'shared/api/users-words';
 import { UserState } from 'entities/user';
+import { GameStatistics } from 'shared/api/users-statistics';
 
 export const startGame = createAsyncThunk<AggregatedWord[] | void, void, AsyncThunkConfig>(
   'game/start', 
@@ -65,14 +66,16 @@ const getWordsFromRandomPage = async (group: number, user: UserState) => {
     : wordsApi.getWords(options)
 }
 
-export const finishGame = createAsyncThunk<void, void, AsyncThunkConfig>(
+export const finishGame = createAsyncThunk<void, GameStats, AsyncThunkConfig>(
   'game/finish', 
   async (
-    _, { dispatch, getState }
+    { results, longestChain }, { dispatch, getState }
   ) => {
   const {
-    game: { words, results }, user,
+    game: { words, gameId }, user,
   } = getState();
+  
+  dispatch(setGameResults(results));
 
   if (!user.isAuthorized) {
     dispatch(setGamePhase(GAME_PHASE.RESULTS));
@@ -80,56 +83,57 @@ export const finishGame = createAsyncThunk<void, void, AsyncThunkConfig>(
   }
 
   const { stats, promises } = processWords(words, results);
-  const { newWordsCounter, correctAnswers, percent, learndWords } = stats;
-  console.log(`New: ${newWordsCounter}\nCorrect: ${correctAnswers}\nPercent: ${percent}\nLearned: ${learndWords}`);
+  const { newWords, correctAnswers, percent, learnedWords } = stats;
+  console.log(`New: ${newWords}\nCorrect: ${correctAnswers}\nPercent: ${percent}\nLearned: ${learnedWords}`);
   try {
     await Promise.all(promises);
-    // update user statistics here
-    // we need for mini-game stats:
-    //   1. new words
-    //   2. correctAnswers / allWards - percent of correct answers
-    //   3. the longest chain
-    // we need for words stats:
-    //   1. new words
-    //   2. learned words
-    //   3. percent of correct answers - average of games
     const date = dateToJson(new Date());
+    let userStats = userStatsApi.defaultUserStatistics;
     try {
-      // update stats
-      const userStats = await userStatsApi.getUserStatistics();
-      console.log(userStats.optional)
-      await userStatsApi.updateUserStatistics({
-        optional: {
-          ...userStats.optional,
-          [date]: {
-            s: [1, 1, 1],
-            a: [1, 1, 1],
-            w: 1
-          }
+      // user stats exists
+      userStats = await userStatsApi.getUserStatistics();
+    } catch {
+      // user stats doesnt exists
+      userStats = { optional: {
+        [date]: {
+          ...userStatsApi.defaultUserDailyStats
         }
-      });
-    } catch (error) {
-      // add new stats
-      await userStatsApi.updateUserStatistics({
-        optional: {
-          [date]: {
-            s: [1, 1, 1],
-            a: [1, 1, 1],
-            w: 1
-          }
-        }
-      });
+      }};
+    } finally {
+      // update user statistics here
+      // we need for mini-game stats:
+      //   1. new words
+      //   2. correctAnswers / allWards - percent of correct answers
+      //   3. the longest chain
+      // we need for words stats:
+      //   1. new words = (sum new words from all games)
+      //   2. learned words
+      //   3. percent of correct answers = (avarage of sum from all games)
+      const oldStats = userStats.optional[date] || userStatsApi.defaultUserDailyStats;
+      const game = gameId === GAME.AUDIO ? 'a' : 's';
+      const gameStats = oldStats[game] as GameStatistics;
+      const newNewWords = gameStats[0] + newWords;
+      const newPercent = Math.round((gameStats[1] + percent) / 2);
+      const newChain = Math.max(gameStats[2], longestChain);
+      userStats.optional = {
+        ...userStats.optional,
+        [date]: {
+          ...oldStats,
+          [game]: [ newNewWords, newPercent, newChain ],
+          lw: +oldStats.lw + learnedWords,
+        },
+      }
+      await userStatsApi.updateUserStatistics(userStats);
     }
   } finally {
     dispatch(setGamePhase(GAME_PHASE.RESULTS));
   }
 });
 
-const processWords = (words: AggregatedWord[], results: Record<string, boolean>) => {
-  let newWordsCounter = 0;
+const processWords = (words: AggregatedWord[], results: GameResultsData) => {
+  let newWords = 0;
   let correctAnswers = 0;
-  let longestChain = 0;
-  let learndWords = 0;
+  let learnedWords = 0;
   const promises = words
     .filter(({ id }) => results[id] !== undefined)
     .map((word) => {
@@ -137,22 +141,20 @@ const processWords = (words: AggregatedWord[], results: Record<string, boolean>)
       const wordResult = +results[id];
       correctAnswers += wordResult;
       if (userWord === undefined) {
-        newWordsCounter += 1;
+        newWords += 1;
         return processNewWord(id, wordResult);
       } else {
-        const { chain, learned, updatePromise } = processExistingWord(id, wordResult, userWord);
-        if (longestChain < chain) longestChain = chain;
-        learndWords += +learned;
+        const { learned, updatePromise } = processExistingWord(id, wordResult, userWord);
+        learnedWords += +learned;
         return updatePromise;
       }
     });
   const percent = Math.round(correctAnswers / Object.keys(results).length * 100);
   return {
     stats: {
-      newWordsCounter,
+      newWords,
       correctAnswers,
-      longestChain,
-      learndWords,
+      learnedWords,
       percent,
     },
     promises,
@@ -175,7 +177,6 @@ const processExistingWord = (id: string, wordResult: number, userWord: UserWord)
   const newChain = wordResult ? chain + wordResult : 0;
   const newIsLearned = newChain >= LEARN_CHAIN;
   return {
-    chain: newChain,
     learned: newIsLearned,
     updatePromise: userWordsApi.updateUserWord(id, {
       optional: {
@@ -216,9 +217,8 @@ export const gameSlice = createSlice({
     setGameGroup(state, action: PayloadAction<number>) {
       state.group = action.payload;
     },
-    addWordResult(state, action: PayloadAction<{ id: string, result: boolean }>) {
-      const { id, result } = action.payload;
-      state.results = { ...state.results, [id]: result };
+    setGameResults(state, action: PayloadAction<GameResultsData>) {
+      state.results = action.payload;
     },
     resetGame(state) {
       state.loadingProcess.status = STATUS.IDLE;
@@ -258,7 +258,7 @@ export const {
   setGameGroup,
   setGamePhase,
   setGameSource,
-  addWordResult,
+  setGameResults,
   resetGame,
   toggleGameSound,
   toggleGameFullscreen,
