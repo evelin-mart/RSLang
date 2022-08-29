@@ -39,6 +39,9 @@ export const GamePage = () => {
   return (
     <Page pageName={PAGES.GAME} pt={0}>
       <GameInterface>
+        {/* В зависимости от фазы игры, рэндерится тот или иной компонент
+            фазу игры меняем с помощью dispatch(setGamePhase(GAME_PHASE))
+        */}
         {gamePhase === GAME_PHASE.START && <GameStartScreen />}
         {gamePhase === GAME_PHASE.COUNTDOWN && <GameCountdown />}
         {gamePhase === GAME_PHASE.PLAYING && (

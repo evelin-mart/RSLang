@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { initialState, GAME_PHASE, GameSource, GameResultsData, GameStats } from './interface';
+import { initialState, GAME_PHASE, GameSource, GameResultsData } from './interface';
 import { GAME, LEARN_CHAIN, MAX_PAGE, MAX_WORDS_IN_GAME, STATUS } from 'shared/constants';
 import { AggregatedWord } from 'shared/api/users-aggregated-words';
 import { AsyncThunkConfig } from 'app/store';
@@ -61,18 +61,19 @@ const getWordsFromRandomPage = async (group: number, user: UserState) => {
   const page = getRandomInt(0, MAX_PAGE);
   console.log(`Get words from group ${group}, page: ${page}`);
   const options = { group, page };
-  return user.isAuthorized
+  const words = await (user.isAuthorized
     ? agWordsApi.getAggregatedWords(options)
-    : wordsApi.getWords(options)
+    : wordsApi.getWords(options));
+  return words.slice(0, MAX_WORDS_IN_GAME);
 }
 
-export const finishGame = createAsyncThunk<void, GameStats, AsyncThunkConfig>(
+export const finishGame = createAsyncThunk<void, void, AsyncThunkConfig>(
   'game/finish', 
   async (
-    { results, longestChain }, { dispatch, getState }
+    _, { dispatch, getState }
   ) => {
   const {
-    game: { words, gameId }, user,
+    game: { words, gameId, results, longestChain }, user,
   } = getState();
   
   dispatch(setGameResults(results));
@@ -220,7 +221,14 @@ export const gameSlice = createSlice({
     setGameResults(state, action: PayloadAction<GameResultsData>) {
       state.results = action.payload;
     },
-    setProgress(state, action: PayloadAction<number>) {
+    addGameResult(state, action: PayloadAction<{id: string, result: boolean}>) {
+      const { id, result } = action.payload;
+      state.results = {...state.results, [id]: result };
+    },
+    setLongestChain(state, action: PayloadAction<number>) {
+      state.longestChain = action.payload;
+    },
+    setGameProgress(state, action: PayloadAction<number>) {
       state.progress = action.payload;
     },
     resetGame(state) {
@@ -229,6 +237,7 @@ export const gameSlice = createSlice({
       state.results = {};
       state.words = [];
       state.progress = 0;
+      state.longestChain = 0;
     }
   },
   extraReducers(builder) {
@@ -266,5 +275,7 @@ export const {
   resetGame,
   toggleGameSound,
   toggleGameFullscreen,
-  setProgress,
+  setGameProgress,
+  setLongestChain,
+  addGameResult,
 } = gameSlice.actions;
