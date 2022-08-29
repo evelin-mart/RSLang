@@ -9,18 +9,22 @@ export interface UserWord {
   };
 }
 
+export interface UserWordAnswer extends UserWord {
+  id: string;
+  wordId: string;
+}
+
 export enum UserWordDifficulty {
   HARD = 'hard',
   EASY = 'easy',
 }
 
 export const defaultUserWord: UserWord = {
-  difficulty: UserWordDifficulty.EASY,
   optional: {
     totalUsed: 0,
     guessed: 0,
     chain: 0,
     isLearned: false,
     isHard: false,
-  }
-}
+  },
+};

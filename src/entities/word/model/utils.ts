@@ -30,8 +30,8 @@ export const toggleWordState = (prop: 'isHard' | 'isLearned', userWord: UserWord
     },
   };
   if (word.userWord) {
-    updateUserWord(word.id, newUserWord);
+    return updateUserWord(word.id, newUserWord);
   } else {
-    addUserWord(word.id, newUserWord);
+    return addUserWord(word.id, newUserWord);
   }
 };

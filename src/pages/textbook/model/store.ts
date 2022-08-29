@@ -8,14 +8,13 @@ import {
 } from 'shared/api/users-aggregated-words';
 import { AsyncThunkConfig } from 'app/store';
 import { getLastSeenPage, initialState } from './interface';
+import { UserWordAnswer } from 'shared/api/users-words';
 
 export const getWords = createAsyncThunk<Word[], boolean, AsyncThunkConfig>(
   'words/getWords',
   async (isAuth, { getState }) => {
     const { page, group } = getState().textbook;
-    return isAuth
-      ? getAggregatedWordsOnPage({ page, group })
-      : wordsApi.getWords({ page, group });
+    return isAuth ? getAggregatedWordsOnPage({ page, group }) : wordsApi.getWords({ page, group });
   },
 );
 
@@ -37,6 +36,12 @@ export const textbookSlice = createSlice({
     setGroup(state, action: PayloadAction<number>) {
       state.group = action.payload;
       state.page = getLastSeenPage(state.group)[1];
+    },
+    updateWord(state, action: PayloadAction<UserWordAnswer>) {
+      const userWord = action.payload;
+      state.words = state.words.map((word) =>
+        word.id === userWord.wordId ? { ...word, userWord: { optional: userWord.optional } } : word,
+      );
     },
   },
   extraReducers(builder) {
@@ -66,4 +71,4 @@ export const textbookSlice = createSlice({
   },
 });
 
-export const { setPage, setGroup } = textbookSlice.actions;
+export const { setPage, setGroup, updateWord } = textbookSlice.actions;

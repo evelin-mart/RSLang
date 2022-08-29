@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   Typography,
   Card,
@@ -19,6 +20,8 @@ import { useUser } from 'entities/user/model/hooks';
 import { Word } from 'entities/word/model';
 import styles from './styles.module.scss';
 import classNames from 'classnames';
+import { AppDispatch } from 'app/store';
+import { updateWord } from 'pages/textbook/model';
 
 export type WordCardProps = {
   word: Word;
@@ -28,6 +31,7 @@ export type WordCardProps = {
 export const WordCard = (props: WordCardProps) => {
   const { word, play } = props;
   const { isAuthorized } = useUser();
+  const dispatch: AppDispatch = useDispatch();
 
   const userWord = word.userWord ? word.userWord : defaultUserWord;
 
@@ -49,6 +53,11 @@ export const WordCard = (props: WordCardProps) => {
   const progress = getWordProgress(userWord);
 
   const color = getProgressbarColor(progress);
+
+  const updateUserWord = async (prop: 'isHard' | 'isLearned') => {
+    const updatedWord = await toggleWordState(prop, userWord, word);
+    dispatch(updateWord(updatedWord));
+  };
 
   return (
     <Card className={wordClass}>
@@ -97,7 +106,7 @@ export const WordCard = (props: WordCardProps) => {
         <Stack direction='row' spacing={2} sx={{ justifyContent: 'center', pb: 2, mt: 'auto' }}>
           <Chip
             label={userWord.optional.isLearned ? 'в изученных' : 'в изученные'}
-            onClick={() => toggleWordState('isLearned', userWord, word)}
+            onClick={() => updateUserWord('isLearned')}
             icon={userWord.optional.isLearned ? <DoneIcon /> : undefined}
             size='small'
             color='success'
@@ -105,7 +114,7 @@ export const WordCard = (props: WordCardProps) => {
           />
           <Chip
             label={userWord.optional.isHard ? 'в сложных' : 'в сложные'}
-            onClick={() => toggleWordState('isHard', userWord, word)}
+            onClick={() => updateUserWord('isHard')}
             icon={userWord.optional.isHard ? <DoneIcon /> : undefined}
             size='small'
             color='error'
