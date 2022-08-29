@@ -39,6 +39,6 @@ export const useNoScrollFit = () => {
 
   return {
     scrollbarWidth,
-    isNoScrollFit: (isHeaderMenuOpened && hasScrollBar) || isAuthModalShowed,
+    isNoScrollFit: (isHeaderMenuOpened || isAuthModalShowed) && hasScrollBar,
   }
 }

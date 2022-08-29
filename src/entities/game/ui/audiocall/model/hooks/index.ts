@@ -4,7 +4,6 @@ import { getRandomInt, shuffle } from 'shared/lib/utils';
 import { AggregatedWord } from 'shared/api/users-aggregated-words';
 import { MAX_ANSWERS } from '../config';
 import { setGameProgress } from 'entities/game';
-import { MAX_WORDS_IN_GAME } from 'shared/constants';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
 
@@ -31,7 +30,8 @@ type PlayingWord = {
 const generateAnswers = (currentWord: AggregatedWord, words: AggregatedWord[] ) => {
   const restWords = words.filter(({ id }) => id !== currentWord.id);
   const usedIndexies: number[] = [];
-  const answers: AnswerOptions[] = Array.from({ length: MAX_ANSWERS - 1 }, (_, i) => {
+  const answersNumber = words.length < MAX_ANSWERS ? words.length : MAX_ANSWERS;
+  const answers: AnswerOptions[] = Array.from({ length: answersNumber - 1 }, (_, i) => {
     let randomIndex = -1;
     do {
       randomIndex = getRandomInt(0, restWords.length - 1);
@@ -45,6 +45,7 @@ const generateAnswers = (currentWord: AggregatedWord, words: AggregatedWord[] ) 
 
 const useProgress = (currentIndex: number) => {
   const dispatch: AppDispatch = useDispatch();
+  const { gameId, words } = useGame();
   const progressStep = React.useRef(0);
 
   React.useEffect(() => {
@@ -55,12 +56,12 @@ const useProgress = (currentIndex: number) => {
   }, [currentIndex, dispatch]);
 
   React.useEffect(() => {
-    progressStep.current = (100 / MAX_WORDS_IN_GAME);
-  }, []);
+    progressStep.current = (100 / words.length);
+  }, [gameId, words]);
 }
 
 export const usePlayingWord = (): [PlayingWord | null, () => void, boolean, typeof playSound] => {
-  const { words } = useGame();
+  const { words, gameId } = useGame();
   const { playSound, stopSound } = useSound();
   const [ isEndGame, setIsEndGame ] = React.useState(false);
   const [ currentIndex, setCurrentIndex ] = React.useState(0);
@@ -78,7 +79,7 @@ export const usePlayingWord = (): [PlayingWord | null, () => void, boolean, type
   }, [words]);
 
   React.useEffect(() => {
-    if (currentIndex === MAX_WORDS_IN_GAME) {
+    if (currentIndex === words.length) {
       return setIsEndGame(true);
     }
     const word = shuffledWords.current[currentIndex] !== undefined
@@ -94,7 +95,7 @@ export const usePlayingWord = (): [PlayingWord | null, () => void, boolean, type
       answers: generateAnswers(word, shuffledWords.current),
     });
 
-  }, [currentIndex]);
+  }, [currentIndex, gameId, words]);
 
 
   React.useEffect(() => {

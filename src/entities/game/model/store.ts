@@ -1,16 +1,17 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { initialState, GAME_PHASE, GameSource, GameResultsData } from './interface';
-import { GAME, LEARN_CHAIN, MAX_PAGE, MAX_WORDS_IN_GAME, STATUS } from 'shared/constants';
+import { GAME, LEARN_CHAIN, MAX_PAGE, STATUS } from 'shared/constants';
 import { AggregatedWord } from 'shared/api/users-aggregated-words';
 import { AsyncThunkConfig } from 'app/store';
 import * as agWordsApi from 'shared/api/users-aggregated-words';
 import * as wordsApi from 'shared/api/words';
 import * as userWordsApi from 'shared/api/users-words';
 import * as userStatsApi from 'shared/api/users-statistics';
-import { dateToJson, getRandomInt } from 'shared/lib';
+import { dateToJson, getRandomInt, shuffle } from 'shared/lib';
 import { defaultUserWord, UserWord } from 'shared/api/users-words';
 import { UserState } from 'entities/user';
 import { GameStatistics } from 'shared/api/users-statistics';
+import { games } from 'shared/constants/games';
 
 export const startGame = createAsyncThunk<AggregatedWord[] | void, void, AsyncThunkConfig>(
   'game/start', 
@@ -19,16 +20,16 @@ export const startGame = createAsyncThunk<AggregatedWord[] | void, void, AsyncTh
   ) => {
   const {
     textbook: { page },
-    game: { source, group },
+    game: { source, group, gameId },
     user,
   } = getState();
 
   const isFromTextbook = source === 'textbook';
-
+  const maxWords = games[gameId as GAME].maxWords;
   const words: AggregatedWord[] = await (
     isFromTextbook
-      ? getWordsFromTextbook(group, page, user)
-      : getWordsFromRandomPage(group, user)
+      ? getWordsFromTextbook(group, page, user, maxWords)
+      : getWordsFromRandomPage(group, user, maxWords)
   )
 
   if (words.length === 0) throw new Error('There are no words to use in game');
@@ -36,7 +37,7 @@ export const startGame = createAsyncThunk<AggregatedWord[] | void, void, AsyncTh
   dispatch(setWords(words));
 });
 
-const getWordsFromTextbook = async (group: number, page: number, user: UserState) => {
+const getWordsFromTextbook = async (group: number, page: number, user: UserState, maxWords: number) => {
   let words: AggregatedWord[] = [];
   for (let pageNumber = page; pageNumber >= 0; pageNumber -= 1) {
     const options = { group, page: pageNumber };
@@ -50,21 +51,34 @@ const getWordsFromTextbook = async (group: number, page: number, user: UserState
         ? currentPageWords.filter((word) => !word.userWord?.optional.isLearned)
         : currentPageWords
     )
-    if (words.length >= MAX_WORDS_IN_GAME) {
-      return words.slice(0, MAX_WORDS_IN_GAME);
+    if (words.length >= maxWords) {
+      return words.slice(0, maxWords);
     }
   }
   return words;
 }
 
-const getWordsFromRandomPage = async (group: number, user: UserState) => {
-  const page = getRandomInt(0, MAX_PAGE);
-  console.log(`Get words from group ${group}, page: ${page}`);
-  const options = { group, page };
-  const words = await (user.isAuthorized
-    ? agWordsApi.getAggregatedWords(options)
-    : wordsApi.getWords(options));
-  return words.slice(0, MAX_WORDS_IN_GAME);
+const getWordsFromRandomPage = async (group: number, user: UserState, maxWords: number) => {
+  const usedPages: number[] = [];
+  let words: AggregatedWord[] = [];
+  while(words.length < maxWords) {
+    let page = -1;
+    do {
+      page = getRandomInt(0, MAX_PAGE);
+    } while (usedPages.includes(page));
+
+    console.log(`Get words from group ${group}, page: ${page}`);
+
+    const options = { group, page };
+    words = words.concat(await (user.isAuthorized
+      ? agWordsApi.getAggregatedWords(options)
+      : wordsApi.getWords(options)));
+    
+    if (words.length > maxWords) {
+      return shuffle(words).slice(0, maxWords);
+    }
+  }
+  return words;
 }
 
 export const finishGame = createAsyncThunk<void, void, AsyncThunkConfig>(
