@@ -60,9 +60,9 @@ export const useSound = (): { playSound: typeof playSound, stopSound: typeof sto
       playSong(sound)
         .finally(() => setSound(null));
     }
-    return () => {
-      sound && sound.pause();
-    }
+    // return () => {
+      // sound && sound.pause();
+    // }
   }, [sound, setIsPlaying]);
 
   const playSound = React.useCallback((url: string) => {

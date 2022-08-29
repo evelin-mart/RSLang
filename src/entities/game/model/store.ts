@@ -24,18 +24,34 @@ export const startGame = createAsyncThunk<AggregatedWord[] | void, void, AsyncTh
     user,
   } = getState();
 
+
   const isFromTextbook = source === 'textbook';
   const maxWords = games[gameId as GAME].maxWords;
-  const words: AggregatedWord[] = await (
-    isFromTextbook
-      ? getWordsFromTextbook(group, page, user, maxWords)
-      : getWordsFromRandomPage(group, user, maxWords)
-  )
+
+  let words: AggregatedWord[] = [];
+  if (group === 6) {
+    words = await getHardWords(maxWords);
+  } else {
+    words = await (
+      isFromTextbook
+        ? getWordsFromTextbook(group, page, user, maxWords)
+        : getWordsFromRandomPage(group, user, maxWords)
+    )
+  }
 
   if (words.length === 0) throw new Error('There are no words to use in game');
   console.log('Game words:', words.length, words.map(({ word }) => word).join(','))
   dispatch(setWords(words));
 });
+
+const getHardWords = async (maxWords: number) => {
+
+  const words = await agWordsApi.getHardAggregatedWords();
+  return words.length > maxWords
+    ? shuffle(words).slice(0, maxWords)
+    : words;
+
+}
 
 const getWordsFromTextbook = async (group: number, page: number, user: UserState, maxWords: number) => {
   let words: AggregatedWord[] = [];

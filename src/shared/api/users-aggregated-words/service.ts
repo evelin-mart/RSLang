@@ -12,7 +12,7 @@ const queryOptionsToString = ({ wordsPerPage, group, page, filter }: AggregatedW
     : JSON.stringify({ $and: [ { page }, { group } ] });
   
   const params = [`filter=${resultFilter}`];
-  params.push(`wordsPerPage=${wordsPerPage}`);
+  if (wordsPerPage) params.push(`wordsPerPage=${wordsPerPage}`);
 
   return params.join('&');
 }
@@ -48,6 +48,6 @@ export const getAggregatedWordById = async (wordId: string) => {
 }
 
 export const getHardAggregatedWords = async () => {
-  const filter = { "userWord.optional.isHard": "true" };
-  return getAggregatedWords({ filter: JSON.stringify(filter) });
+  const filter = { "userWord.optional.isHard": true };
+  return getAggregatedWords({ filter: JSON.stringify(filter), wordsPerPage: 0 });
 }

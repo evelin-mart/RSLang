@@ -13,7 +13,7 @@ const styles = {
     columnGap: 2,
     justifyContent: "center",
     flexWrap: "wrap",
-    mt: 3,
+    mt: 5,
     width: '100%',
   },
 

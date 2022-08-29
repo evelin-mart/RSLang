@@ -102,10 +102,40 @@ export const usePlayingWord = (): [PlayingWord | null, () => void, boolean, type
     if (playingWord !== null) {
       playSound(playingWord.word.audio);
     }
-    return () => {
-      playingWord !== null && stopSound();
-    }
+    // return () => {
+    //   playingWord !== null && stopSound();
+    // }
   }, [playingWord, playSound, stopSound]);
 
   return [playingWord, next, isEndGame, playSound];
+}
+
+
+const handleKeyDown = (buttons: Record<string, HTMLButtonElement | null>) => (event: KeyboardEvent) => {
+  if (Object.keys(buttons).includes(event.code)) {
+    event.preventDefault();
+  }
+  buttons[event.code]?.click();
+}
+
+export const useKeyboard = (
+  answerButtons: React.MutableRefObject<(HTMLButtonElement | null)[]>, 
+  nextBtn: React.MutableRefObject<HTMLButtonElement | null>,
+  playingWord: PlayingWord | null) => {
+  
+  React.useEffect(() => {
+    const buttons = {
+      ...answerButtons.current.reduce((acc: Record<string, HTMLButtonElement | null>, btn, i) => {
+        return {...acc, [`Digit${i + 1}`]: btn };
+      }, {}),
+      'Space': nextBtn.current,
+    };
+
+    const handler = handleKeyDown(buttons);
+    document.addEventListener('keydown', handler);
+
+    return () => {
+      document.removeEventListener('keydown', handler);
+    }
+  }, [playingWord]);
 }
