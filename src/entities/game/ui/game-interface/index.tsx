@@ -1,7 +1,7 @@
 import { resetGame, toggleGameFullscreen, toggleGameSound, useGame } from 'entities/game';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
-import { IconButton, Box, Grid, Tooltip } from '@mui/material';
+import { IconButton, Box, Grid, Tooltip, LinearProgress } from '@mui/material';
 import React from 'react';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const GameInterface = ({ children }: React.PropsWithChildren) => {
   const dispatch: AppDispatch = useDispatch();
-  const { isSound, isFullscreen } = useGame();
+  const { isSound, isFullscreen, progress } = useGame();
   const navigate = useNavigate();
 
   const handleToTextbookClick = () => {
@@ -38,7 +38,8 @@ export const GameInterface = ({ children }: React.PropsWithChildren) => {
 
   return (
     <Grid sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <LinearProgress color="secondary" variant="determinate" value={progress} sx={{ height: 8, position: "fixed", bottom: 0, left: 0, width: "100vw" }}/>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
         <Tooltip title="Звук">
           <IconButton onClick={handleSoundClick} color="secondary">
             {isSound ? <VolumeUpIcon /> : <VolumeOffIcon sx={{ color: "grey.500"}}/>}

@@ -11,11 +11,12 @@ export type PageProps = {
   pageName: PAGES;
   title?: string;
   children?: React.ReactNode;
+  pt?: number;
 };
 
 export const Page = (props: PageProps) => {
   const { isNoScrollFit, scrollbarWidth } = useNoScrollFit();
-  const { pageName, title, children } = props;
+  const { pageName, title, children, pt } = props;
   const isFooter = pageName !== PAGES.GAME;
   
   const { bg = '', filter = '' } = pagesBackgrounds[pageName] || {};
@@ -41,7 +42,7 @@ export const Page = (props: PageProps) => {
                 <Typography variant='h6' marginBottom={2}>
                   {title}
                 </Typography>}
-              <Grid sx={{ flexGrow: 1, pt: title ? 0 : 3 }}>
+              <Grid sx={{ flexGrow: 1, pt: pt !== undefined ? pt : (title ? 0 : 3) }}>
                 {children}
               </Grid>
             </Container>

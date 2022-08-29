@@ -25,6 +25,7 @@ export interface GameState {
   source: GameSource;
   results: GameResultsData;
   loadingProcess: LoadingState;
+  progress: number;
 }
 
 export const initialState: GameState = {
@@ -37,4 +38,5 @@ export const initialState: GameState = {
   source: 'headerMenu',
   results: {},
   loadingProcess: defaultLoadingState,
+  progress: 0,
 }
