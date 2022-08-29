@@ -220,11 +220,15 @@ export const gameSlice = createSlice({
     setGameResults(state, action: PayloadAction<GameResultsData>) {
       state.results = action.payload;
     },
+    setProgress(state, action: PayloadAction<number>) {
+      state.progress = action.payload;
+    },
     resetGame(state) {
       state.loadingProcess.status = STATUS.IDLE;
       state.gamePhase = GAME_PHASE.START;
       state.results = {};
       state.words = [];
+      state.progress = 0;
     }
   },
   extraReducers(builder) {
@@ -262,4 +266,5 @@ export const {
   resetGame,
   toggleGameSound,
   toggleGameFullscreen,
+  setProgress,
 } = gameSlice.actions;

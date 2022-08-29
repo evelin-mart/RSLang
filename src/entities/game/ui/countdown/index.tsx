@@ -1,16 +1,14 @@
-import { finishGame, setGamePhase, GAME_PHASE, useGame, GameResultsData } from 'entities/game';
+import { setGamePhase, GAME_PHASE } from 'entities/game';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
 import { Typography } from '@mui/material';
 import { GameInformationWrapper } from '../info-wrapper';
 import React from 'react';
 import { GAME_COUNTDOWN } from 'shared/constants';
-import { getRandomInt } from 'shared/lib';
 
 export const GameCountdown = () => {
   const dispatch: AppDispatch = useDispatch();
   const [counter, setCounter] = React.useState<number>(GAME_COUNTDOWN);
-  const { words } = useGame();
 
   React.useEffect(() => {
     const timer = setInterval(() => {
@@ -26,22 +24,9 @@ export const GameCountdown = () => {
 
   React.useEffect(() => {
     if (counter === 0) {
-      // dispatch(setGamePhase(GAME_PHASE.PLAYING));
-
-      // generating some random game results
-      // skip playing phase and go directly to results
-      const results: GameResultsData = {};
-      words.forEach(({ id }) => {
-        const result = Math.random() > 0.2;
-        results[id] = result;
-      });
-      dispatch(setGamePhase(GAME_PHASE.LOADING));
-      dispatch(finishGame({
-        results,
-        longestChain: getRandomInt(0, Object.keys(results).length) 
-      }));
+      dispatch(setGamePhase(GAME_PHASE.PLAYING));
     }
-  }, [words, counter, dispatch]);
+  }, [counter, dispatch]);
 
   return (
     <GameInformationWrapper>      
