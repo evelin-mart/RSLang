@@ -21,6 +21,9 @@ export const SprintGame = () => {
       results, // results = { [wordId]: boolean }
       longestChain: getRandomInt(0, Object.keys(results).length)
     }));
+
+    console.log('Результаты', results);
+    
   }
 
   return (
