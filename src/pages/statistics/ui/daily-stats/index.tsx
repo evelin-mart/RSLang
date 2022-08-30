@@ -22,7 +22,6 @@ export const DailyStats = ({ stats }: DailyStatsProps) => {
   return (
     <Box sx={{
       display: "flex",
-      mt: 3,
       columnGap: 3,
       rowGap: 3,
       flexWrap: "wrap",

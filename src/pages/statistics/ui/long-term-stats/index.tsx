@@ -3,7 +3,6 @@ import React from 'react';
 import { UserStatistics } from "shared/api/users-statistics"
 import { Typography, Box, useTheme, useMediaQuery } from '@mui/material';
 import { getWordsStats } from 'pages/statistics/model';
-import { dateToJson } from 'shared/lib';
 import {
   ComposedChart,
   Line,
@@ -28,28 +27,52 @@ export const LongTermStats = ({ stats }: LongTermStatsProps) => {
   if (stats instanceof Error) {
     return <Typography variant="body1" color="info.main">Статистики пока нет</Typography>;
   }
-
+  
+  let learnedWordsSum = 0;
   const data = Object.keys(stats.optional).map((date) => {
     const wordsStatsOnDate = getWordsStats(stats.optional[date]);
+    const [ day, mounth ] = date.split('-').reverse();
+    const learned = +wordsStatsOnDate[1].value;
+    const prevLearned = learnedWordsSum;
+    learnedWordsSum += learned;
     return {
-      name: date,
-      uv: wordsStatsOnDate[0].value,
+      name: `${day}/${mounth}`,
+      newWords: wordsStatsOnDate[0].value,
+      learnedWords: learned,
+      prevDayLearnedWords: prevLearned,
+      learnedOverall: learnedWordsSum,
     }
   });
 
   return (
     <Box sx={{ flexBasis: 700 }}>
-      <ResponsiveContainer minWidth={250} width={"99%"} height={smMatches ? 400 : 300}>
-        <ComposedChart data={data} margin={{top: 0, left: 0, right: 0, bottom: 0}} style={{ left: "-20px"}}>
-          <CartesianGrid stroke={palette.grey[400]} />
-          <XAxis dataKey="name" scale="band" />
-          <YAxis />
-          <Tooltip />
-          <Legend payload={[{ value: 'Новых слов за день', type: 'line' }]} color={palette.info.dark} />
-          <Bar dataKey="uv" name="Новые слова" barSize={20} fill={palette.info.dark} />
-          <Line dataKey="uv" type="monotone" name="Новые слова" stroke={palette.warning.main} />
-        </ComposedChart>
-      </ResponsiveContainer>
+      <Box>
+        <ResponsiveContainer minWidth={250} width={"99%"} height={smMatches ? 400 : 300}>
+          <ComposedChart data={data} margin={{top: 0, left: 0, right: 0, bottom: 0}} style={{ left: "-20px"}}>
+            <CartesianGrid stroke={palette.grey[400]} />
+            <XAxis dataKey="name" tickMargin={5}/>
+            <YAxis />
+            <Tooltip />
+            <Legend payload={[{ value: 'Новых слов в день', type: 'line' }]} color={palette.info.dark} align="right"/>
+            <Bar dataKey="newWords" name="Новые слова" barSize={20} fill={palette.info.dark} />
+            <Line dataKey="newWords" type="monotone" name="Новые слова" stroke={palette.warning.main} />
+          </ComposedChart>
+        </ResponsiveContainer>
+      </Box>
+      <Box sx={{ mt: 4 }}>
+        <ResponsiveContainer minWidth={250} width={"99%"} height={smMatches ? 400 : 300} >
+          <ComposedChart data={data} margin={{top: 0, left: 0, right: 0, bottom: 0}} style={{ left: "-20px"}}>
+            <CartesianGrid stroke={palette.grey[400]} />
+            <XAxis dataKey="name" tickMargin={5}/>
+            <YAxis />
+            <Tooltip />
+            <Legend payload={[{ value: 'Увеличение общего количества изученных слов в день', type: 'line' }]} align="right"/>
+            <Bar stackId="learned" dataKey="prevDayLearnedWords" name="Изученные на вчера" barSize={20} fill={palette.info.dark} />
+            <Bar stackId="learned" dataKey="learnedWords" name="Изученные на сегодня" barSize={20} fill={palette.info.light} />
+            <Line dataKey="learnedOverall" type="monotone" name="Всего изучено" stroke={palette.warning.main} />
+          </ComposedChart>
+        </ResponsiveContainer>
+      </Box>
     </Box>
   )
 }

@@ -1,8 +1,5 @@
 import React from 'react';
-import { Page } from 'pages/page';
 import { CircularProgress, Grid, Box, Typography } from '@mui/material';
-import { PAGES } from 'shared/constants';
-import { UserStatistics } from 'shared/api/users-statistics';
 
 type StatsSectionWrapperProps = React.PropsWithChildren & {
   title: string;
@@ -13,7 +10,11 @@ export const StatsSectionWrapper = ({ title, loading, children }: StatsSectionWr
 
   return (
     <Grid component="section">
-      <Typography variant="h5" component="h3" sx={{ mb: 2, textAlign: "center" }}>
+      <Typography variant="h5" component="h3" sx={{
+        mb: { xs: 2, md: 3 },
+        textAlign: "center",
+        fontSize: { xs: "1.3rem", md: "1.5rem" },
+      }}>
         {title}
       </Typography>
       <Box sx={{ display: "flex", justifyContent: "center" }}>
