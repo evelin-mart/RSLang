@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import classNames from 'classnames';
+import { useDispatch } from 'react-redux';
 import {
   Typography,
   Card,
@@ -13,33 +13,28 @@ import {
 } from '@mui/material';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import DoneIcon from '@mui/icons-material/Done';
+import { getProgressbarColor, getWordProgress, toggleWordState } from 'entities/word/model/utils';
 import { makeAbsUrl } from '../../../../shared/constants';
+import { defaultUserWord } from 'shared/api/users-words';
+import { useUser } from 'entities/user/model/hooks';
 import { Word } from 'entities/word/model';
-import { UserWord, UserWordDifficulty } from 'shared/api/users-words';
 import styles from './styles.module.scss';
-import { dateToJson } from 'shared/lib';
+import classNames from 'classnames';
+import { AppDispatch } from 'app/store';
+import { updateWord } from 'pages/textbook/model';
 
 export type WordCardProps = {
   word: Word;
   play: Dispatch<SetStateAction<HTMLAudioElement[]>>;
-  userWord?: UserWord;
 };
 
 export const WordCard = (props: WordCardProps) => {
   const { word, play } = props;
+  const { isAuthorized } = useUser();
+  const dispatch: AppDispatch = useDispatch();
 
-  //! mock
-  const userWord: UserWord = {
-    difficulty: UserWordDifficulty.EASY,
-    optional: {
-      totalUsed: 8,
-      guessed: 6,
-      chain: 5,
-      isLearned: true,
-      learnDate: dateToJson(new Date(0)),
-      isHard: false,
-    },
-  };
+
+  const userWord = word.userWord ? word.userWord : defaultUserWord;
 
   const sounds = [
     makeAbsUrl(word.audio),
@@ -52,14 +47,18 @@ export const WordCard = (props: WordCardProps) => {
   };
 
   const wordClass = classNames(styles.container, {
-    [styles.hard]: userWord && userWord.optional.isHard,
-    [styles.learned]: userWord && userWord.optional.isLearned,
+    [styles.hard]: isAuthorized && userWord.optional.isHard,
+    [styles.learned]: isAuthorized && userWord.optional.isLearned,
   });
 
-  const getWordProgress = ({ optional }: UserWord) => (optional.guessed * 100) / optional.totalUsed;
+  const progress = getWordProgress(userWord);
 
-  // TODO
-  const toggleUserWord = () => true;
+  const color = getProgressbarColor(progress);
+
+  const updateUserWord = async (prop: 'isHard' | 'isLearned') => {
+    const updatedWord = await toggleWordState(prop, userWord, word);
+    dispatch(updateWord(updatedWord));
+  };
 
   return (
     <Card className={wordClass}>
@@ -73,12 +72,12 @@ export const WordCard = (props: WordCardProps) => {
         subheader={word.wordTranslate}
       />
 
-      {userWord && (
+      {isAuthorized && (
         <LinearProgress
-          color='success'
-          variant='determinate'
+          color={color}
+          variant={'determinate'}
           sx={{ height: 12 }}
-          value={getWordProgress(userWord)}
+          value={progress ? progress : 0}
         />
       )}
 
@@ -104,11 +103,11 @@ export const WordCard = (props: WordCardProps) => {
         <Typography variant='body2'>{word.textExampleTranslate}</Typography>
       </CardContent>
 
-      {userWord && (
+      {isAuthorized && (
         <Stack direction='row' spacing={2} sx={{ justifyContent: 'center', pb: 2, mt: 'auto' }}>
           <Chip
             label={userWord.optional.isLearned ? 'в изученных' : 'в изученные'}
-            onClick={toggleUserWord}
+            onClick={() => updateUserWord('isLearned')}
             icon={userWord.optional.isLearned ? <DoneIcon /> : undefined}
             size='small'
             color='success'
@@ -116,7 +115,7 @@ export const WordCard = (props: WordCardProps) => {
           />
           <Chip
             label={userWord.optional.isHard ? 'в сложных' : 'в сложные'}
-            onClick={toggleUserWord}
+            onClick={() => updateUserWord('isHard')}
             icon={userWord.optional.isHard ? <DoneIcon /> : undefined}
             size='small'
             color='error'

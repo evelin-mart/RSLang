@@ -10,7 +10,7 @@ export const MainPage = () => {
       <Grid sx={{ color: "grey.50" }}>
         <Typography component="h2" sx={{
           textShadow: ({ palette }: Theme) => `1px 1px 3px ${palette.text.primary}`,
-          mt: 5, mb: 5,
+          mt: 1, mb: 3,
           typography: { xs: 'h5', md: 'h3'}
         }}>
           RSLang - удобное приложение для изучения английского языка!

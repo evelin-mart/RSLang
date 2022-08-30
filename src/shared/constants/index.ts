@@ -1,4 +1,3 @@
-
 export const baseUrl = 'http://localhost:3001';
 // export const baseUrl = 'https://react-learnwords-jsfe2022.herokuapp.com';
 

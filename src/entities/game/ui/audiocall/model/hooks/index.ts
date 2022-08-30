@@ -137,5 +137,5 @@ export const useKeyboard = (
     return () => {
       document.removeEventListener('keydown', handler);
     }
-  }, [playingWord]);
+  }, [playingWord, answerButtons, nextBtn]);
 }

@@ -46,7 +46,7 @@ export const startGame = createAsyncThunk<AggregatedWord[] | void, void, AsyncTh
 
 const getHardWords = async (maxWords: number) => {
 
-  const words = await agWordsApi.getHardAggregatedWords();
+  const words = await agWordsApi._getHardAggregatedWords();
   return words.length > maxWords
     ? shuffle(words).slice(0, maxWords)
     : words;
@@ -59,7 +59,7 @@ const getWordsFromTextbook = async (group: number, page: number, user: UserState
     const options = { group, page: pageNumber };
     const currentPageWords: AggregatedWord[] = await (
       user.isAuthorized
-        ? agWordsApi.getAggregatedWords(options)
+        ? agWordsApi._getAggregatedWords(options)
         : wordsApi.getWords(options)
     );
     words = words.concat(
@@ -87,7 +87,7 @@ const getWordsFromRandomPage = async (group: number, user: UserState, maxWords: 
 
     const options = { group, page };
     words = words.concat(await (user.isAuthorized
-      ? agWordsApi.getAggregatedWords(options)
+      ? agWordsApi._getAggregatedWords(options)
       : wordsApi.getWords(options)));
     
     if (words.length > maxWords) {

@@ -84,7 +84,7 @@ export const AudiocallGame = () => {
               <VolumeUpIcon />
             </Fab>
             <CardContent>
-              <Typography variant="h4" component="div">
+              <Typography variant="h5" component="div">
                 {playingWord ? playingWord.word.word : ''}
               </Typography>
               <Typography color="text.secondary">
