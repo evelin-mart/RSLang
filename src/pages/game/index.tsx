@@ -15,7 +15,7 @@ import {
 } from 'entities/game';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
-import { CircularProgress } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import { AudiocallGame } from 'entities/game/ui/audiocall';
 import { SprintGame } from 'entities/game/ui/sprint';
 
@@ -39,6 +39,9 @@ export const GamePage = () => {
   return (
     <Page pageName={PAGES.GAME} pt={0}>
       <GameInterface>
+        {/* В зависимости от фазы игры, рэндерится тот или иной компонент
+            фазу игры меняем с помощью dispatch(setGamePhase(GAME_PHASE))
+        */}
         {gamePhase === GAME_PHASE.START && <GameStartScreen />}
         {gamePhase === GAME_PHASE.COUNTDOWN && <GameCountdown />}
         {gamePhase === GAME_PHASE.PLAYING && (
@@ -46,7 +49,10 @@ export const GamePage = () => {
           (gameId === GAME.SPRINT && <SprintGame />)
         )}
         {gamePhase === GAME_PHASE.RESULTS && <GameResults />}
-        {gamePhase === GAME_PHASE.LOADING && <CircularProgress color="secondary" size={100} thickness={2}/>}
+        {gamePhase === GAME_PHASE.LOADING &&
+          <Box sx={{ height: "calc(100% - var(--header-height))", display: "flex", alignItems: "center"}}>
+            <CircularProgress color="secondary" size={100} thickness={2}/>
+          </Box>}
       </GameInterface>
     </Page>
   )

@@ -24,6 +24,7 @@ export interface GameState {
   isFullscreen: boolean;
   source: GameSource;
   results: GameResultsData;
+  longestChain: number;
   loadingProcess: LoadingState;
   progress: number;
 }
@@ -37,6 +38,7 @@ export const initialState: GameState = {
   isFullscreen: false,
   source: 'headerMenu',
   results: {},
+  longestChain: 0,
   loadingProcess: defaultLoadingState,
   progress: 0,
 }

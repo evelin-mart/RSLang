@@ -18,9 +18,9 @@ export const GameStartScreen = () => {
   
   React.useEffect(() => {
     const currentGroup = source === 'textbook'
-      ? textbookGroup : 0;
+      ? textbookGroup : group;
     dispatch(setGameGroup(currentGroup));
-  }, [dispatch, source, textbookGroup]);
+  }, [dispatch, source, textbookGroup, group]);
 
   React.useEffect(() => {
     if (loadingProcess.status === STATUS.SUCCESS) {
