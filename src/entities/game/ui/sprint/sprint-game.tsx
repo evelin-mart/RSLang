@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Box, Button, Grid, IconButton, Paper, Typography } from '@mui/material';
 import { AppDispatch } from 'app/store';
 import { finishGame, GameResultsData, GAME_PHASE, setGamePhase, useGame } from 'entities/game/model';
 import { Word } from 'entities/word'
@@ -22,7 +22,7 @@ export const GameSprintTest = () => {
   const [winsCounter, setWinsCounter] = useState(0);  //TODO обсудить и решить какую именно статистику по словам будем собирать, пока затычка в виде счетчика отгаданных слов
   let userAnswer: boolean | null = null;
 
-  const [secunds, setSecunds] = useState(0);
+  const [secunds, setSecunds] = useState(30);
 
   const getWrongAnswer = () => {
     const wrong = ['черный', 'слово', 'небо', 'лето', 'апельсин']; //TODO сделать функцию для генерации неправильного ответа, пока затычка
@@ -77,41 +77,62 @@ export const GameSprintTest = () => {
   }, [words])
 
   useEffect(() => {
-    if (secunds < 30) {
+    if (secunds > 0) {
       setTimeout(() => {
-        setSecunds(secunds => secunds + 1)
+        setSecunds(secunds => secunds - 1)
       }, 1000);
     } else {
       setIsGameOver(true)
     }
   }, [secunds, isGameOver])
 
+  const handleAnswer = (answer: boolean) => {
+    userAnswer = answer;
+    checkAnswer()
+  }
+
 
   return (
-    <div style={{margin: '20vh auto 20vh', textAlign: 'center'}}>
-      {isGameOver
-        ? 
-        <Button onClick={handleEndGame} variant="outlined" color="secondary" endIcon={<SkipNextIcon />}>
-          Завершить игру
-        </Button>
-        : <div style={{width: '280px', height: '400px', backgroundColor: 'tomato', margin: '0 auto', display: 'flex', flexDirection: 'column', justifyContent: 'space-around'}}>
-            <div style={{display: 'flex', justifyContent: 'space-around'}}>
-              <span>Sprint</span><span>timer: {secunds}</span>
-            </div>
-            <div>
-              <div>
-                <img src={`http://localhost:3001/${imgLink}`} width='80%' alt="" />
-              </div>
-            </div>
-            <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-around'}}>
-              <span style={{fontSize: '25px', color: 'blue'}}>{word}</span><span> is equal </span><span style={{fontSize: '25px', color: 'aqua'}}>{translate}</span>
-            </div>
-            <div style={{display: 'flex', justifyContent: 'space-around'}}>
-              <button onClick={() => {userAnswer = true; checkAnswer()}}>true</button>
-              <button onClick={() => {userAnswer = false; checkAnswer()}}>false</button>
-            </div>
-          </div>}
-    </div>
+    <Paper elevation={3} sx={{ 
+      flexBasis: {xs: 300, md: 400}, 
+      pl: {xs: 1, md: 3},
+      pr: {xs: 1, md: 3},
+      display: "flex", 
+      flexDirection: "column", 
+      rowGap: 2, p: 4,
+      height: "fit-content",
+    }}>
+        {isGameOver
+        ? <Button onClick={handleEndGame} variant="outlined" color="secondary" endIcon={<SkipNextIcon />}>
+            Завершить игру
+          </Button>
+        : <Box sx={{ display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: "center" }}>
+            <Box sx={{ mt: 5, display: "flex", columnGap: 6, justifyContent: "space-between" }}>
+              <Typography sx={{pt: 1}} variant='body1'>Time left:</Typography>
+              <Typography variant='h4' color="error">{secunds}</Typography>
+            </Box>
+            <Box
+              component="img"
+              sx={{
+                width: 350,
+                maxWidth: { xs: 250, md: 350 },
+                maxHeight: 250,
+              }}
+              alt="Word illustration"
+              src={`http://localhost:3001/${imgLink}`}
+            />
+            <Box sx={{ mt: 5, display: "flex", flexDirection: "column", columnGap: 2, justifyContent: "center", alignItems: 'center' }}>
+              <Typography align='center' color='secondary' variant='h4'>{word}</Typography>
+              <Typography sx={{pt: 1}} variant='body2'>is mean</Typography>
+              <Typography align='center' color='secondary' variant='h4'>{translate}</Typography>
+            </Box>
+            <Box sx={{ mt: 5, display: "flex", columnGap: 6, justifyContent: "center" }}>
+              <Button variant="contained" color="success" sx={{ pl: 5, pr: 5, textTransform: "none" }} onClick={() => {handleAnswer(true)}}>True!</Button>
+              <Button variant="contained" color="error" sx={{ pl: 5, pr: 5, textTransform: "none" }} onClick={() => {handleAnswer(false)}}>False!</Button>
+            </Box>
+          </Box>
+          }
+    </Paper>
   )
 }
 
