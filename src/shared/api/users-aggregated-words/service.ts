@@ -27,7 +27,7 @@ const getAggregatedWords = async (queryOptions: string): Promise<[AggregatedWord
     },
     url,
   );
-  return [paginatedResults.map(transformId), totalCount[0]['count']];
+  return [paginatedResults.map(transformId), totalCount.length ? totalCount[0]['count'] : 1];
 };
 
 export const getAggregatedWordsOnPage = async ({

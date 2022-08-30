@@ -39,9 +39,14 @@ export const textbookSlice = createSlice({
     },
     updateWord(state, action: PayloadAction<UserWordAnswer>) {
       const userWord = action.payload;
-      state.words = state.words.map((word) =>
-        word.id === userWord.wordId ? { ...word, userWord: { optional: userWord.optional } } : word,
-      );
+      state.words =
+        state.group === 6
+          ? state.words.filter((word) => word.id !== userWord.wordId)
+          : state.words.map((word) =>
+              word.id === userWord.wordId
+                ? { ...word, userWord: { optional: userWord.optional } }
+                : word,
+            );
     },
   },
   extraReducers(builder) {

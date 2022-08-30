@@ -4,7 +4,7 @@ import { Page } from 'pages/page';
 import { AppDispatch, useAppSelector } from 'app/store';
 import { WordCard } from 'entities/word';
 import { Loader } from 'shared/components/loader';
-import { List, ListItem, Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import { List, ListItem, Select, MenuItem, SelectChangeEvent, Typography } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import styles from './styles.module.scss';
 import { STATUS, PAGES } from '../../shared/constants';
@@ -14,7 +14,9 @@ import { useUser } from 'entities/user/model/hooks';
 
 export const TextbookPage = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { words, status, error, page, group, totalPages } = useAppSelector((state) => state.textbook);
+  const { words, status, error, page, group, totalPages } = useAppSelector(
+    (state) => state.textbook,
+  );
   const { isAuthorized } = useUser();
   const [sounds, setSounds] = useState<HTMLAudioElement[]>([]);
 
@@ -50,25 +52,33 @@ export const TextbookPage = () => {
   }
 
   if (status === STATUS.SUCCESS) {
-    const renderedItem = words.map((word) => (
-      <ListItem key={word.id} sx={{ p: 0, alignItems: 'stretch' }} className={styles.listItem}>
-        <WordCard word={word} play={setSounds} />
-      </ListItem>
-    ));
-    content = (
-      <>
-        <List sx={{ pt: 3 }} className={styles.list}>
-          {renderedItem}
-        </List>
-        <Pagination
-          className={styles.pagination}
-          color='primary'
-          count={group === 6 ? totalPages : 30}
-          page={page + 1}
-          onChange={handlePageChange}
-        />
-      </>
-    );
+    if (!words.length) {
+      if (page === 0) {
+        content = <Typography variant='h4'>В данном разделе нет слов</Typography>;
+      } else {
+        dispatch(setPage(page - 1));
+      }
+    } else {
+      const renderedItem = words.map((word) => (
+        <ListItem key={word.id} sx={{ p: 0, alignItems: 'stretch' }} className={styles.listItem}>
+          <WordCard word={word} play={setSounds} />
+        </ListItem>
+      ));
+      content = (
+        <>
+          <List sx={{ pt: 3 }} className={styles.list}>
+            {renderedItem}
+          </List>
+          <Pagination
+            className={styles.pagination}
+            color='primary'
+            count={group === 6 ? totalPages : 30}
+            page={page + 1}
+            onChange={handlePageChange}
+          />
+        </>
+      );
+    }
   }
 
   if (status === STATUS.FAIL) {
