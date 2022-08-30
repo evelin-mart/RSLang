@@ -49,7 +49,7 @@ export const PopupMenu = (props: { user: UserState}) => {
 
   return (
     <Box sx={{ flexGrow: 0 }}>
-      <Tooltip title="Open settings">
+      <Tooltip title="Меню пользователя">
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
           <Avatar alt={user.data.name} src="#" />
         </IconButton>

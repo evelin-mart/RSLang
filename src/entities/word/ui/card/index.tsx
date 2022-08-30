@@ -33,6 +33,7 @@ export const WordCard = (props: WordCardProps) => {
   const { isAuthorized } = useUser();
   const dispatch: AppDispatch = useDispatch();
 
+
   const userWord = word.userWord ? word.userWord : defaultUserWord;
 
   const sounds = [

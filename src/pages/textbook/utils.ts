@@ -8,7 +8,7 @@ export const play = async (arr: HTMLAudioElement[]) => {
   }
 };
 
-const playSong = async (audio: HTMLAudioElement) => {
+export const playSong = async (audio: HTMLAudioElement) => {
   audio.play();
 
   return new Promise<void>((resolve, reject) => {

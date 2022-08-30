@@ -1,5 +1,6 @@
 import { WORDS_PER_PAGE } from 'shared/constants';
 import { processAuthorizedRequest } from '../lib';
+
 import {
   AggregatedWordsQueryOptions,
   AggregatedWordsResult,

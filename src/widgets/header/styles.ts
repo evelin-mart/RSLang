@@ -10,7 +10,7 @@ const styles = {
     flexGrow: 1,
     display: {
       xs: 'none',
-      md: 'flex',
+      sm: 'flex',
     },
     justifyContent: 'flex-end',
     marginRight: 3,
@@ -21,6 +21,8 @@ const styles = {
     display: 'flex',
     alignItems: 'flex-start',
     padding: 3,
+    pl: 0,
+    pr: 0,
     backgroundColor: 'primary.dark',
   },
 
