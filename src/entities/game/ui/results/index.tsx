@@ -1,4 +1,4 @@
-import { useGameResults, resetGame } from 'entities/game';
+import { useGameResults, resetGame, useSound } from 'entities/game';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
 import { Box, Typography, Button, Divider } from '@mui/material';
@@ -14,7 +14,7 @@ export type Sound = HTMLAudioElement | null;
 
 export const GameResults = () => {
   const dispatch: AppDispatch = useDispatch();
-  const [sound, setSound] = React.useState<Sound>(null);
+  const { playSound, isPlaying } = useSound();
   const { correctWords, failedWords } = useGameResults();
   const navigate = useNavigate();
   
@@ -41,12 +41,12 @@ export const GameResults = () => {
         <Typography variant="body2" sx={[{ color: "error.light" }, styles.answersRow]}>
           <ErrorOutlineIcon fontSize="small" /> ошибок: {failedWords.length}
         </Typography>
-        <ResultsWordsList words={failedWords} sound={sound} setSound={setSound}/>
+        <ResultsWordsList words={failedWords} playSound={playSound} isPlaying={isPlaying} />
         <Divider sx={{ width: "50%", mb: 1 }} />
         <Typography variant="body2" sx={[{ color: "success.light" }, styles.answersRow]}>
           <TaskAltIcon fontSize="small" /> верных ответов: {correctWords.length}
         </Typography>
-        <ResultsWordsList words={correctWords} sound={sound} setSound={setSound}/>
+        <ResultsWordsList words={correctWords} playSound={playSound} isPlaying={isPlaying} />
       </Box>
       <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
         <Button

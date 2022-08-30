@@ -5,13 +5,14 @@ import { LoadingState } from 'shared/lib';
 export interface TextbookState extends LoadingState {
   page: number;
   group: number;
+  totalPages: number;
   words: Word[];
 }
 
 export const getLastSeenPage = (group?: number) => {
   const pages = localStorage.getItem('pages');
   if (!pages) {
-    const pages = Array(6).fill(0);
+    const pages = Array(7).fill(0);
     localStorage.setItem('pages', JSON.stringify(pages));
     localStorage.setItem('group', String(0));
     return [0, 0];
@@ -33,6 +34,7 @@ const [group, page] = getLastSeenPage();
 export const initialState: TextbookState = {
   page,
   group,
+  totalPages: 30,
   words: [],
   status: STATUS.IDLE,
   error: null,
