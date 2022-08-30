@@ -1,26 +1,54 @@
 import React from 'react';
-import { GAME_PHASE, setGamePhase, finishGame, addGameResult } from 'entities/game';
+import { GAME_PHASE, setGamePhase, finishGame, addGameResult, useSoundEffect, SOUND_EFFECT, useSound, useTimer } from 'entities/game';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
-import { Box, Grid, Button, IconButton, Typography, Card, CardMedia, Zoom, CardContent, Fab } from '@mui/material';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import { Box, Grid, Button, Typography, Fade } from '@mui/material';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useKeyboard, usePlayingWord } from './model';
-import { BTN_STATE, defaultAnswersState, disabledAnswersState } from './model/config';
-import { makeAbsUrl } from 'shared/constants';
+import { ANSWER_TIME, BTN_STATE, defaultAnswersState, disabledAnswersState } from './model/config';
 import { useLongestChain } from 'entities/game';
 import styles from './styles';
+import { AudiocallWordCard } from './ui';
 
 export const AudiocallGame = () => {
   const dispatch: AppDispatch = useDispatch();
-  const [ playingWord, setNextPlayingWord, isEndGame, playSound ] = usePlayingWord();
+  const [ playingWord, setNextPlayingWord, isEndGame ] = usePlayingWord();
   const [ answerButtonsState, setAnswerButtonsState ] = React.useState<BTN_STATE[]>(defaultAnswersState);
   const [ nextButtonState, setNextButtonState ] = React.useState<'skip' | 'next'>('skip');
   const [ setChainCounter ] = useLongestChain();
+  const [ playSoundEffect ] = useSoundEffect();
+  const [ playSound, { stopSound, canPlay } ] = useSound();
   const answerButtons = React.useRef<(HTMLButtonElement | null)[]>([]);
   const nextBtn = React.useRef<HTMLButtonElement | null>(null);
   useKeyboard(answerButtons, nextBtn, playingWord);
+  const [ startTimer, stopTimer, timerCounter ] = useTimer(ANSWER_TIME);
+
+  const handleSkipWord = React.useCallback(() => {
+    stopTimer();
+    playSoundEffect(SOUND_EFFECT.WRONG);
+    setNextButtonState('next');
+    if (playingWord !== null) {
+      const { id } = playingWord.word;
+      const newButtonsState = [ ...disabledAnswersState ];
+      newButtonsState[playingWord.rightAnswerIndex] = BTN_STATE.ERROR;
+      setAnswerButtonsState(newButtonsState);
+      setChainCounter(0);
+      dispatch(addGameResult({ id, result: false }));
+    }
+  }, [stopTimer, playSoundEffect, dispatch, playingWord, setChainCounter]);
+
+  React.useEffect(() => {
+    if (playingWord !== null) {
+      playSound(playingWord.word.audio);
+      startTimer(handleSkipWord);
+    }
+    return () => {
+      playingWord !== null && stopSound();
+    }
+  }, [playingWord, playSound, stopSound, startTimer, handleSkipWord]);
 
   React.useEffect(() => {
     if (isEndGame) {
@@ -29,30 +57,15 @@ export const AudiocallGame = () => {
     }
   }, [isEndGame, dispatch]);
 
-  const handleNextWord = () => {
+  const handleNextWord = React.useCallback(() => {
     setNextButtonState('skip');
     setAnswerButtonsState(defaultAnswersState);
     setNextPlayingWord();
-  }
-  
-  const getRightWordIndex = () => playingWord
-    ? playingWord.answers.findIndex(({ wordId }) => wordId === playingWord.word.id)
-    : 0;
-
-  const handleSkipWord = () => {
-    if (playingWord !== null) {
-      const { id } = playingWord.word;
-      const newButtonsState = [ ...answerButtonsState ];
-      newButtonsState[getRightWordIndex()] = BTN_STATE.ERROR;
-      setAnswerButtonsState(newButtonsState);
-      setChainCounter(0);
-      dispatch(addGameResult({ id, result: false }));
-    }
-    handleNextWord();
-  }
+  }, [setNextPlayingWord]);
 
   const handleGuessWord = (guessWordId: string, btnRefIndex: number) => {
     if (nextButtonState === 'next') return;
+    stopTimer();
     setNextButtonState('next');
     if (playingWord !== null) {
       const { id } = playingWord.word;
@@ -60,12 +73,14 @@ export const AudiocallGame = () => {
       dispatch(addGameResult({ id, result }));
       const newButtonsState = [ ...disabledAnswersState ];
       if (result) {
+        playSoundEffect(SOUND_EFFECT.RIGHT);
         setChainCounter((prev) => prev + 1);
         newButtonsState[btnRefIndex] = BTN_STATE.SUCCESS;
       } else {
+        playSoundEffect(SOUND_EFFECT.WRONG);
         setChainCounter(0);
         newButtonsState[btnRefIndex] = BTN_STATE.ERROR;
-        newButtonsState[getRightWordIndex()] = BTN_STATE.SUCCESS;
+        newButtonsState[playingWord.rightAnswerIndex] = BTN_STATE.SUCCESS;
       }
       setAnswerButtonsState(newButtonsState);
     }
@@ -73,42 +88,13 @@ export const AudiocallGame = () => {
 
   return (
     <Grid sx={styles.gameContainer}>
-      <Box sx={{ display: "flex", justifyContent: "center", position: "relative", height: 250 }}>
-        <Zoom in={nextButtonState === 'next'}>
-          <Card sx={{ position: "absolute", top: 0, width: 250 }}>
-            <Fab
-              size="small"
-              sx={{ position: "absolute", right: 16, top: 16 }}
-              color="secondary"
-              onClick={() => playingWord && playSound(playingWord.word.audio)}>
-              <VolumeUpIcon />
-            </Fab>
-            <CardContent>
-              <Typography variant="h5" component="div">
-                {playingWord ? playingWord.word.word : ''}
-              </Typography>
-              <Typography color="text.secondary">
-                {playingWord ? playingWord.word.transcription : ''}
-              </Typography>
-            </CardContent>
-            <CardMedia
-              component="img"
-              sx={{ height: 150, width: 250 }}
-              image={playingWord ? makeAbsUrl(playingWord.word.image) : ''}
-              alt={playingWord ? playingWord.word.word : ''}
-            />
-          </Card>
-        </Zoom>
-        <Zoom in={nextButtonState === 'skip'}>
-          <Box sx={{ position: "absolute", top: 0, height: "100%", display: "flex", alignItems: "center" }}>
-            <IconButton
-              color="info"
-              onClick={() => playingWord && playSound(playingWord.word.audio)}>
-              <VolumeUpIcon sx={{ width: 100, height: 100 }} />
-            </IconButton>
-          </Box>
-        </Zoom>
-      </Box>
+      {playingWord !== null && 
+        <AudiocallWordCard
+          timerCounter={timerCounter}
+          nextButtonState={nextButtonState}
+          word={playingWord.word}
+          canPlayWordAudio={canPlay}
+          playSound={playSound}/>}
       <Box sx={styles.answersContainer}>
         {playingWord?.answers.map(({ translation, wordId }, i) => (
           <Button
@@ -122,23 +108,26 @@ export const AudiocallGame = () => {
                 pointerEvent: nextButtonState === 'next' ? 'none' : 'all',
               }
             ]}>
-              <Typography component="span" sx={{ 
-                pr: 1, pl: 1, mr: 0.5, borderRadius: "3px",
-                borderWidth: 1, 
-                borderStyle: "solid", 
-                borderColor: answerButtonsState[i] }}>
-                {i + 1}
-              </Typography>
+              {answerButtonsState[i] === BTN_STATE.SUCCESS && <Fade in={true}><TaskAltIcon /></Fade>}
+              {answerButtonsState[i] === BTN_STATE.ERROR && <Fade in={true}><ErrorOutlineIcon /></Fade>}
+              {(answerButtonsState[i] === BTN_STATE.IDLE || answerButtonsState[i] === BTN_STATE.DISABLED) && 
+                <Typography component="span" sx={{ 
+                  pr: 1, pl: 1, mr: 0.5, borderRadius: "3px",
+                  borderWidth: 1, 
+                  borderStyle: "solid", 
+                  borderColor: answerButtonsState[i] }}>
+                  {i + 1}
+                </Typography>}
               &nbsp;{translation}
           </Button>
         ))}
       </Box>
       <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
         {nextButtonState === 'skip'
-          ? <Button ref={nextBtn} onClick={handleSkipWord} variant="outlined" color="secondary" endIcon={<SkipNextIcon />}>
+          ? <Button size="large" disabled={!canPlay} ref={nextBtn} onClick={handleSkipWord} variant="outlined" color="warning" endIcon={<SkipNextIcon />}>
               Не знаю!
             </Button>
-          : <Button ref={nextBtn} onClick={handleNextWord} variant="outlined" color="secondary" endIcon={<ArrowForwardIcon />}>
+          : <Button size="large" ref={nextBtn} onClick={handleNextWord} variant="outlined" color="secondary" endIcon={<ArrowForwardIcon />}>
               Дальше
             </Button>
         }

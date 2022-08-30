@@ -14,7 +14,7 @@ export type Sound = HTMLAudioElement | null;
 
 export const GameResults = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { playSound, isPlaying } = useSound();
+  const [ playSound, { isPlaying } ] = useSound();
   const { correctWords, failedWords } = useGameResults();
   const navigate = useNavigate();
   
