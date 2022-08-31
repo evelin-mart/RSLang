@@ -26,6 +26,6 @@ export const getGameStats = (stats: UserDailyStats, gameId: GAME) => {
   return [
     { title: 'Новых слов', value: newWords},
     { title: 'Самая длинная серия', value: chain},
-    { title: 'Правильных ответов', value: `${percent}%`}, 
+    { title: 'Правильных ответов', value: `${newWords === 0 ? 0 : percent}%`}, 
   ]
 }
