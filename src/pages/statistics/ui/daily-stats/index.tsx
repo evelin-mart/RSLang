@@ -19,10 +19,20 @@ export const DailyStats = ({ stats }: DailyStatsProps) => {
     return <Typography variant="body1" color="info.main">Статистики за сегодня ({date}) пока нет</Typography>;
   }
 
+  const gamesStatsRendered = Object.keys(games).map((gameId) => {
+    const dataRows = getGameStats(stats.optional[date], gameId as GAME);
+    if (dataRows[0].value === 0) return null;
+    return (
+      <StatsItem
+        key={gameId}
+        title={games[gameId as GAME].title}
+        rows={dataRows} />
+    )
+  });
+
   return (
     <Box sx={{
       display: "flex",
-      mt: 3,
       columnGap: 3,
       rowGap: 3,
       flexWrap: "wrap",
@@ -32,12 +42,7 @@ export const DailyStats = ({ stats }: DailyStatsProps) => {
         key={'words'}
         title={"Слова"}
         rows={getWordsStats(stats.optional[date])} />
-      {Object.keys(games).map((gameId) => (
-        <StatsItem
-          key={gameId}
-          title={games[gameId as GAME].title}
-          rows={getGameStats(stats.optional[date], gameId as GAME)} />
-      ))}
+      {gamesStatsRendered}
     </Box>
   )
 }

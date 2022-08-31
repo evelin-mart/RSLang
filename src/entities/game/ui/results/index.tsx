@@ -1,23 +1,31 @@
-import { useGameResults, resetGame } from 'entities/game';
+import { useGameResults, resetGame, useSound } from 'entities/game';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
-import { Box, Typography, Button, Divider } from '@mui/material';
-import { ResultsWordsList } from './words-list';
+import { Box, Typography, Button, Divider, Tabs, Tab, useMediaQuery, useTheme } from '@mui/material';
+import { GameResultsChart, ResultsWordsList, TabPanel } from './ui';
 import { GameInformationWrapper } from '../info-wrapper';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import styles from './styles';
-
-export type Sound = HTMLAudioElement | null;
+import { TAB } from './model';
+import PieChartIcon from '@mui/icons-material/PieChart';
+import ListIcon from '@mui/icons-material/List';
 
 export const GameResults = () => {
   const dispatch: AppDispatch = useDispatch();
-  const [sound, setSound] = React.useState<Sound>(null);
+  const [ playSound, { isPlaying } ] = useSound();
   const { correctWords, failedWords } = useGameResults();
+  const theme = useTheme();
+  const smMatches = useMediaQuery(theme.breakpoints.up('sm'));
   const navigate = useNavigate();
-  
+  const [tabValue, setTabValue] = React.useState(TAB.GRAPH);
+
+  const handleTabChange = (_: React.SyntheticEvent, newValue: TAB) => {
+    setTabValue(newValue);
+  };
+
   const handleReplay = () => {
     dispatch(resetGame());
   }
@@ -27,35 +35,52 @@ export const GameResults = () => {
     navigate('/textbook', { replace: true });
   }
 
-  const correctWordsPercent = correctWords.length / (failedWords.length + correctWords.length);
-  const result = correctWordsPercent >= 0.6
-    ? 'Отличный результат!'
-    : 'Такой себе результат';
+  const showDivider = correctWords.length !== 0 && failedWords.length !== 0;
 
   return (
-    <GameInformationWrapper>      
-      <Typography variant="h5" sx={{ textAlign: "center", fontSize: { xs: "1.5rem", sm: "2rem"}, color: "grey.700" }}>
-        {result} 
-      </Typography>
-      <Box sx={styles.wordsList}>
-        <Typography variant="body2" sx={[{ color: "error.light" }, styles.answersRow]}>
-          <ErrorOutlineIcon fontSize="small" /> ошибок: {failedWords.length}
-        </Typography>
-        <ResultsWordsList words={failedWords} sound={sound} setSound={setSound}/>
-        <Divider sx={{ width: "50%", mb: 1 }} />
-        <Typography variant="body2" sx={[{ color: "success.light" }, styles.answersRow]}>
-          <TaskAltIcon fontSize="small" /> верных ответов: {correctWords.length}
-        </Typography>
-        <ResultsWordsList words={correctWords} sound={sound} setSound={setSound}/>
-      </Box>
-      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
+    <GameInformationWrapper>
+      <Tabs
+        value={tabValue}
+        onChange={handleTabChange}
+        textColor="secondary"
+        indicatorColor="secondary"
+        sx={styles.tabsStyle}
+      >
+        <Tab sx={styles.tabStyle} icon={<PieChartIcon />} value={TAB.GRAPH} />
+        <Tab sx={styles.tabStyle} icon={<ListIcon />} value={TAB.WORDS} />
+      </Tabs>
+      <TabPanel value={tabValue} index={TAB.GRAPH}>
+        <GameResultsChart setTabValue={setTabValue} />
+      </TabPanel>
+      <TabPanel value={tabValue} index={TAB.WORDS}>
+        <Box sx={styles.wordsList}>
+          {failedWords.length !== 0 &&
+            <>
+              <Typography variant="body2" sx={[{ color: "error.light" }, styles.answersRow]}>
+                <ErrorOutlineIcon fontSize="small" /> ошибок: {failedWords.length}
+              </Typography>
+              <ResultsWordsList words={failedWords} playSound={playSound} isPlaying={isPlaying} />
+            </>}
+          {showDivider && <Divider sx={{ width: "50%", mb: 1 }} />}
+          {correctWords.length !== 0 &&
+            <>
+              <Typography variant="body2" sx={[{ color: "success.light" }, styles.answersRow]}>
+                <TaskAltIcon fontSize="small" /> верных ответов: {correctWords.length}
+              </Typography>
+              <ResultsWordsList words={correctWords} playSound={playSound} isPlaying={isPlaying} />
+            </>}
+        </Box>
+      </TabPanel>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
         <Button
+          size={!smMatches ? "small" : "medium"}
           onClick={handleTextbookClick}
           variant="outlined"
           color="secondary">
           Учебник
         </Button>
         <Button 
+          size={!smMatches ? "small" : "medium"}
           onClick={handleReplay}
           variant="outlined" 
           color="secondary">

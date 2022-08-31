@@ -65,12 +65,7 @@ export const GameSprintTest = () => {
   }
 
   const handleEndGame = () => {
-    dispatch(setGamePhase(GAME_PHASE.LOADING));
-    dispatch(finishGame({
-      results,
-      longestChain: getRandomInt(0, Object.keys(results).length)
-    }));
-    
+    dispatch(setGamePhase(GAME_PHASE.LOADING));    
     console.log('Результаты', results);
   }
 

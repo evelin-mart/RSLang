@@ -1,3 +1,5 @@
+import { UserWord } from "shared/api/users-words";
+
 export interface Word {
   id: string;
   group: number;
@@ -13,5 +15,5 @@ export interface Word {
   wordTranslate: string;
   textMeaningTranslate: string;
   textExampleTranslate: string;
-  // userWord?: UserWord;
+  userWord?: UserWord;
 }

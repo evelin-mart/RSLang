@@ -7,11 +7,17 @@ import { NotFoundPage } from "./not-found";
 import { useUser } from '../entities/user/model/hooks';
 import { PropsWithChildren } from "react";
 import { ProfilePage } from "./user/profile";
+import { STATUS } from "shared/constants";
+import { LinearProgress } from "@mui/material";
 
 const ProtectedRoute = ({ children }: PropsWithChildren) => {
-  const { isAuthorized } = useUser();
+  const { isAuthorized, startupLoading } = useUser();
 
-  return !isAuthorized
+  if (startupLoading.status === STATUS.LOADING) {
+    return <LinearProgress />
+  }
+
+  return !isAuthorized 
     ? <Navigate to="/" replace />
     : <>{children}</>;
 }

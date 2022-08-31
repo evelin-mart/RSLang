@@ -1,52 +1,67 @@
 import { processAuthorizedRequest } from "../lib";
-import { UserWord } from "./interface";
+import { UserWord, UserWordAnswer } from "./interface";
 
 export const wordsUrlPath = `/words`;
 
 const getUrlPath = (wordId: string) => `${wordsUrlPath}/${wordId}`;
 
 export const getUserWords = async () => {
-  return await processAuthorizedRequest<UserWord[]>({
-    method: 'GET',
-    headers: {
-      'Accept': 'application/json',
+  return await processAuthorizedRequest<UserWordAnswer[]>(
+    {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
     },
-  }, wordsUrlPath);
+    wordsUrlPath,
+  );
 }
 
 export const getUserWordsById = async (wordId: string) => {
-  return await processAuthorizedRequest<UserWord>({
-    method: 'GET',
-    headers: {
-      'Accept': 'application/json',
+  return await processAuthorizedRequest<UserWordAnswer>(
+    {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
     },
-  }, getUrlPath(wordId));
+    getUrlPath(wordId),
+  );
 }
 
 export const addUserWord = async (wordId: string, wordData: UserWord) => {
-  return await processAuthorizedRequest<UserWord>({
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
+  return await processAuthorizedRequest<UserWordAnswer>(
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(wordData),
     },
-    body: JSON.stringify(wordData),
-  }, getUrlPath(wordId));
+    getUrlPath(wordId),
+  );
 }
 
 export const updateUserWord = async (wordId: string, wordData: Partial<UserWord>) => {
-  return await processAuthorizedRequest<UserWord>({
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
+  return await processAuthorizedRequest<UserWordAnswer>(
+    {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(wordData),
     },
-    body: JSON.stringify(wordData),
-  }, getUrlPath(wordId));
+    getUrlPath(wordId),
+  );
 }
 
 export const deleteUserWord = async (wordId: string) => {
-  return await processAuthorizedRequest<UserWord>({
-    method: 'DELETE',
-  }, getUrlPath(wordId));
+  return await processAuthorizedRequest<UserWordAnswer>(
+    {
+      method: 'DELETE',
+    },
+    getUrlPath(wordId),
+  );
 }

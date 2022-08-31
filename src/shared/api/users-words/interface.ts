@@ -12,13 +12,17 @@ export interface UserWord {
   };
 }
 
+export interface UserWordAnswer extends UserWord {
+  id: string;
+  wordId: string;
+}
+
 export enum UserWordDifficulty {
   HARD = 'hard',
   EASY = 'easy',
 }
 
 export const defaultUserWord: UserWord = {
-  // difficulty: UserWordDifficulty.EASY,
   optional: {
     totalUsed: 0,
     guessed: 0,
@@ -26,5 +30,5 @@ export const defaultUserWord: UserWord = {
     isLearned: false,
     learnDate: dateToJson(new Date(0)),
     isHard: false,
-  }
-}
+  },
+};
