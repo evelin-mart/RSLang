@@ -64,6 +64,7 @@ export const AudiocallGame = () => {
   }, [setNextPlayingWord]);
 
   const handleGuessWord = React.useCallback((guessWordId: string, btnRefIndex: number) => {
+    if (nextButtonState === 'next') return;
     stopTimer();
     setNextButtonState('next');
     if (playingWord !== null) {
@@ -83,7 +84,7 @@ export const AudiocallGame = () => {
       }
       setAnswerButtonsState(newButtonsState);
     }
-  }, [dispatch, playingWord, playSound, stopTimer, setChainCounter, playSoundEffect])
+  }, [dispatch, playingWord, stopTimer, setChainCounter, playSoundEffect, nextButtonState])
 
   return (
     <Grid sx={styles.gameContainer}>
@@ -123,10 +124,25 @@ export const AudiocallGame = () => {
       </Box>
       <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
         {nextButtonState === 'skip'
-          ? <Button size="large" disabled={!canPlay} ref={nextBtn} onClick={handleSkipWord} variant="outlined" color="warning" endIcon={<SkipNextIcon />}>
+          ? <Button 
+              disabled={!canPlay} 
+              size="large" 
+              ref={nextBtn} 
+              onClick={handleSkipWord} 
+              variant="outlined" 
+              color="warning" 
+              sx={{ width: 150 }}
+              endIcon={<SkipNextIcon />}>
               Не знаю!
             </Button>
-          : <Button size="large" ref={nextBtn} onClick={handleNextWord} variant="outlined" color="secondary" endIcon={<ArrowForwardIcon />}>
+          : <Button
+              size="large"
+              ref={nextBtn}
+              onClick={handleNextWord}
+              variant="outlined"
+              color="secondary"
+              sx={{ width: 150 }}
+              endIcon={<ArrowForwardIcon />}>
               Дальше
             </Button>
         }

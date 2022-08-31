@@ -21,7 +21,7 @@ export const DailyStats = ({ stats }: DailyStatsProps) => {
 
   const gamesStatsRendered = Object.keys(games).map((gameId) => {
     const dataRows = getGameStats(stats.optional[date], gameId as GAME);
-    if (dataRows[0].value === 0) return;
+    if (dataRows[0].value === 0) return null;
     return (
       <StatsItem
         key={gameId}

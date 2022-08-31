@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sound } from '../../ui';
+import { Sound } from 'shared/constants';
 import { useGame } from './game';
 import rightSound from 'shared/sounds/right.mp3';
 import wrongSound from 'shared/sounds/wrong.mp3';

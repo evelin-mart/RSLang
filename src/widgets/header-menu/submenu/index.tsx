@@ -7,7 +7,7 @@ import { MenuLink } from 'shared/constants/menu-links';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
 import { toggleHeaderMenu } from 'entities/user';
-import { setGameSource } from 'entities/game';
+import { setGameSource, resetGame } from 'entities/game';
 import { MenuLinkText } from '../link-text';
 import styles from '../styles';
 
@@ -35,6 +35,7 @@ export const HeaderSubmenu = (props: HeaderSubmenuProps) => {
   };
   
   const handleCloseUserMenu = (path?: string) => {
+    dispatch(resetGame());
     dispatch(setGameSource('headerMenu'));
     dispatch(toggleHeaderMenu(false));
     setAnchorElUser(null);

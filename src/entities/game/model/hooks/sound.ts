@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeAbsUrl } from 'shared/constants';
-import { Sound } from '../../ui';
+import { Sound } from 'shared/constants';
 
 export const useSound = (): [
   typeof playSound,
