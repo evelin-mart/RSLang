@@ -30,8 +30,73 @@ const styles = {
   playButton: {
     p: 0, 
     mr: 1, 
-    color: "info.light", 
-    "&:hover": { color: "grey.700" },
+    color: 'info.light', 
+    '&:hover': { color: 'grey.700' },
+  },
+
+  chartTab: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    height: 300,
+  },
+
+  title: {
+    textAlign: 'center',
+    fontSize: { xs: '1.5rem', sm: '2rem'},
+    color: 'grey.700',
+    mb: 1,
+  },
+
+  subtitle: {
+    textAling: 'center',
+  },
+
+  subtitleLink: {
+    textDecoration: 'none',
+    color: 'text.secondary',
+    borderBottom: '1px dashed',
+    borderColor: 'grey.400',
+    cursor: 'pointer',
+  },
+  
+  pieChart: {
+    width: '100%',
+    position: 'relative',
+    flexBasis: '100%',
+    flexGrow: 1,
+  },
+
+  percentBox: {
+    position: 'absolute', 
+    top: '50%',
+    left: '50%',
+    transform: 'translateY(-50%) translateX(-50%)',
+  },
+  
+  percentBoxText: {
+    color: "success.light",
+    fontSize: "3rem"
+  },
+
+  tabsStyle: {
+    mb: 1,
+    minHeight: 40,
+    '& .MuiTabs-flexContainer': { justifyContent: 'flex-end' },
+    '& .MuiTabs-indicator': { display: 'none' },
+    '& .MuiButtonBase-root': {
+      p: 0, pr: 1, pl: 1,
+    },
+  },
+
+  tabStyle: {
+    minWidth: 40,
+    minHeight: 40,
+    textTransform: 'none',
+    color: 'grey.400',
+    '&.Mui-selected': {
+      color: 'secondary.main',
+    },
   }
 }
 

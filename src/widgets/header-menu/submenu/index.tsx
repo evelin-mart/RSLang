@@ -1,13 +1,13 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { matchPath } from 'react-router';
-import { MenuItem, Menu, Link, Collapse, List, ListItemButton, ListItemText, ListItem } from '@mui/material';
+import { MenuItem, Menu, Link, Collapse, List, ListItemButton, ListItemText, ListItem, ListItemIcon } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { MenuLink } from 'shared/constants/menu-links';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
 import { toggleHeaderMenu } from 'entities/user';
-import { setGameSource } from 'entities/game';
+import { setGameSource, resetGame } from 'entities/game';
 import { MenuLinkText } from '../link-text';
 import styles from '../styles';
 
@@ -35,6 +35,7 @@ export const HeaderSubmenu = (props: HeaderSubmenuProps) => {
   };
   
   const handleCloseUserMenu = (path?: string) => {
+    dispatch(resetGame());
     dispatch(setGameSource('headerMenu'));
     dispatch(toggleHeaderMenu(false));
     setAnchorElUser(null);
@@ -44,13 +45,14 @@ export const HeaderSubmenu = (props: HeaderSubmenuProps) => {
     }
   };
 
-  const userMenuItems = link.submenu?.map(({ title, href }, i) => {
+  const userMenuItems = link.submenu?.map(({ title, href, icon }, i) => {
     const isActive = matchPath(href, location.pathname) !== null;
     return (
       <MenuItem
         key={i}
         onClick={() => handleCloseUserMenu(href)}
         sx={{ color: "primary.main" }}>
+        <ListItemIcon>{icon}</ListItemIcon>
         <MenuLinkText title={title} isActive={isActive} isColumn={isColumn}/>
       </MenuItem>)
   })
@@ -83,8 +85,8 @@ export const HeaderSubmenu = (props: HeaderSubmenuProps) => {
         </Collapse>
       </>
     : <ListItem disablePadding>
-        <ListItemButton sx={{ pl: isColumn ? 3 : 1, pr: isColumn ? 3 : 1 }}>
-          <Link onClick={handleOpenUserMenu} sx={[{ display: "flex" }, styles.headerSubmenuMainLink]}>
+        <ListItemButton onClick={handleOpenUserMenu} sx={{ pl: isColumn ? 3 : 1, pr: isColumn ? 3 : 1 }}>
+          <Link sx={[{ display: "flex" }, styles.headerSubmenuMainLink]}>
             <MenuLinkText title={link.title} isActive={false} isColumn={isColumn}/>
             {anchorElUser !== null ? <ExpandLess /> : <ExpandMore />}
           </Link>

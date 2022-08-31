@@ -1,7 +1,7 @@
 import { List, ListItem, Typography, IconButton } from '@mui/material';
 import { AggregatedWord } from 'shared/api/users-aggregated-words';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import styles from '../styles';
+import styles from '../../styles';
 import React from 'react';
 
 type WordsListProps = {

@@ -5,8 +5,8 @@ import { IconButton, Box, Grid, Tooltip, LinearProgress } from '@mui/material';
 import React from 'react';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
+import MusicOffIcon from '@mui/icons-material/MusicOff';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 
@@ -42,7 +42,7 @@ export const GameInterface = ({ children }: React.PropsWithChildren) => {
       <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
         <Tooltip title="Звук">
           <IconButton onClick={handleSoundClick} color="secondary">
-            {isSound ? <VolumeUpIcon /> : <VolumeOffIcon sx={{ color: "grey.500"}}/>}
+            {isSound ? <MusicNoteIcon /> : <MusicOffIcon sx={{ color: "grey.500"}}/>}
           </IconButton >
         </Tooltip>
         <Tooltip onClick={handleFullScreenClick} title="На весь экран">

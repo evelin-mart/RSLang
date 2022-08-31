@@ -11,7 +11,8 @@ export const GameInformationWrapper = ({ title, children }: GameInformationWrapp
       flexBasis: 400, 
       display: "flex", 
       flexDirection: "column", 
-      rowGap: 2, p: 4,
+      rowGap: title ? 2 : 0,
+      p: { xs: 2, sm: 4 },
       height: "fit-content",
     }}>
       {title &&

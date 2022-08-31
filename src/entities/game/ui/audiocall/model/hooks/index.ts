@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGame, useSound } from "entities/game/model";
+import { useGame } from "entities/game/model";
 import { getRandomInt, shuffle } from 'shared/lib/utils';
 import { AggregatedWord } from 'shared/api/users-aggregated-words';
 import { MAX_ANSWERS } from '../config';
@@ -25,6 +25,7 @@ const createAnswer = (word: AggregatedWord, isRight: boolean) => {
 type PlayingWord = {
   word: AggregatedWord;
   answers: AnswerOptions[];
+  rightAnswerIndex: number;
 }
 
 const generateAnswers = (currentWord: AggregatedWord, words: AggregatedWord[] ) => {
@@ -60,18 +61,17 @@ const useProgress = (currentIndex: number) => {
   }, [gameId, words]);
 }
 
-export const usePlayingWord = (): [PlayingWord | null, () => void, boolean, typeof playSound] => {
+export const usePlayingWord = (): [PlayingWord | null, () => void, boolean] => {
   const { words, gameId } = useGame();
-  const { playSound, stopSound } = useSound();
   const [ isEndGame, setIsEndGame ] = React.useState(false);
   const [ currentIndex, setCurrentIndex ] = React.useState(0);
   const [ playingWord, setPlayingWord ] = React.useState<PlayingWord | null>(null);
   useProgress(currentIndex);
   const shuffledWords = React.useRef<AggregatedWord[]>([]);
 
-  const next = () => {
+  const next = React.useCallback(() => {
     setCurrentIndex((prev) => prev + 1);
-  };
+  }, []);
 
   React.useEffect(() => {
     shuffledWords.current = shuffle(words);
@@ -90,24 +90,15 @@ export const usePlayingWord = (): [PlayingWord | null, () => void, boolean, type
       return setPlayingWord(null);
     }
 
+    const answers = generateAnswers(word, shuffledWords.current);
     setPlayingWord({
-      word,
-      answers: generateAnswers(word, shuffledWords.current),
+      word, answers,
+      rightAnswerIndex: answers.findIndex(({ wordId }) => wordId === word.id),
     });
 
   }, [currentIndex, gameId, words]);
 
-
-  React.useEffect(() => {
-    if (playingWord !== null) {
-      playSound(playingWord.word.audio);
-    }
-    // return () => {
-    //   playingWord !== null && stopSound();
-    // }
-  }, [playingWord, playSound, stopSound]);
-
-  return [playingWord, next, isEndGame, playSound];
+  return [playingWord, next, isEndGame];
 }
 
 
