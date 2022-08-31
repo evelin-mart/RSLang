@@ -1,6 +1,6 @@
 import { Box, Button, ButtonBaseActions, Grid, IconButton, Paper, Typography } from '@mui/material';
 import { AppDispatch } from 'app/store';
-import { finishGame, GameResultsData, GAME_PHASE, setGamePhase, useGame } from 'entities/game/model';
+import { finishGame, GameResultsData, GAME_PHASE, setGamePhase, SOUND_EFFECT, useGame, useSoundEffect } from 'entities/game/model';
 import { Word } from 'entities/word'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
@@ -22,6 +22,7 @@ export const GameSprintTest = () => {
   const [rightAnswer, setRightAnswer] = useState<null | boolean>(null)
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [winsCounter, setWinsCounter] = useState(0);  //TODO обсудить и решить какую именно статистику по словам будем собирать, пока затычка в виде счетчика отгаданных слов
+  const [ playSoundEffect ] = useSoundEffect();
   let userAnswer: boolean | null = null;
 
   const [secunds, setSecunds] = useState(30);
@@ -54,8 +55,10 @@ export const GameSprintTest = () => {
       setWinsCounter((s) => s + 1);
       setResults({...results, [wordId]: true})
       console.log('Верно!');
+      playSoundEffect(SOUND_EFFECT.RIGHT);
     } else {
-      setResults({...results, [wordId]: false})
+      setResults({...results, [wordId]: false});
+      playSoundEffect(SOUND_EFFECT.WRONG);
       console.log('Не верно!');
     }
     
