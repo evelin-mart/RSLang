@@ -38,7 +38,7 @@ export const AudiocallGame = () => {
       setChainCounter(0);
       dispatch(addGameResult({ id, result: false }));
     }
-  }, [stopTimer, playSoundEffect, dispatch, playingWord, setChainCounter]);
+  }, [stopTimer, dispatch, playingWord, setChainCounter, playSoundEffect]);
 
   React.useEffect(() => {
     if (playingWord !== null) {
@@ -63,8 +63,7 @@ export const AudiocallGame = () => {
     setNextPlayingWord();
   }, [setNextPlayingWord]);
 
-  const handleGuessWord = (guessWordId: string, btnRefIndex: number) => {
-    if (nextButtonState === 'next') return;
+  const handleGuessWord = React.useCallback((guessWordId: string, btnRefIndex: number) => {
     stopTimer();
     setNextButtonState('next');
     if (playingWord !== null) {
@@ -84,7 +83,7 @@ export const AudiocallGame = () => {
       }
       setAnswerButtonsState(newButtonsState);
     }
-  }
+  }, [dispatch, playingWord, playSound, stopTimer, setChainCounter, playSoundEffect])
 
   return (
     <Grid sx={styles.gameContainer}>

@@ -8,31 +8,37 @@ export enum SOUND_EFFECT {
   RIGHT, WRONG,
 }
 
+const isPlaying = (sound: HTMLMediaElement) => {
+  return sound.currentTime > 0 && !sound.paused && !sound.ended && sound.readyState > 2;
+}
+
 export const useSoundEffect = () => {
-  const [soundEffect, setSoundEffect] = React.useState<Sound>(null);
   const { isSound } = useGame();
+  const isSoundRef = React.useRef(isSound);
+  
+  React.useEffect(() => {
+    isSoundRef.current = isSound;
+  }, [isSound]);
 
   const sounds = React.useRef<Record<SOUND_EFFECT, Sound> | null>(null);
+
+  const playSoundEffect = React.useCallback((soundEffect: SOUND_EFFECT) => {
+    const sound = sounds.current?.[soundEffect] || null;
+    if (sound !== null && isSoundRef.current) {
+      if (isPlaying(sound)) {
+        sound.pause();
+        sound.currentTime = 0;
+      }
+      sound.play();
+    }
+  }, []);
 
   React.useEffect(() => {
     sounds.current = {
       [SOUND_EFFECT.RIGHT]: new Audio(rightSound),
       [SOUND_EFFECT.WRONG]: new Audio(wrongSound),
     }
-  }, [])
-  
-  React.useEffect(() => {
-    if (soundEffect) {
-      soundEffect.play()
-        .finally(() => setSoundEffect(null))
-    }
-  }, [soundEffect]);
-
-  const playSoundEffect = React.useCallback((soundEffect: SOUND_EFFECT) => {
-    if (isSound && sounds.current !== null) {
-      setSoundEffect(sounds.current[soundEffect]);
-    }
-  }, [isSound]);
+  }, []);
   
   return [
     playSoundEffect
