@@ -1,9 +1,11 @@
+import { STATUS } from "shared/constants";
+
 export interface LoadingState {
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  status: STATUS;
   error: string | null;
 }
 
 export const defaultLoadingState: LoadingState = {
-  status: 'idle',
+  status: STATUS.IDLE,
   error: null,
 }

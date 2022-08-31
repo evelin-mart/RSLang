@@ -1,43 +1,51 @@
 import React from 'react';
-import styles from './styles.module.scss';
-import { NavLink } from 'react-router-dom';
-import { Box, List, ListItem } from '@mui/material';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { matchPath } from 'react-router';
+import { Box, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { links } from 'shared/constants/menu-links';
+import { AppDispatch } from 'app/store';
+import { useDispatch } from 'react-redux';
+import styles from './styles';
+import { toggleHeaderMenu } from 'entities/user';
+import { HeaderSubmenu } from './submenu';
+import { MenuLinkText } from './link-text';
 
-const links: { title: string, href: string }[] = [
-  {
-    title: 'Учебник',
-    href: '/textbook',
-  },
-  {
-    title: 'Статистика',
-    href: '/statistics',
-  },
-  {
-    title: 'Аудиовызов',
-    href: '/game/audio',
-  },
-  {
-    title: 'Спринт',
-    href: '/game/sprint',
-  },
-]
+export const HeaderMenu = (props: {isColumn: boolean, handleCloseNavMenu?: () => void}) => {
+  const dispatch: AppDispatch = useDispatch();
+  const { isColumn, handleCloseNavMenu } = props;
+  const location = useLocation();
+  const navigate = useNavigate();
 
-export const HeaderMenu = () => {
-  const { headerMenuItemLink, active, headerMenu } = styles;
-
-  const checkActive = ({ isActive }: { isActive: boolean }) => isActive
-    ? `${headerMenuItemLink} ${active}`
-    : headerMenuItemLink;
+  React.useEffect(() => {
+    dispatch(toggleHeaderMenu(false));
+  }, [location, dispatch]);
   
-  const linksRendered = links.map(({ title, href }, i) => (
-    <ListItem key={i}>
-      <NavLink className={checkActive} to={href}>{title}</NavLink>
-    </ListItem>
-  ));
+  const handleMenuItemClick = (path?: string) => {
+    if (path !== undefined && typeof path === 'string') {
+      navigate(path, { replace: true });
+    }
+  }
+  
+  const linksRendered = links.map((link, i) => {
+    const { title, href, submenu } = link;
+    const isActive = matchPath(href, location.pathname) !== null;
+    return (submenu !== undefined
+      ? <HeaderSubmenu key={i} isColumn={isColumn} link={link} handleCloseNavMenu={handleCloseNavMenu}/>
+      : <ListItem key={i} sx={{ p: 0 }}>
+          <ListItemButton 
+            onClick={() => handleMenuItemClick(href)}
+            sx={{ color: "primary.contrastText", pl: isColumn ? 3 : 1, pr: isColumn ? 3 : 1 }}>
+              <ListItemText primary={<MenuLinkText title={title} isActive={isActive} isColumn={isColumn}/>}/>
+          </ListItemButton>
+        </ListItem>)
+  });
 
   return (
     <Box component="nav">
-      <List className={headerMenu}>
+      <List sx={[
+        styles.headerMenu,
+        isColumn && styles.headerMenu_column
+      ]}>
         {linksRendered}
       </List>
     </Box>

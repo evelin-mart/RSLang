@@ -1,19 +1,26 @@
-import React from 'react';
 import { Page } from 'pages/page';
-import { Grid, Typography } from '@mui/material';
+import { Grid, Theme, Typography } from '@mui/material';
+import { Advantages } from 'widgets/advantages';
+import { AboutTeam } from 'widgets/about-team';
+import { PAGES } from 'shared/constants';
 
 export const MainPage = () => {
   return (
-    <Page pageClassName="main" title="Главная">
-      <Grid container component="section">
-        <Typography variant="h5" component="h3">
-          Возможности и преимуществ приложения
+    <Page pageName={PAGES.MAIN}>
+      <Grid sx={{ color: "grey.50" }}>
+        <Typography component="h2" sx={{
+          textShadow: ({ palette }: Theme) => `1px 1px 3px ${palette.text.primary}`,
+          mt: 1, mb: 3,
+          typography: { xs: 'h5', md: 'h3'}
+        }}>
+          RSLang - удобное приложение для изучения английского языка!
         </Typography>
-      </Grid>
-      <Grid container component="section">
-        <Typography variant="h5" component="h3">
-          О команде
-        </Typography>
+        <Grid component="section">
+          <Advantages/>
+        </Grid>
+        <Grid component="section">
+          <AboutTeam/>
+        </Grid>
       </Grid>
     </Page>
   )

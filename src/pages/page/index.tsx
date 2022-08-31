@@ -1,29 +1,55 @@
-import { Typography, Grid } from '@mui/material';
+import { Typography, Grid, Container, Box } from '@mui/material';
 import React from 'react';
+import { ResponsiveAppBar } from 'widgets/header';
 import { Footer } from 'widgets/footer';
-import { Header } from 'widgets/header';
+import { PAGES } from 'shared/constants';
+import pagesBackgrounds from 'app/styles/pages-backgrounds';
+import { useNoScrollFit } from 'shared/lib';
+import styles from './style';
 
 export type PageProps = {
-  pageClassName: string;
-  title: string;
+  pageName: PAGES;
+  title?: string;
   children?: React.ReactNode;
+  pt?: number;
 };
 
 export const Page = (props: PageProps) => {
-  const { pageClassName, title, children } = props;
-  const isFooter = pageClassName !== 'game';
+  const { isNoScrollFit, scrollbarWidth } = useNoScrollFit();
+  const { pageName, title, children, pt } = props;
+  const isFooter = pageName !== PAGES.GAME;
+  
+  const { bg = '', filter = '' } = pagesBackgrounds[pageName] || {};
+
   return (
     <>
-      <Header />
-      <main>
-        <Typography component="h2" variant="h4" marginTop={2} marginBottom={2}>
-          {title}
-        </Typography>
-        <Grid>
-          {children}
-        </Grid>
-      </main>
+      <ResponsiveAppBar />
+      <Box component="main" sx={[
+        { display: "flex" },
+        isNoScrollFit && styles.menuOpenedMainStyles,
+      ]}>
+        <Box sx={[
+          { background: bg, flexGrow: 1 },
+          isNoScrollFit && styles.menuOpenedBgStyles(scrollbarWidth),
+        ]}>
+          <Box sx={{ backdropFilter: filter, height: "100%" }}>
+            <Container maxWidth="lg" sx={{
+              display: "flex", flexDirection: "column",
+              height: "100%", 
+              pb: 5, 
+              pt: title ? 2 : 0 }}>
+              {title &&
+                <Typography variant='h6' marginBottom={2}>
+                  {title}
+                </Typography>}
+              <Grid sx={{ flexGrow: 1, pt: pt !== undefined ? pt : (title ? 0 : 3) }}>
+                {children}
+              </Grid>
+            </Container>
+          </Box>
+        </Box>
+      </Box>
       {isFooter && <Footer />}
     </>
-  )
-}
+  );
+};

@@ -1,4 +1,4 @@
-import { BASE_URL } from 'shared/config';
+import { baseUrl } from 'shared/constants';
 import {
   UserLoginResult,
   UserLoginData,
@@ -8,8 +8,8 @@ import {
 import { processRequest, processAuthorizedRequest, withToken } from '../lib';
 import { UserData } from 'entities/user';
 
-const url = `${BASE_URL}/users`;
-const urlSignIn = `${BASE_URL}/signin`;
+export const usersUrl = `${baseUrl}/users`;
+const urlSignIn = `${baseUrl}/signin`;
 
 export const loginUser = async (userData: UserLoginData) => {
   return await processRequest<UserLoginResult>(urlSignIn, {
@@ -23,13 +23,13 @@ export const loginUser = async (userData: UserLoginData) => {
 
 export const getUserTokens = async (userId: string, refreshToken: string) => {
   return await processRequest<UserTokens>(
-    `${url}/${userId}/tokens`, 
+    `${usersUrl}/${userId}/tokens`, 
     withToken(refreshToken)
   );
 }
 
 export const createUser = async (userData: UserRegistrationData) => {
-  return await processRequest<UserRegistrationResult>(url, {
+  return await processRequest<UserRegistrationResult>(usersUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

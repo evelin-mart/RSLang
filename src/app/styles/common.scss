@@ -1,23 +1,22 @@
+*,
+h1,
+h2,
+h3 {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-.app {
-  min-height: 100vh;
-  position: relative;
-  padding-bottom: var(--footer-height);
-  width: 100%;
-}
-
-*, h1, h2, h3 {
-  box-sizing: border-box;
-}
-
 html {
   scroll-behavior: smooth;
+}
+
+main {
+  flex-grow: 1;
 }
 
 a {
@@ -26,4 +25,18 @@ a {
 
 ul {
   list-style: none;
+}
+
+.app {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: 1280px;
+  width: 100%;
+  padding: 0 20px;
+  margin: 0 auto;
 }

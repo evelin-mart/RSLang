@@ -6,7 +6,8 @@ import { useDispatch } from 'react-redux';
 import { RegistrationForm } from 'features/user/registration';
 import { FormWrapper } from './ui';
 import { setFormType, formData, FormType, toggleAuthModal } from './model';
-import { resetForm } from 'entities/user';
+import { resetForm, toggleHeaderMenu } from 'entities/user';
+import { STATUS } from 'shared/constants';
 
 const modalStyles = {
   display: 'flex',
@@ -19,11 +20,12 @@ export const AuthModal = () => {
   const { show, formType } = useAppSelector((state) => state.authModal);
   const dispatch: AppDispatch = useDispatch();
   const { requestState } = useAppSelector((state) => state.user.formLoading);
-  const loading = requestState.status === 'loading';
+  const loading = requestState.status === STATUS.LOADING;
   const { title, buttonText } = formData[formType];
 
   const handleClose = () => {
     dispatch(toggleAuthModal(false));
+    dispatch(toggleHeaderMenu(false));
   }
 
   const handleBottomButtonClick = () => {

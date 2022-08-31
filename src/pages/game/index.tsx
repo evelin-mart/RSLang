@@ -1,31 +1,59 @@
 import { useEffect } from 'react';
-import { Page } from 'pages/page';
 import { useNavigate, useParams } from 'react-router-dom';
-
-const games: Record<string, { title: string }> = {
-  audio: {
-    title: 'Аудиовызов',
-  },
-  sprint: {
-    title: 'Спринт',
-  }
-}
+import { Page } from 'pages/page';
+import { GAME, PAGES } from 'shared/constants';
+import { games } from 'shared/constants/games';
+import {
+  GAME_PHASE,
+  resetGame,
+  setGameId,
+  useGame,
+  GameStartScreen,
+  GameResults,
+  GameInterface,
+  GameCountdown,
+} from 'entities/game';
+import { AppDispatch } from 'app/store';
+import { useDispatch } from 'react-redux';
+import { Box, CircularProgress } from '@mui/material';
+import { AudiocallGame } from 'entities/game/ui/audiocall';
+import { SprintGame } from 'entities/game/ui/sprint';
 
 export const GamePage = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const { gamePhase } = useGame();
   const navigate = useNavigate();
-  const { gameId } = useParams();
-
+  const { gameId } = useParams<{ gameId: GAME }>();
+  
   useEffect(() => {
-    if (gameId !== undefined && !games[gameId]) {
-      navigate("/*", { replace: true });
+    if (gameId !== undefined) {
+      if (!games[gameId]) {
+        navigate('/*', { replace: true });
+      } else {
+        dispatch(setGameId(gameId));
+        dispatch(resetGame());
+      }
     }
-  }, [gameId]);
-
-  const title = (gameId && games[gameId]) ? games[gameId].title : '';
+  }, [gameId, navigate, dispatch]);
 
   return (
-    <Page pageClassName="game" title={title}>
-      <div>Game: {gameId}</div>
+    <Page pageName={PAGES.GAME} pt={0}>
+      <GameInterface>
+        {/* В зависимости от фазы игры, рэндерится тот или иной компонент
+            фазу игры меняем с помощью dispatch(setGamePhase(GAME_PHASE))
+        */}
+        {gamePhase === GAME_PHASE.START && <GameStartScreen />}
+        {gamePhase === GAME_PHASE.COUNTDOWN && <GameCountdown />}
+        {gamePhase === GAME_PHASE.PLAYING && (
+          (gameId === GAME.AUDIO && <AudiocallGame />) ||
+          (gameId === GAME.SPRINT && <SprintGame />)
+        )}
+        {gamePhase === GAME_PHASE.RESULTS && <GameResults />}
+        {gamePhase === GAME_PHASE.LOADING &&
+          <Box sx={{ height: "calc(100% - var(--header-height))", display: "flex", alignItems: "center"}}>
+            <CircularProgress color="secondary" size={100} thickness={2}/>
+          </Box>}
+      </GameInterface>
     </Page>
   )
 }

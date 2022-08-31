@@ -6,6 +6,7 @@ import { defaultLoadingState } from 'shared/lib';
 import { toggleAuthModal } from 'pages/user/auth-modal/model';
 import { HttpError } from 'shared/api/lib';
 import { isUserRegistrationResult, UserRegistrationResult, UserTokens } from 'shared/api/users';
+import { STATUS } from 'shared/constants';
 
 const initialState: UserState = {
   data: {
@@ -21,6 +22,7 @@ const initialState: UserState = {
     requestState: { ...defaultLoadingState },
     error: null,
   },
+  isHeaderMenuOpened: false,
 }
 
 export const loadUserFromStorage = createAsyncThunk<void, void, AsyncThunkConfig>(
@@ -69,7 +71,11 @@ export const submitForm = createAsyncThunk<FormLoadingError | UserRegistrationRe
       ? error as usersApi.UserRegistrationError
       : error as string;
   }
-  if (show && !submitFormError) dispatch(toggleAuthModal(false));
+  
+  if (show && !submitFormError) {
+    dispatch(toggleAuthModal(false));
+    dispatch(toggleHeaderMenu(false));
+  }
 
   return submitFormError;
 });
@@ -128,25 +134,28 @@ export const userSlice = createSlice({
       const { token, refreshToken } = action.payload;
       state.data.token = token;
       state.data.refreshToken = refreshToken;
+    },
+    toggleHeaderMenu(state, action: PayloadAction<boolean>) {
+      state.isHeaderMenuOpened = action.payload;
     }
   },
   extraReducers(builder) {
     builder
       .addCase(loadUserFromStorage.pending, (state, action) => {
-        state.startupLoading.status = 'loading';
+        state.startupLoading.status = STATUS.LOADING;
       })
       .addCase(loadUserFromStorage.fulfilled, (state, action) => {
-        state.startupLoading.status = 'succeeded';
+        state.startupLoading.status = STATUS.SUCCESS;
       })
       .addCase(loadUserFromStorage.rejected, (state, action) => {
-        state.startupLoading.status = 'failed';
+        state.startupLoading.status = STATUS.FAIL;
         state.startupLoading.error = action.error.message || '';
       })
       .addCase(submitForm.pending, (state, action) => {
-        state.formLoading.requestState.status = 'loading';
+        state.formLoading.requestState.status = STATUS.LOADING;
       })
       .addCase(submitForm.fulfilled, (state, action) => {
-        state.formLoading.requestState.status = 'succeeded';
+        state.formLoading.requestState.status = STATUS.SUCCESS;
         if (!isUserRegistrationResult(action.payload)) {
           state.formLoading.error = action.payload;
         } else {
@@ -155,12 +164,11 @@ export const userSlice = createSlice({
         }
       })
       .addCase(submitForm.rejected, (state, action) => {
-        state.formLoading.requestState.status = 'failed';
+        state.formLoading.requestState.status = STATUS.FAIL;
         state.formLoading.requestState.error = action.error.message || '';
       })
       .addCase(getUser.fulfilled, (state, action) => {
-        const result = action.payload;
-        state.formLoading.requestState.status = 'succeeded';
+        state.formLoading.requestState.status = STATUS.SUCCESS;
       })
   }
 })
@@ -170,4 +178,5 @@ export const {
   deauthorize,
   resetForm,
   updateTokens,
+  toggleHeaderMenu,
 } = userSlice.actions;

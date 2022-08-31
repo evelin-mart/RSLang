@@ -9,14 +9,12 @@ export interface UserData {
   refreshToken: string;
 }
 
-export type UserDataNoTokens = Omit<UserData, 'token' | 'refreshToken'>;
-
 export const isUserData = (data: unknown): data is UserData => {
   const requiredProps = ['userId', 'name', 'email', 'token', 'refreshToken'];
   return (
     data !== null
     && typeof data === 'object'
-    && requiredProps.every((prop) => data.hasOwnProperty(prop))
+    && requiredProps.every((prop) => Object.prototype.hasOwnProperty.call(data, prop))
   );
 }
 
@@ -30,4 +28,5 @@ export interface UserState {
   },
   data: UserData;
   isAuthorized: boolean;
+  isHeaderMenuOpened: boolean;
 }

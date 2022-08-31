@@ -1,9 +1,8 @@
 import { Middleware } from '@reduxjs/toolkit';
 import { updateTokens, UserData } from 'entities/user';
-import { getUserTokens } from '../users';
+import { getUserTokens, usersUrl } from '../users';
 import { store } from 'app/store';
 import { deauthorize } from 'entities/user';
-import { BASE_URL } from 'shared/config';
 import { HttpError } from './errors';
 
 const authorizationErrors = [401, 402, 403];
@@ -27,7 +26,7 @@ export const withToken = (token: string, requestInit: RequestInit = {}) => {
   }}
 }
 
-export const getResponseBody = async (res: Response): Promise<string | Object> => {
+export const getResponseBody = async (res: Response): Promise<string | unknown> => {
   const contentType = res.headers.get('Content-Type');
   if (!contentType) return '';
   const isJson = contentType?.includes('application/json');
@@ -40,12 +39,12 @@ export const processRequest = async <T>(url: string, requestInit: RequestInit = 
     const error = await getResponseBody(res);
     throw new HttpError(res, error);
   }
-  return (await getResponseBody(res)) as T;
+  return await getResponseBody(res) as T;
 }
 
 const getAuthorizedRequestUrl = () => {
   const { userId } = authorizedUserData;
-  return `${BASE_URL}/users/${userId}`;
+  return `${usersUrl}/${userId}`;
 }
 
 export const processTokensUpdate = async (): Promise<boolean> => {
@@ -60,10 +59,10 @@ export const processTokensUpdate = async (): Promise<boolean> => {
   }
 }
 
-export const processAuthorizedRequest = async <T>(requestInit: RequestInit = {}, urlPath: string = ''): Promise<T> => {
+export const processAuthorizedRequest = async <T>(requestInit: RequestInit = {}, urlPath?: string): Promise<T> => {
   try {
     const { token } = authorizedUserData;
-    const url = `${getAuthorizedRequestUrl()}${urlPath}`;
+    const url = `${getAuthorizedRequestUrl()}${urlPath || ''}`;
     return await processRequest<T>(url, withToken(token, requestInit));
     
   } catch (error) {

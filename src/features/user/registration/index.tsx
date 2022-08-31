@@ -12,15 +12,16 @@ import * as usersApi from 'shared/api/users';
 import { submitForm } from 'entities/user';
 import { apiUrl, defaultInputsState, defaulValidationState } from './model';
 import { FormErrors } from './ui';
+import { STATUS } from 'shared/constants';
 
 export const RegistrationForm = () => {
   const [ selectedFile, setSelectedFile ] = React.useState<File | null>(null);
   const [ inputsState, setInputsState ] = React.useState(defaultInputsState);
   const [ inputsErrors, setInputsErrors ] = React.useState(defaulValidationState);
   const { requestState, error } = useAppSelector((state) => state.user.formLoading);
+  const loading = requestState.status === STATUS.LOADING;
   const fileUploadRef = useRef<HTMLInputElement>(null);
-  const loading = requestState.status === 'loading';
-
+  
   const dispatch: AppDispatch = useDispatch();
 
   const handleSubmit = (e: React.SyntheticEvent) => {
@@ -58,7 +59,7 @@ export const RegistrationForm = () => {
     ? typeof error === 'string'
       ? error
       : <FormErrors errors={error.error.errors}/>
-    : error;
+    : requestState.error || error;
 
   return (
     <Box
@@ -102,7 +103,6 @@ export const RegistrationForm = () => {
         value={inputsState.name}
         onChange={handleChange('name')}
         error={inputsErrors.name}
-        autoFocus
       />
       <TextField
         required
