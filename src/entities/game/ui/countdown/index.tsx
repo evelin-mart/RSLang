@@ -1,4 +1,4 @@
-import { setGamePhase, GAME_PHASE } from 'entities/game';
+import { setGamePhase, GAME_PHASE, useTimer } from 'entities/game';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
 import { Typography } from '@mui/material';
@@ -8,30 +8,21 @@ import { GAME_COUNTDOWN } from 'shared/constants';
 
 export const GameCountdown = () => {
   const dispatch: AppDispatch = useDispatch();
-  const [counter, setCounter] = React.useState<number>(GAME_COUNTDOWN);
+  const [ startTimer, stopTimer, timerCounter ] = useTimer(GAME_COUNTDOWN, -1);
 
   React.useEffect(() => {
-    const timer = setInterval(() => {
-      setCounter((prev) => prev - 1);
-    }, 1000);
-
-    return () => {
-      if (timer) {
-        clearInterval(timer);
-      }
-    }
-  }, []);
-
-  React.useEffect(() => {
-    if (counter === 0) {
+    startTimer(() => {
       dispatch(setGamePhase(GAME_PHASE.PLAYING));
-    }
-  }, [counter, dispatch]);
+    })
+    return () => {
+      stopTimer()
+    };
+  }, [dispatch, startTimer, stopTimer]);
 
   return (
     <GameInformationWrapper>      
       <Typography variant="h5" sx={{ textAlign: "center", fontSize: { xs: "1.5rem", sm: "2rem"}, color: "grey.700" }}>
-        Игра начнется через:<br/>{counter} 
+        Игра начнется через:<br/>{timerCounter} 
       </Typography>
     </GameInformationWrapper>
   )
