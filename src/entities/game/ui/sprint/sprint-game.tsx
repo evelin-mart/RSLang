@@ -1,4 +1,4 @@
-import { Box, Button, Grid, IconButton, Paper, Typography } from '@mui/material';
+import { Box, Button, ButtonBaseActions, Grid, IconButton, Paper, Typography } from '@mui/material';
 import { AppDispatch } from 'app/store';
 import { finishGame, GameResultsData, GAME_PHASE, setGamePhase, useGame } from 'entities/game/model';
 import { Word } from 'entities/word'
@@ -6,6 +6,8 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import { getRandomInt } from 'shared/lib';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 export const GameSprintTest = () => {
   
@@ -77,6 +79,23 @@ export const GameSprintTest = () => {
   }, [words])
 
   useEffect(() => {
+    const onKeyPress = (e: KeyboardEvent) => {
+      if (!e.repeat && e.code === 'ArrowRight') {
+        handleAnswer(false);
+      }
+      if (!e.repeat && e.code === 'ArrowLeft') {
+        handleAnswer(true)
+      }
+    };
+
+    document.addEventListener('keydown', onKeyPress);
+
+    return () => {
+      document.removeEventListener('keydown', onKeyPress);
+    }
+  }, [rightAnswer])
+
+  useEffect(() => {
     if (secunds > 0) {
       setTimeout(() => {
         setSecunds(secunds => secunds - 1)
@@ -88,7 +107,9 @@ export const GameSprintTest = () => {
 
   const handleAnswer = (answer: boolean) => {
     userAnswer = answer;
-    checkAnswer()
+    checkAnswer();
+    console.log('ответ пользователя', userAnswer);
+    console.log('правильный ответ',rightAnswer);
   }
 
 
@@ -127,8 +148,8 @@ export const GameSprintTest = () => {
               <Typography align='center' color='secondary' variant='h4'>{translate}</Typography>
             </Box>
             <Box sx={{ mt: 5, display: "flex", columnGap: 6, justifyContent: "center" }}>
-              <Button variant="contained" color="success" sx={{ pl: 5, pr: 5, textTransform: "none" }} onClick={() => {handleAnswer(true)}}>True!</Button>
-              <Button variant="contained" color="error" sx={{ pl: 5, pr: 5, textTransform: "none" }} onClick={() => {handleAnswer(false)}}>False!</Button>
+              <Button variant="contained" color="success" sx={{ pl: 5, pr: 5, textTransform: "none" }} startIcon={<ArrowBackIcon />} onClick={() => {handleAnswer(true)}}>True!</Button>
+              <Button variant="contained" color="error" sx={{ pl: 5, pr: 5, textTransform: "none" }} endIcon={<ArrowForwardIcon />} onClick={() => {handleAnswer(false)}}>False!</Button>
             </Box>
           </Box>
           }
