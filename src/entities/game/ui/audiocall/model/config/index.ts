@@ -1,4 +1,5 @@
 export const MAX_ANSWERS = 5;
+export const ANSWER_TIME = 5;
 
 export enum BTN_STATE {
   IDLE = 'primary.main',

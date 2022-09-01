@@ -30,6 +30,9 @@ export enum PAGES {
 export enum GAME {
   AUDIO = 'audio',
   SPRINT = 'sprint',
+  // SAVANAH = 'savannah',
 }
 
 export type MyColor = "error" | "primary" | "inherit" | "success" | "secondary" | "info" | "warning" | undefined;
+
+export type Sound = HTMLAudioElement | null;
