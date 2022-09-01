@@ -1,9 +1,9 @@
 const styles = {
   gameContainer: {
-    height: 'calc(100% - var(--header-height))',
+    // height: 'calc(100% - var(--header-height))',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     flexBasis: '100%',
   },
