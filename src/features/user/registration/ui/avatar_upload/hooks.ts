@@ -1,5 +1,6 @@
 import React from 'react';
 import { processRequest } from 'shared/api/lib';
+import { AvatarUrlDispatch } from './interface';
 
 const cloudName = 'deckxrkbj';
 export const uploadPreset = 'rsschool';
@@ -16,7 +17,7 @@ export interface AvatarUploadError {
 }
 
 export const useAvatarUpload = (
-  setAvatarUrl: React.Dispatch<React.SetStateAction<string | Error>>
+  setAvatarUrl: AvatarUrlDispatch
 ): [typeof setFile, boolean] => {
   const [ file, setFile ] = React.useState<File | null>(null);
   const [ loading, setLoading ] = React.useState(false);

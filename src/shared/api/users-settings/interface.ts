@@ -1,9 +1,9 @@
 
 export interface UserSettings {
-  wordsPerDay: number;
+  wordsPerDay?: number;
   optional: {
-    avatar: string | null,
-    dailyStats: {
+    avatarUrl?: string,
+    dailyStats?: {
       new: number;
       learned: number;
       date: Date;
@@ -12,9 +12,6 @@ export interface UserSettings {
 }
 
 export const defaultUserSettings: UserSettings = {
-  wordsPerDay: 0,
-  optional: {
-    avatar: null,
-    dailyStats: [],
-  }
+  wordsPerDay: 1,
+  optional: {}
 }

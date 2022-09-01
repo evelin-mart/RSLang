@@ -7,11 +7,12 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import { Refresh as RefreshIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import * as usersApi from 'shared/api/users';
 import { LoadingButton } from '@mui/lab';
-import { FormErrors } from 'features/user/registration/ui';
+import { AvatarUpload, FormErrors, AvatarUrl } from 'features/user/registration/ui';
 import { PAGES, STATUS } from 'shared/constants';
 
 export const ProfilePage = () => {
-  const { data: { name, email } } = useUser();
+  const { data: { name, email, avatarUrl } } = useUser();
+  const [ avatarUrlUpdated, setAvatarUrl ] = React.useState<AvatarUrl>(avatarUrl || null);
   const [ inputsState, setInputsState ] = React.useState<usersApi.UserRegistrationData>({
     name, email,
     password: '',
@@ -23,7 +24,10 @@ export const ProfilePage = () => {
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    dispatch(submitForm({...inputsState}));
+    const data = avatarUrlUpdated && !(avatarUrlUpdated instanceof Error)
+      ? {...inputsState, avatarUrl: avatarUrlUpdated }
+      : {...inputsState };
+    dispatch(submitForm(data));
   };
 
   const handleChange = (key: keyof usersApi.UserRegistrationData) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,6 +53,10 @@ export const ProfilePage = () => {
           autoComplete="off"
           onSubmit={handleSubmit}
         >
+          <AvatarUpload avatarUrl={avatarUrlUpdated} setAvatarUrl={setAvatarUrl}/>
+          {avatarUrlUpdated instanceof Error && <Typography sx={{ color: "error.light" }}>
+            Uploading avatar error
+          </Typography>}
           {errorText && <Typography sx={{ color: "error.light" }}>
             {errorText}
           </Typography>}

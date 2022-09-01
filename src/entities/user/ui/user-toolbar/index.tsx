@@ -29,7 +29,7 @@ export const UserToolbar = () => {
             sx={{ color: "primary.contrastText"}}>
             Войти
           </Button>
-        : <PopupMenu user={user}/>}
+        : <PopupMenu />}
     </Box>
   );
 }

@@ -5,37 +5,17 @@ import {
   AddAPhoto as AddAPhotoIcon
 } from '@mui/icons-material';
 import { useAvatarUpload } from './hooks';
+import { AvatarUrl, AvatarUrlDispatch } from './interface';
+export * from './interface';
 
 interface AvatarUploadProps {
-  avatarUrl: string | Error;
-  setAvatarUrl: React.Dispatch<React.SetStateAction<string | Error>>
+  avatarUrl: AvatarUrl;
+  setAvatarUrl: AvatarUrlDispatch
 }
 
 export const AvatarUpload = ({ avatarUrl, setAvatarUrl }: AvatarUploadProps) => {
   const [ setFile, loading ] = useAvatarUpload(setAvatarUrl);
   const fileUploadRef = useRef<HTMLInputElement>(null);
-  // const [ selectedFile, setSelectedFile ] = React.useState<File | null>(null);
-  // const fileUploadRef = useRef<HTMLInputElement>(null);
-  // const [ loading, setLoading ] = React.useState(false);
-
-  // React.useEffect(() => {
-  //   if (selectedFile === null) return;
-  //   setLoading(true);
-  //   const formData = new FormData();
-    
-  //   formData.append('file', selectedFile);
-  //   // fontData.append('api_key', apiKey);
-  //   formData.append('upload_preset', uploadPreset);
-    
-  //   processRequest<uploadResponseData>(apiUrl, {
-  //     method: 'POST',
-  //     body: formData,
-  //   })
-  //     .then((data: uploadResponseData) => setAvatarUrl(data.secure_url))
-  //     .catch((error: Error) => setAvatarUrl(error))
-  //     .finally(() => setLoading(false))
-
-  // }, [selectedFile]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const el = e.target;
@@ -48,7 +28,7 @@ export const AvatarUpload = ({ avatarUrl, setAvatarUrl }: AvatarUploadProps) => 
     fileUploadRef.current?.click();
   }
 
-  const avatarUrlToShow = avatarUrl instanceof Error ? '' : avatarUrl;
+  const avatarUrlToShow = !avatarUrl || (avatarUrl instanceof Error) ? '' : avatarUrl;
 
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>

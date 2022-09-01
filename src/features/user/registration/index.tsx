@@ -12,19 +12,23 @@ import { defaultInputsState, defaulValidationState } from './model';
 import { FormErrors } from './ui';
 import { STATUS } from 'shared/constants';
 import { AvatarUpload } from './ui/avatar_upload';
+import { AvatarUrl } from './ui/avatar_upload/interface';
 
 export const RegistrationForm = () => {
   const [ inputsState, setInputsState ] = React.useState(defaultInputsState);
   const [ inputsErrors, setInputsErrors ] = React.useState(defaulValidationState);
   const { requestState, error } = useAppSelector((state) => state.user.formLoading);
-  const [ avatarUrl, setAvatarUrl ] = React.useState<string | Error>('');
+  const [ avatarUrl, setAvatarUrl ] = React.useState<AvatarUrl>(null);
   const loading = requestState.status === STATUS.LOADING;
   
   const dispatch: AppDispatch = useDispatch();
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    dispatch(submitForm({...inputsState}));
+    const data = avatarUrl && !(avatarUrl instanceof Error)
+      ? {...inputsState, avatarUrl }
+      : {...inputsState };
+    dispatch(submitForm(data));
   };
 
   const handleChange = (key: keyof usersApi.UserRegistrationData) => (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -7,6 +7,7 @@ export interface UserData {
   email: string;
   token: string;
   refreshToken: string;
+  avatarUrl?: string;
 }
 
 export const isUserData = (data: unknown): data is UserData => {
@@ -29,5 +30,4 @@ export interface UserState {
   data: UserData;
   isAuthorized: boolean;
   isHeaderMenuOpened: boolean;
-  avatarUrl: string;
 }
