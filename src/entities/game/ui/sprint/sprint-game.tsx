@@ -9,6 +9,7 @@ import { getRandomInt } from 'shared/lib';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useLongestChain } from '../../model/hooks/longest-chain';
+import { makeAbsUrl } from 'shared/constants';
 
 const GAME_TIME = 10;
 
@@ -25,55 +26,50 @@ export const GameSprintTest = () => {
   const [rightAnswer, setRightAnswer] = useState<null | boolean>(null)
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [winsCounter, setWinsCounter] = useState(0);  //TODO обсудить и решить какую именно статистику по словам будем собирать, пока затычка в виде счетчика отгаданных слов
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [ playSoundEffect ] = useSoundEffect();
   const [ setLongestChain ] = useLongestChain();
   const [ startTimer, stopTimer, counter ] = useTimer(GAME_TIME, -1);
-
   let userAnswer: boolean | null = null;
 
-  const [secunds, setSecunds] = useState(30);
-
   const getWrongAnswer = () => {
-    const wrong = ['черный', 'слово', 'небо', 'лето', 'апельсин']; //TODO сделать функцию для генерации неправильного ответа, пока затычка
+    const wrong = words.filter((item) => item !== words[currentWordIndex]);
     const index = Math.floor(Math.random() * wrong.length);
     return wrong[index];
   }
 
   const createCard = () => {
+    console.log(currentWordIndex);
+    
+    if (!words[currentWordIndex]) {
+      setIsGameOver(true);
+      return
+    }
 
     const roll = Math.random();
-    const index = Math.floor(Math.random() * words.length);
-    setWord(words[index].word);
-    setWordId(words[index].id);
-    setImgLink(words[index].image);
+    setWord(words[currentWordIndex].word);
+    setWordId(words[currentWordIndex].id);
+    setImgLink(makeAbsUrl(words[currentWordIndex].image));
     
-    if (roll > 0.5) {
+    if (roll < 0.5 || words.length <= 1) {
       setRightAnswer(true);
-      setTranslate(words[index].wordTranslate);
+      setTranslate(words[currentWordIndex].wordTranslate);
     } else {
       setRightAnswer(false);
-      setTranslate(getWrongAnswer());
+      setTranslate(getWrongAnswer().wordTranslate);
     }
   }
 
   const checkAnswer = () => {
     if (userAnswer === rightAnswer) {
       setWinsCounter((s) => s + 1);
-      // setResults({...results, [wordId]: true})
       dispatch(addGameResult({ id: wordId, result: true }))
       setLongestChain((prev) => prev + 1);
-      console.log('Верно!');
       playSoundEffect(SOUND_EFFECT.RIGHT);
     } else {
-      // setResults({...results, [wordId]: false});
       dispatch(addGameResult({ id: wordId, result: false }))
       setLongestChain(0)
       playSoundEffect(SOUND_EFFECT.WRONG);
-      console.log('Не верно!');
-    }
-    
-    if (!isGameOver) {
-      createCard();
     }
   }
 
@@ -85,15 +81,15 @@ export const GameSprintTest = () => {
     }
   }, [isGameOver, dispatch]);
 
-  // const handleEndGame = () => {
-  //   dispatch(setGamePhase(GAME_PHASE.LOADING));
-  //   dispatch(setLongestChain(0));
-  //   dispatch(finishGame());
-  //   console.log('Результаты', results);
-  // }
+  React.useEffect(() => {
+      if (!isGameOver) {
+        return createCard;
+      }
+  }, [currentWordIndex]);
 
   useEffect(() => {
-    createCard();
+    //createCard();
+    setCurrentWordIndex(1);
     startTimer(() => setIsGameOver(true));
   }, [words, startTimer])
 
@@ -121,21 +117,14 @@ export const GameSprintTest = () => {
     }
   }, [rightAnswer])
 
-  // useEffect(() => {
-  //   if (secunds > 0) {
-  //     setTimeout(() => {
-  //       setSecunds(secunds => secunds - 1)
-  //     }, 1000);
-  //   } else {
-  //     setIsGameOver(true);
-  //   }
-  // }, [secunds])
-
   const handleAnswer = (answer: boolean) => {
     userAnswer = answer;
     checkAnswer();
-    console.log('ответ пользователя', userAnswer);
-    console.log('правильный ответ',rightAnswer);
+    if (currentWordIndex === words.length - 1) {
+      setIsGameOver(true);
+      return;
+    }
+    setCurrentWordIndex((s) => s + 1);
   }
 
   return (
@@ -148,10 +137,6 @@ export const GameSprintTest = () => {
       rowGap: 2, p: 4,
       height: "fit-content",
     }}>
-        {/* {isGameOver */}
-        {/* // ? <Button onClick={handleEndGame} variant="outlined" color="secondary" endIcon={<SkipNextIcon />}>
-        //     Завершить игру
-        //   </Button> */}
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: "center" }}>
             <Box sx={{ mt: 5, display: "flex", columnGap: 6, justifyContent: "space-between" }}>
               <Typography sx={{pt: 1}} variant='body1'>Time left:</Typography>
@@ -162,10 +147,11 @@ export const GameSprintTest = () => {
               sx={{
                 width: 350,
                 maxWidth: { xs: 250, md: 350 },
-                maxHeight: 250,
+                objectFit: "cover",
+                height: 150,
               }}
               alt="Word illustration"
-              src={`http://localhost:3001/${imgLink}`}
+              src={imgLink || ''}
             />
             <Box sx={{ mt: 5, display: "flex", flexDirection: "column", columnGap: 2, justifyContent: "center", alignItems: 'center' }}>
               <Typography align='center' color='secondary' variant='h4'>{word}</Typography>
@@ -177,7 +163,6 @@ export const GameSprintTest = () => {
               <Button variant="contained" color="error" sx={{ pl: 5, pr: 5, textTransform: "none" }} endIcon={<ArrowForwardIcon />} onClick={() => {handleAnswer(false)}}>False!</Button>
             </Box>
           </Box>
-          {/* } */}
     </Paper>
   )
 }
