@@ -23,6 +23,7 @@ const initialState: UserState = {
     error: null,
   },
   isHeaderMenuOpened: false,
+  avatarUrl: '',
 }
 
 export const loadUserFromStorage = createAsyncThunk<void, void, AsyncThunkConfig>(
@@ -137,6 +138,9 @@ export const userSlice = createSlice({
     },
     toggleHeaderMenu(state, action: PayloadAction<boolean>) {
       state.isHeaderMenuOpened = action.payload;
+    },
+    setAvatarUrl(state, action: PayloadAction<string>) {
+      state.avatarUrl = action.payload;
     }
   },
   extraReducers(builder) {

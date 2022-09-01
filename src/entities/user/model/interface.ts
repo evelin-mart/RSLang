@@ -29,4 +29,5 @@ export interface UserState {
   data: UserData;
   isAuthorized: boolean;
   isHeaderMenuOpened: boolean;
+  avatarUrl: string;
 }
