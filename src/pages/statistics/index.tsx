@@ -7,8 +7,7 @@ import { StatsSectionWrapper } from './ui/section-wrapper/index';
 import { Box } from '@mui/material';
 
 export const StatisticsPage = () => {
-  const [ loading, stats ] = useStatistics();
-
+  const [ loading, stats ] = useStatistics(); 
   return (
     <Page pageName={PAGES.STATISTICS}>
       <StatsSectionWrapper

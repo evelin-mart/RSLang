@@ -52,7 +52,7 @@ export const HeaderSubmenu = (props: HeaderSubmenuProps) => {
         key={i}
         onClick={() => handleCloseUserMenu(href)}
         sx={{ color: "primary.main" }}>
-        <ListItemIcon>{icon}</ListItemIcon>
+        <ListItemIcon>{icon && icon()}</ListItemIcon>
         <MenuLinkText title={title} isActive={isActive} isColumn={isColumn}/>
       </MenuItem>)
   })
