@@ -63,6 +63,16 @@ export const GameSprintTest = () => {
     }
   }
 
+  const handleAnswer = (answer: boolean) => {
+    userAnswer = answer;
+    checkAnswer();
+    if (currentWordIndex === words.length - 1) {
+      setIsGameOver(true);
+      return;
+    }
+    setCurrentWordIndex((s) => s + 1);
+  }
+
   const checkAnswer = () => {
     if (userAnswer === rightAnswer) {
       setIsRight(true);
@@ -124,16 +134,6 @@ export const GameSprintTest = () => {
     }
   }, [rightAnswer])
 
-  const handleAnswer = (answer: boolean) => {
-    userAnswer = answer;
-    checkAnswer();
-    if (currentWordIndex === words.length - 1) {
-      setIsGameOver(true);
-      return;
-    }
-    setCurrentWordIndex((s) => s + 1);
-  }
-
   return (
     <Paper 
       elevation={3} 
@@ -148,7 +148,7 @@ export const GameSprintTest = () => {
       }}
       className={classes}>
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: "center" }}>
-            <Box sx={{ mt: 5, display: "flex", columnGap: 6, justifyContent: "space-between" }}>
+            <Box sx={{ display: "flex", flexDirection: {xs: "column", md: "row"}, columnGap: 6, justifyContent: "space-between" }}>
               <Typography sx={{pt: 1}} variant='body1'>Chain length: 
                 <Typography component="span" sx={{pl: 1}} variant='h5' color="primary">{chain}</Typography>
               </Typography>
@@ -159,6 +159,8 @@ export const GameSprintTest = () => {
             <Box
               component="img"
               sx={{
+                mt: 1,
+                mb: 1,
                 width: 350,
                 maxWidth: { xs: 250, md: 350 },
                 objectFit: "cover",
@@ -168,14 +170,14 @@ export const GameSprintTest = () => {
               src={imgLink || ''}
             />
             <Typography variant='h4'color={'green'}>{scoreCounter}</Typography>
-            <Box sx={{ mt: 5, display: "flex", flexDirection: "column", columnGap: 2, justifyContent: "center", alignItems: 'center' }}>
+            <Box sx={{ display: "flex", flexDirection: "column", columnGap: 2, justifyContent: "center", alignItems: 'center' }}>
               <Typography align='center' color='secondary' variant='h4'>{word}</Typography>
               <Typography sx={{pt: 1}} variant='body2'>is mean</Typography>
               <Typography align='center' color='secondary' variant='h4'>{translate}</Typography>
             </Box>
-            <Box sx={{ mt: 5, display: "flex", columnGap: 6, justifyContent: "center" }}>
-              <Button variant="contained" color="success" sx={{ pl: 5, pr: 5, textTransform: "none" }} startIcon={<ArrowBackIcon />} onClick={() => {handleAnswer(true)}}>True!</Button>
-              <Button variant="contained" color="error" sx={{ pl: 5, pr: 5, textTransform: "none" }} endIcon={<ArrowForwardIcon />} onClick={() => {handleAnswer(false)}}>False!</Button>
+            <Box sx={{ display: "flex", flexDirection: {xs: "column", md: "row"}, columnGap: 6, justifyContent: "center" }}>
+              <Button variant="contained" color="success" sx={{ mt: 1, pl: 5, pr: 5, textTransform: "none" }} startIcon={<ArrowBackIcon />} onClick={() => {handleAnswer(true)}}>True!</Button>
+              <Button variant="contained" color="error" sx={{ mt: 1, pl: 5, pr: 5, textTransform: "none" }} endIcon={<ArrowForwardIcon />} onClick={() => {handleAnswer(false)}}>False!</Button>
             </Box>
           </Box>
     </Paper>

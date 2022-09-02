@@ -1,14 +1,11 @@
 .base {
   transition: all .2s ease;
-  /* box-shadow: none !important; */
 }
 
 .right {
   box-shadow: 0 0 10px green, 0 0 10px green, 0 0 10px green !important;
-  //transition: all .3s ease;
 }
 
 .wrong {
   box-shadow: 0 0 10px red, 0 0 10px red, 0 0 10px red !important;
-  //transition: all .3s ease;
 }
