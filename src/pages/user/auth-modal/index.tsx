@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { RegistrationForm } from 'features/user/registration';
 import { FormWrapper } from './ui';
 import { setFormType, formData, FormType, toggleAuthModal } from './model';
-import { resetForm, toggleHeaderMenu } from 'entities/user';
+import { resetForm } from 'entities/user';
 import { STATUS } from 'shared/constants';
 
 const modalStyles = {
@@ -25,7 +25,6 @@ export const AuthModal = () => {
 
   const handleClose = () => {
     dispatch(toggleAuthModal(false));
-    dispatch(toggleHeaderMenu(false));
   }
 
   const handleBottomButtonClick = () => {

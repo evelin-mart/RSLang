@@ -3,19 +3,15 @@ import React from 'react';
 import { withProviders } from './providers';
 import { Routing } from 'pages';
 import { AuthModal } from 'pages/user/auth-modal';
-import { useNoScrollFit } from 'shared/lib';
+import { useOverflowObserver } from '../shared/lib/hooks/overflow';
 
 const App = () => {
-  const { isNoScrollFit } = useNoScrollFit();
+  useOverflowObserver();
 
   return (
     <>
       <AuthModal />
-      <div className="app" style={{
-        paddingTop: isNoScrollFit
-          ? "var(--header-height)"
-          : 0,
-      }}>
+      <div className="app">
         <Routing />
       </div>
     </>
