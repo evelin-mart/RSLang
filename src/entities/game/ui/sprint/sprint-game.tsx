@@ -12,7 +12,7 @@ import classNames from 'classnames';
 
 const GAME_TIME = 30;
 
-export const GameSprintTest = () => {
+export const SprintGame = () => {
   
   const dispatch: AppDispatch = useDispatch();
   const { words } = useGame();
