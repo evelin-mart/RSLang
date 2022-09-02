@@ -4,7 +4,7 @@ import { Login as LoginIcon } from '@mui/icons-material';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
 import { toggleAuthModal } from 'pages/user/auth-modal/model';
-import { useUser, resetForm, toggleHeaderMenu } from 'entities/user';
+import { useUser, resetForm } from 'entities/user';
 import { PopupMenu } from './popup-menu';
 
 
@@ -15,7 +15,6 @@ export const UserToolbar = () => {
   const handleOpenModal = (e: React.MouseEvent<HTMLElement>) => {
     dispatch(resetForm());
     dispatch(toggleAuthModal(true));
-    dispatch(toggleHeaderMenu(true));
   };
 
   return (

@@ -13,7 +13,8 @@ export const GameResultsChart = ({ setTabValue }: GameResultsProps) => {
   const { palette: { error, success } } = useTheme();
   const { correctWords, failedWords } = useGameResults();
 
-  const correctWordsPercent = Math.round((correctWords.length / (failedWords.length + correctWords.length)) * 100);
+  const wordsNumber = failedWords.length + correctWords.length;
+  const correctWordsPercent = wordsNumber !== 0 ? Math.round((correctWords.length / wordsNumber) * 100) : 0;
   const resultTitle = getResultTitle(correctWordsPercent);
 
   const data = [
@@ -45,7 +46,7 @@ export const GameResultsChart = ({ setTabValue }: GameResultsProps) => {
               data={data}
               innerRadius={70}
               outerRadius={80}
-              paddingAngle={correctWordsPercent === 100 ? 0 : 3}
+              paddingAngle={(correctWordsPercent === 100 || correctWordsPercent === 0) ? 0 : 3}
               dataKey="value"
             >
               {data.map((_, index) => (

@@ -2,11 +2,11 @@ import styles from './styles.module.scss';
 import { Container, Link, List, ListItem, Stack, Typography, Box } from '@mui/material';
 import { RssLogo } from 'shared/components/rss-logo';
 import { githubLinks } from 'shared/constants/team-github-links';
-import { useNoScrollFit } from 'shared/lib';
 import React from 'react';
+import { useUi } from 'shared/lib/store/ui';
 
 export const Footer = () => {
-  const { isNoScrollFit } = useNoScrollFit();
+  const { isBodyOverflow } = useUi();
   const footerContainer = React.useRef<HTMLElement | null>(null);
 
   const menuOpenedStyles = {
@@ -17,7 +17,7 @@ export const Footer = () => {
   return (
     <Box ref={footerContainer} sx={[
       { bgcolor: "primary.dark" },
-      isNoScrollFit && menuOpenedStyles
+      isBodyOverflow && menuOpenedStyles
     ]}>
       <Container maxWidth="lg" sx={{
         display: "flex",

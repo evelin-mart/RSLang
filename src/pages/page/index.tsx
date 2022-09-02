@@ -4,8 +4,9 @@ import { ResponsiveAppBar } from 'widgets/header';
 import { Footer } from 'widgets/footer';
 import { PAGES } from 'shared/constants';
 import pagesBackgrounds from 'app/styles/pages-backgrounds';
-import { useNoScrollFit } from 'shared/lib';
+import { useScrollbarWidth } from 'shared/lib';
 import styles from './style';
+import { useUi } from 'shared/lib/store/ui';
 
 export type PageProps = {
   pageName: PAGES;
@@ -15,7 +16,8 @@ export type PageProps = {
 };
 
 export const Page = (props: PageProps) => {
-  const { isNoScrollFit, scrollbarWidth } = useNoScrollFit();
+  const { scrollbarWidth } = useScrollbarWidth();
+  const { isBodyOverflow } = useUi();
   const { pageName, title, children, pt } = props;
   const isFooter = pageName !== PAGES.GAME;
   
@@ -26,11 +28,11 @@ export const Page = (props: PageProps) => {
       <ResponsiveAppBar />
       <Box component="main" sx={[
         { display: "flex" },
-        isNoScrollFit && styles.menuOpenedMainStyles,
+        isBodyOverflow && styles.menuOpenedMainStyles,
       ]}>
         <Box sx={[
           { background: bg, flexGrow: 1 },
-          isNoScrollFit && styles.menuOpenedBgStyles(scrollbarWidth),
+          isBodyOverflow && styles.menuOpenedBgStyles(scrollbarWidth),
         ]}>
           <Box sx={{ backdropFilter: filter, height: "100%" }}>
             <Container maxWidth="lg" sx={{

@@ -24,7 +24,6 @@ const initialState: UserState = {
     requestState: { ...defaultLoadingState },
     error: null,
   },
-  isHeaderMenuOpened: false,
 }
 
 export const loadUserFromStorage = createAsyncThunk<void, void, AsyncThunkConfig>(
@@ -82,7 +81,6 @@ export const submitForm = createAsyncThunk<FormLoadingError | UserRegistrationRe
   
   if (show && !submitFormError) {
     dispatch(toggleAuthModal(false));
-    dispatch(toggleHeaderMenu(false));
   }
 
   return submitFormError;
@@ -167,9 +165,6 @@ export const userSlice = createSlice({
       state.data.token = token;
       state.data.refreshToken = refreshToken;
     },
-    toggleHeaderMenu(state, action: PayloadAction<boolean>) {
-      state.isHeaderMenuOpened = action.payload;
-    },
     setAvatarUrl(state, action: PayloadAction<string>) {
       state.data.avatarUrl = action.payload;
     }
@@ -213,6 +208,5 @@ export const {
   deauthorize,
   resetForm,
   updateTokens,
-  toggleHeaderMenu,
   setAvatarUrl,
 } = userSlice.actions;

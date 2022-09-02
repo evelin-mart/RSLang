@@ -5,6 +5,7 @@ import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import { userSlice, saveDataToStoreMiddleware, loadUserFromStorage } from 'entities/user';
 import { saveTokensMiddleware } from 'shared/api/lib';
 import { gameSlice } from 'entities/game';
+import { appUiSlice } from 'shared/lib/store/ui';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     [authModalSlice.name]: authModalSlice.reducer,
     [userSlice.name]: userSlice.reducer,
     [gameSlice.name]: gameSlice.reducer,
+    [appUiSlice.name]: appUiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(
