@@ -6,12 +6,12 @@ import {
 import { Logout as LogoutIcon } from '@mui/icons-material';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
-import { deauthorize, UserState, toggleHeaderMenu } from 'entities/user';
+import { deauthorize, UserState, toggleHeaderMenu, useUser } from 'entities/user';
 import { useNavigate } from 'react-router-dom';
 import { userMenuOptions } from './model';
 
-export const PopupMenu = (props: { user: UserState}) => {
-  const { user } = props;
+export const PopupMenu = () => {
+  const { isAuthorized, data: { name, avatarUrl }} = useUser();
   const dispatch: AppDispatch = useDispatch();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ export const PopupMenu = (props: { user: UserState}) => {
     dispatch(deauthorize());
   }
 
-  const userMenuItems = user.isAuthorized
+  const userMenuItems = isAuthorized
     ? Object.keys(userMenuOptions).map((key) => {
       const { title, href, icon } = userMenuOptions[key];
       return (
@@ -51,7 +51,7 @@ export const PopupMenu = (props: { user: UserState}) => {
     <Box sx={{ flexGrow: 0 }}>
       <Tooltip title="Меню пользователя">
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar alt={user.data.name} src="#" />
+          <Avatar alt={name} src={avatarUrl || "#"} />
         </IconButton>
       </Tooltip>
       <Menu
@@ -78,7 +78,7 @@ export const PopupMenu = (props: { user: UserState}) => {
             opacity: 1,
           }}}>
           <Typography variant="body1" noWrap>
-            {user.data.name}
+            {name}
           </Typography>
         </MenuItem>
         {userMenuItems}

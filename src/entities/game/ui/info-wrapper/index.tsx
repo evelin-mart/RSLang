@@ -11,14 +11,14 @@ export const GameInformationWrapper = ({ title, children }: GameInformationWrapp
       flexBasis: 400, 
       display: "flex", 
       flexDirection: "column", 
-      rowGap: title ? 2 : 0,
+      rowGap: title ? 2 : 2,
       p: { xs: 2, sm: 4 },
       height: "fit-content",
     }}>
       {title &&
         <Typography variant="h2" sx={{ 
           textAlign: "center",
-          fontSize: "3rem",
+          fontSize: { xs: "2rem", sm: "3rem" },
         }}>
           {title}
         </Typography>}
