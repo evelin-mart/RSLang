@@ -1,11 +1,8 @@
-import { Box, Button, ButtonBaseActions, Grid, IconButton, Paper, Typography } from '@mui/material';
+import { Box, Button, Paper, Typography } from '@mui/material';
 import { AppDispatch } from 'app/store';
-import { addGameResult, finishGame, GameResultsData, GAME_PHASE, setGamePhase, setGameProgress, setLongestChain, SOUND_EFFECT, useGame, useSoundEffect, useTimer } from 'entities/game/model';
-import { Word } from 'entities/word'
+import { addGameResult, finishGame, GAME_PHASE, setGamePhase, setGameProgress, SOUND_EFFECT, useGame, useSoundEffect, useTimer } from 'entities/game/model';
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
-import SkipNextIcon from '@mui/icons-material/SkipNext';
-import { getRandomInt } from 'shared/lib';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useLongestChain } from '../../model/hooks/longest-chain';
@@ -13,7 +10,7 @@ import { makeAbsUrl } from 'shared/constants';
 import style from './sprint-game.module.scss'
 import classNames from 'classnames';
 
-const GAME_TIME = 10;
+const GAME_TIME = 30;
 
 export const GameSprintTest = () => {
   
@@ -23,22 +20,22 @@ export const GameSprintTest = () => {
   const [word, setWord] = useState('');
   const [wordId, setWordId] = useState('');
   const [imgLink, setImgLink] = useState('');
-  // const [results, setResults] = useState<GameResultsData>({});
   const [translate, setTranslate] = useState('');
   const [rightAnswer, setRightAnswer] = useState<null | boolean>(null)
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
-  const [winsCounter, setWinsCounter] = useState(0);  //TODO обсудить и решить какую именно статистику по словам будем собирать, пока затычка в виде счетчика отгаданных слов
+  const [scoreCounter, setScoreCounter] = useState(0);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [isRight, setIsRight] = useState<boolean | null>(null);
   const [ playSoundEffect ] = useSoundEffect();
   const [ setLongestChain ] = useLongestChain();
+  const [ chain, setChain] = useState(0);
   const [ startTimer, stopTimer, counter ] = useTimer(GAME_TIME, -1);
   let userAnswer: boolean | null = null;
 
   const classes = classNames(style.base, {
     [style.right]: isRight === true,
     [style.wrong]: isRight === false,
-  })
+  })  
 
   const getWrongAnswer = () => {
     const wrong = words.filter((item) => item !== words[currentWordIndex]);
@@ -47,9 +44,6 @@ export const GameSprintTest = () => {
   }
 
   const createCard = () => {
-    console.log(currentWordIndex);
-    //setIsRight(null);
-    
     if (!words[currentWordIndex]) {
       setIsGameOver(true);
       return
@@ -59,7 +53,6 @@ export const GameSprintTest = () => {
     setWord(words[currentWordIndex].word);
     setWordId(words[currentWordIndex].id);
     setImgLink(makeAbsUrl(words[currentWordIndex].image));
-    //setIsRight(null);
     
     if (roll < 0.5 || words.length <= 1) {
       setRightAnswer(true);
@@ -73,17 +66,19 @@ export const GameSprintTest = () => {
   const checkAnswer = () => {
     if (userAnswer === rightAnswer) {
       setIsRight(true);
-      setWinsCounter((s) => s + 1);
+      setScoreCounter((prev) => prev + (10 * (chain === 0 ? 1 : chain)));
       dispatch(addGameResult({ id: wordId, result: true }))
       setLongestChain((prev) => prev + 1);
+      setChain((prev) => prev + 1);
       playSoundEffect(SOUND_EFFECT.RIGHT);
     } else {
       setIsRight(false);
       dispatch(addGameResult({ id: wordId, result: false }))
       setLongestChain(0)
+      setChain(0);
       playSoundEffect(SOUND_EFFECT.WRONG);
     }
-    const anima = setTimeout(() => setIsRight(null), 300);
+    const animation = setTimeout(() => setIsRight(null), 300);
   }
 
   React.useEffect(() => {
@@ -101,7 +96,6 @@ export const GameSprintTest = () => {
   }, [currentWordIndex]);
 
   useEffect(() => {
-    //createCard();
     setCurrentWordIndex(1);
     startTimer(() => setIsGameOver(true));
   }, [words, startTimer])
@@ -155,8 +149,12 @@ export const GameSprintTest = () => {
       className={classes}>
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: "center" }}>
             <Box sx={{ mt: 5, display: "flex", columnGap: 6, justifyContent: "space-between" }}>
-              <Typography sx={{pt: 1}} variant='body1'>Time left:</Typography>
-              <Typography variant='h4' color="error">{counter}</Typography>
+              <Typography sx={{pt: 1}} variant='body1'>Chain length: 
+                <Typography component="span" sx={{pl: 1}} variant='h5' color="primary">{chain}</Typography>
+              </Typography>
+              <Typography sx={{pt: 1}} variant='body1'>Time left:
+                <Typography component="span" sx={{pl: 1}} variant='h5' color="error">{counter}</Typography>
+              </Typography>
             </Box>
             <Box
               component="img"
@@ -169,6 +167,7 @@ export const GameSprintTest = () => {
               alt="Word illustration"
               src={imgLink || ''}
             />
+            <Typography variant='h4'color={'green'}>{scoreCounter}</Typography>
             <Box sx={{ mt: 5, display: "flex", flexDirection: "column", columnGap: 2, justifyContent: "center", alignItems: 'center' }}>
               <Typography align='center' color='secondary' variant='h4'>{word}</Typography>
               <Typography sx={{pt: 1}} variant='body2'>is mean</Typography>
