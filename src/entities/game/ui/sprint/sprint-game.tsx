@@ -10,6 +10,8 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useLongestChain } from '../../model/hooks/longest-chain';
 import { makeAbsUrl } from 'shared/constants';
+import style from './sprint-game.module.scss'
+import classNames from 'classnames';
 
 const GAME_TIME = 10;
 
@@ -27,10 +29,16 @@ export const GameSprintTest = () => {
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [winsCounter, setWinsCounter] = useState(0);  //TODO обсудить и решить какую именно статистику по словам будем собирать, пока затычка в виде счетчика отгаданных слов
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [isRight, setIsRight] = useState<boolean | null>(null);
   const [ playSoundEffect ] = useSoundEffect();
   const [ setLongestChain ] = useLongestChain();
   const [ startTimer, stopTimer, counter ] = useTimer(GAME_TIME, -1);
   let userAnswer: boolean | null = null;
+
+  const classes = classNames(style.base, {
+    [style.right]: isRight === true,
+    [style.wrong]: isRight === false,
+  })
 
   const getWrongAnswer = () => {
     const wrong = words.filter((item) => item !== words[currentWordIndex]);
@@ -40,6 +48,7 @@ export const GameSprintTest = () => {
 
   const createCard = () => {
     console.log(currentWordIndex);
+    //setIsRight(null);
     
     if (!words[currentWordIndex]) {
       setIsGameOver(true);
@@ -50,6 +59,7 @@ export const GameSprintTest = () => {
     setWord(words[currentWordIndex].word);
     setWordId(words[currentWordIndex].id);
     setImgLink(makeAbsUrl(words[currentWordIndex].image));
+    //setIsRight(null);
     
     if (roll < 0.5 || words.length <= 1) {
       setRightAnswer(true);
@@ -62,15 +72,18 @@ export const GameSprintTest = () => {
 
   const checkAnswer = () => {
     if (userAnswer === rightAnswer) {
+      setIsRight(true);
       setWinsCounter((s) => s + 1);
       dispatch(addGameResult({ id: wordId, result: true }))
       setLongestChain((prev) => prev + 1);
       playSoundEffect(SOUND_EFFECT.RIGHT);
     } else {
+      setIsRight(false);
       dispatch(addGameResult({ id: wordId, result: false }))
       setLongestChain(0)
       playSoundEffect(SOUND_EFFECT.WRONG);
     }
+    const anima = setTimeout(() => setIsRight(null), 300);
   }
 
   React.useEffect(() => {
@@ -128,15 +141,18 @@ export const GameSprintTest = () => {
   }
 
   return (
-    <Paper elevation={3} sx={{ 
-      flexBasis: {xs: 300, md: 400}, 
-      pl: {xs: 1, md: 3},
-      pr: {xs: 1, md: 3},
-      display: "flex", 
-      flexDirection: "column", 
-      rowGap: 2, p: 4,
-      height: "fit-content",
-    }}>
+    <Paper 
+      elevation={3} 
+      sx={{ 
+        flexBasis: {xs: 300, md: 400}, 
+        pl: {xs: 1, md: 3},
+        pr: {xs: 1, md: 3},
+        display: "flex", 
+        flexDirection: "column", 
+        rowGap: 2, p: 4,
+        height: "fit-content",
+      }}
+      className={classes}>
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: "center" }}>
             <Box sx={{ mt: 5, display: "flex", columnGap: 6, justifyContent: "space-between" }}>
               <Typography sx={{pt: 1}} variant='body1'>Time left:</Typography>
