@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { setLongestChain } from '../store';
 import { useGame } from './game';
 
-export const useLongestChain = () => {
+export const useLongestChain = (): [typeof setChainCounter, number] => {
   const dispatch: AppDispatch = useDispatch();
   const [ chainCounter, setChainCounter ] = React.useState(0);
   const { longestChain } = useGame();
@@ -14,6 +14,7 @@ export const useLongestChain = () => {
   }, [chainCounter, dispatch, longestChain]);
 
   return [
-    setChainCounter
+    setChainCounter,
+    chainCounter,
   ];
 }
