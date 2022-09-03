@@ -1,5 +1,5 @@
 import { HeaderMenu } from 'widgets/header-menu';
-import { UserToolbar, toggleHeaderMenu } from 'entities/user';
+import { UserToolbar } from 'entities/user';
 import { AppLogo } from 'shared/components/app-logo';
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
@@ -9,22 +9,19 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import { Box, Drawer } from '@mui/material';
 import styles from './styles';
-import { AppDispatch } from 'app/store';
-import { useDispatch } from 'react-redux';
-import { useNoScrollFit } from 'shared/lib';
+import { useScrollbarWidth } from 'shared/lib';
+import { useUi } from 'shared/lib/store/ui';
 
 export const ResponsiveAppBar = () => {
-  const { isNoScrollFit, scrollbarWidth } = useNoScrollFit();
-  const dispatch: AppDispatch = useDispatch();
+  const { scrollbarWidth } = useScrollbarWidth();
+  const { isBodyOverflow } = useUi();
   const [ anchorElNav, setAnchorElNav ] = React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    dispatch(toggleHeaderMenu(true));
     setAnchorElNav(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
-    dispatch(toggleHeaderMenu(false));
     setAnchorElNav(null);
   };
 
@@ -34,7 +31,7 @@ export const ResponsiveAppBar = () => {
       color="primary"
       sx={[
         { height: "var(--header-height)",  },
-        isNoScrollFit && styles.menuOpenedStyles(scrollbarWidth),
+        isBodyOverflow && styles.menuOpenedStyles(scrollbarWidth),
       ]}>
       <Container maxWidth="lg" sx={{ height: "100%" }}>
         <Toolbar disableGutters sx={{ height: 1, width: "100%" }}>

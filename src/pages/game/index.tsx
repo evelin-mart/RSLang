@@ -16,8 +16,6 @@ import {
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
 import { Box, CircularProgress } from '@mui/material';
-import { AudiocallGame } from 'entities/game/ui/audiocall';
-import { SprintGame } from 'entities/game/ui/sprint';
 
 export const GamePage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -44,10 +42,7 @@ export const GamePage = () => {
         */}
         {gamePhase === GAME_PHASE.START && <GameStartScreen />}
         {gamePhase === GAME_PHASE.COUNTDOWN && <GameCountdown />}
-        {gamePhase === GAME_PHASE.PLAYING && (
-          (gameId === GAME.AUDIO && <AudiocallGame />) ||
-          (gameId === GAME.SPRINT && <SprintGame/>)
-        )}
+        {(gamePhase === GAME_PHASE.PLAYING && gameId) && games[gameId].game()}
         {gamePhase === GAME_PHASE.RESULTS && <GameResults />}
         {gamePhase === GAME_PHASE.LOADING &&
           <Box sx={{ height: "calc(100% - var(--header-height))", display: "flex", alignItems: "center"}}>

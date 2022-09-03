@@ -108,6 +108,7 @@ export const AudiocallGame = () => {
                 pointerEvent: nextButtonState === 'next' ? 'none' : 'all',
               }
             ]}>
+            <Typography component="span" sx={{ width: 30, display: "inline-flex", justifyContent: "center" }}>
               {answerButtonsState[i] === BTN_STATE.SUCCESS && <Fade in={true}><TaskAltIcon /></Fade>}
               {answerButtonsState[i] === BTN_STATE.ERROR && <Fade in={true}><ErrorOutlineIcon /></Fade>}
               {(answerButtonsState[i] === BTN_STATE.IDLE || answerButtonsState[i] === BTN_STATE.DISABLED) && 
@@ -118,7 +119,8 @@ export const AudiocallGame = () => {
                   borderColor: answerButtonsState[i] }}>
                   {i + 1}
                 </Typography>}
-              &nbsp;{translation}
+            </Typography>
+            &nbsp;{translation}
           </Button>
         ))}
       </Box>

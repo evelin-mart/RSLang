@@ -1,11 +1,11 @@
-import HeadphonesIcon from '@mui/icons-material/Headphones';
-import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
+import { GAME } from ".";
+import { games } from "./games";
 
 export type MenuLink = {
   title: string,
   href: string,
   submenu?: MenuLink[],
-  icon?: JSX.Element,
+  icon?: () => JSX.Element,
 };
 
 export const links: MenuLink[] = [
@@ -20,17 +20,11 @@ export const links: MenuLink[] = [
   {
     title: 'Мини-игры',
     href: '/game',
-    submenu: [
-      {
-        title: 'Аудиовызов',
-        href: '/game/audio',
-        icon: <HeadphonesIcon />,
-      },
-      {
-        title: 'Спринт',
-        href: '/game/sprint',
-        icon: <DirectionsRunIcon />,
-      },
-    ]
+    submenu: Object.keys(games).map((key) => {
+      const { title, href, icon } = games[key as GAME];
+      return {
+        title, href, icon
+      }
+    })
   },
 ]

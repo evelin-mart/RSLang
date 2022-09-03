@@ -44,6 +44,7 @@ export const LongTermStats = ({ stats }: LongTermStatsProps) => {
     }
   });
 
+  const barSize = smMatches ? 20 : 10;
   return (
     <Box sx={{ flexBasis: 700 }}>
       <Box>
@@ -54,7 +55,7 @@ export const LongTermStats = ({ stats }: LongTermStatsProps) => {
             <YAxis />
             <Tooltip />
             <Legend payload={[{ value: 'Новых слов в день', type: 'line' }]} color={palette.info.dark} align="right"/>
-            <Bar dataKey="newWords" name="Новые слова" barSize={20} fill={palette.info.dark} />
+            <Bar dataKey="newWords" name="Новые слова" barSize={barSize} fill={palette.info.dark} />
             <Line dataKey="newWords" type="monotone" name="Новые слова" stroke={palette.warning.main} />
           </ComposedChart>
         </ResponsiveContainer>
@@ -67,8 +68,8 @@ export const LongTermStats = ({ stats }: LongTermStatsProps) => {
             <YAxis />
             <Tooltip />
             <Legend payload={[{ value: 'Увеличение общего количества изученных слов в день', type: 'line' }]} align="right"/>
-            <Bar stackId="learned" dataKey="prevDayLearnedWords" name="Изученные на вчера" barSize={20} fill={palette.info.dark} />
-            <Bar stackId="learned" dataKey="learnedWords" name="Изученные на сегодня" barSize={20} fill={palette.info.light} />
+            <Bar stackId="learned" dataKey="prevDayLearnedWords" name="Изученные на вчера" barSize={barSize} fill={palette.info.dark} />
+            <Bar stackId="learned" dataKey="learnedWords" name="Изученные на сегодня" barSize={barSize} fill={palette.info.light} />
             <Line dataKey="learnedOverall" type="monotone" name="Всего изучено" stroke={palette.warning.main} />
           </ComposedChart>
         </ResponsiveContainer>

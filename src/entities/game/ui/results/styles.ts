@@ -48,6 +48,12 @@ const styles = {
     mb: 1,
   },
 
+  resultsTitle: {
+    fontSize: { xs: "2rem", sm: "3rem" },
+    mr: { xs: 1, sm: 3 },
+    color: "text.secondary",
+  },
+
   subtitle: {
     textAling: 'center',
   },
@@ -80,17 +86,18 @@ const styles = {
   },
 
   tabsStyle: {
-    mb: 1,
+    alignItems: 'center',
+    columnGap: 1,
     minHeight: 40,
     '& .MuiTabs-flexContainer': { justifyContent: 'flex-end' },
     '& .MuiTabs-indicator': { display: 'none' },
     '& .MuiButtonBase-root': {
-      p: 0, pr: 1, pl: 1,
+      p: 0
     },
   },
 
   tabStyle: {
-    minWidth: 40,
+    minWidth: { xs: 30, sm: 40 },
     minHeight: 40,
     textTransform: 'none',
     color: 'grey.400',

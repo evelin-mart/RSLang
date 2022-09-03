@@ -1,4 +1,4 @@
-import { useGameResults, resetGame, useSound } from 'entities/game';
+import { useGameResults, resetGame, useSound, useGame } from 'entities/game';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
 import { Box, Typography, Button, Divider, Tabs, Tab, useMediaQuery, useTheme } from '@mui/material';
@@ -12,8 +12,10 @@ import styles from './styles';
 import { TAB } from './model';
 import PieChartIcon from '@mui/icons-material/PieChart';
 import ListIcon from '@mui/icons-material/List';
+import { games } from 'shared/constants/games';
 
 export const GameResults = () => {
+  const { gameId } = useGame();
   const dispatch: AppDispatch = useDispatch();
   const [ playSound, { isPlaying } ] = useSound();
   const { correctWords, failedWords } = useGameResults();
@@ -36,24 +38,29 @@ export const GameResults = () => {
   }
 
   const showDivider = correctWords.length !== 0 && failedWords.length !== 0;
+  const isResultsEmpty = !showDivider;
 
   return (
     <GameInformationWrapper>
-      <Tabs
-        value={tabValue}
-        onChange={handleTabChange}
-        textColor="secondary"
-        indicatorColor="secondary"
-        sx={styles.tabsStyle}
-      >
-        <Tab sx={styles.tabStyle} icon={<PieChartIcon />} value={TAB.GRAPH} />
-        <Tab sx={styles.tabStyle} icon={<ListIcon />} value={TAB.WORDS} />
-      </Tabs>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+        <Typography variant="h2" sx={styles.resultsTitle}>{gameId && games[gameId].title}</Typography>
+        <Tabs
+          value={tabValue}
+          onChange={handleTabChange}
+          textColor="secondary"
+          indicatorColor="secondary"
+          sx={styles.tabsStyle}
+        >
+          <Tab sx={styles.tabStyle} icon={<PieChartIcon />} value={TAB.GRAPH} />
+          <Tab sx={styles.tabStyle} icon={<ListIcon />} value={TAB.WORDS} />
+        </Tabs>
+      </Box>
       <TabPanel value={tabValue} index={TAB.GRAPH}>
         <GameResultsChart setTabValue={setTabValue} />
       </TabPanel>
       <TabPanel value={tabValue} index={TAB.WORDS}>
         <Box sx={styles.wordsList}>
+          {isResultsEmpty && <Typography variant="body1" sx={{ textAlign: "center" }}>Результатов нет</Typography>}
           {failedWords.length !== 0 &&
             <>
               <Typography variant="body2" sx={[{ color: "error.light" }, styles.answersRow]}>

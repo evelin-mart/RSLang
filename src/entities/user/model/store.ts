@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { FormLoadingError, isUserData, UserData, UserState } from './interface';
 import * as usersApi from 'shared/api/users';
+import * as userSettingsApi from 'shared/api/users-settings';
 import { AppDispatch, AsyncThunkConfig } from 'app/store';
 import { defaultLoadingState } from 'shared/lib';
 import { toggleAuthModal } from 'pages/user/auth-modal/model';
@@ -15,6 +16,7 @@ const initialState: UserState = {
     email: '',
     token: '',
     refreshToken: '',
+    avatarUrl: '',
   },
   isAuthorized: false,
   startupLoading: { ...defaultLoadingState },
@@ -22,7 +24,6 @@ const initialState: UserState = {
     requestState: { ...defaultLoadingState },
     error: null,
   },
-  isHeaderMenuOpened: false,
 }
 
 export const loadUserFromStorage = createAsyncThunk<void, void, AsyncThunkConfig>(
@@ -37,7 +38,8 @@ export const loadUserFromStorage = createAsyncThunk<void, void, AsyncThunkConfig
       if (isUserData(userData)) {
         const { refreshToken, userId } = userData;
         const newTokens = await usersApi.getUserTokens(userId, refreshToken);
-        dispatch(authorize({ ...userData, ...newTokens }));        
+        dispatch(authorize({ ...userData, ...newTokens }));
+        await loadUserSettings(dispatch);
       }
     }
   } catch (error) {
@@ -55,11 +57,16 @@ export const submitForm = createAsyncThunk<FormLoadingError | UserRegistrationRe
   ) => {
   const { formType, show } = getState().authModal;
   let submitFormError: FormLoadingError = null;
+  const isRegistrationData = usersApi.isUserRegistrationData(formData);
   try {
-    if (!show) {
-      return await updateUser(formData)
-    } else if (formType === 'registration' && usersApi.isUserRegistrationData(formData)) {
-      await registerUser(dispatch, formData)
+    if (!show && isRegistrationData) {
+      const userData = await updateUser(formData);
+      await updateSettings(dispatch, formData);
+      return userData;
+    } else if (formType === 'registration' && isRegistrationData) {
+      await registerUser(dispatch, formData);
+      await userSettingsApi.updateUserSettings(userSettingsApi.defaultUserSettings);
+      await updateSettings(dispatch, formData);
     } else {
       await loginUser(dispatch, formData);
     }
@@ -74,11 +81,24 @@ export const submitForm = createAsyncThunk<FormLoadingError | UserRegistrationRe
   
   if (show && !submitFormError) {
     dispatch(toggleAuthModal(false));
-    dispatch(toggleHeaderMenu(false));
   }
 
   return submitFormError;
 });
+
+const updateSettings = async (dispatch: AppDispatch, formData: usersApi.UserRegistrationData) => {
+  const { avatarUrl } = formData;
+  if (avatarUrl !== undefined) {
+    const userSettings = await userSettingsApi.getUserSettings();
+    await userSettingsApi.updateUserSettings({
+      optional: {
+        ...userSettings.optional,
+        avatarUrl
+      }
+    });
+    dispatch(setAvatarUrl(avatarUrl));
+  }
+}
 
 const loginUser = async (dispatch: AppDispatch, formData: usersApi.UserLoginData) => {
   const loginResult = await usersApi.loginUser(formData);
@@ -86,6 +106,16 @@ const loginUser = async (dispatch: AppDispatch, formData: usersApi.UserLoginData
   const { token, refreshToken, userId, name } = loginResult;
   const userData: UserData = { token, refreshToken, userId, name, email };
   dispatch(authorize(userData));
+  await loadUserSettings(dispatch);
+}
+
+const loadUserSettings = async (dispatch: AppDispatch) => {
+  try {
+    const { optional: { avatarUrl }} = await userSettingsApi.getUserSettings();
+    if (avatarUrl) dispatch(setAvatarUrl(avatarUrl));
+  } catch {
+    await userSettingsApi.updateUserSettings(userSettingsApi.defaultUserSettings);
+  }
 }
 
 const registerUser = async (dispatch: AppDispatch, formData: usersApi.UserRegistrationData) => {
@@ -135,8 +165,8 @@ export const userSlice = createSlice({
       state.data.token = token;
       state.data.refreshToken = refreshToken;
     },
-    toggleHeaderMenu(state, action: PayloadAction<boolean>) {
-      state.isHeaderMenuOpened = action.payload;
+    setAvatarUrl(state, action: PayloadAction<string>) {
+      state.data.avatarUrl = action.payload;
     }
   },
   extraReducers(builder) {
@@ -178,5 +208,5 @@ export const {
   deauthorize,
   resetForm,
   updateTokens,
-  toggleHeaderMenu,
+  setAvatarUrl,
 } = userSlice.actions;

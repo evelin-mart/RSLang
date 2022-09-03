@@ -6,7 +6,6 @@ import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { MenuLink } from 'shared/constants/menu-links';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
-import { toggleHeaderMenu } from 'entities/user';
 import { setGameSource, resetGame } from 'entities/game';
 import { MenuLinkText } from '../link-text';
 import styles from '../styles';
@@ -30,14 +29,10 @@ export const HeaderSubmenu = (props: HeaderSubmenuProps) => {
   };
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    dispatch(toggleHeaderMenu(true));
     setAnchorElUser(event.currentTarget);
   };
   
   const handleCloseUserMenu = (path?: string) => {
-    dispatch(resetGame());
-    dispatch(setGameSource('headerMenu'));
-    dispatch(toggleHeaderMenu(false));
     setAnchorElUser(null);
     if (handleCloseNavMenu) handleCloseNavMenu();
     if (path !== undefined && typeof path === 'string') {
@@ -45,14 +40,20 @@ export const HeaderSubmenu = (props: HeaderSubmenuProps) => {
     }
   };
 
+  const handleGameLinkClick = (path?: string) => {
+    dispatch(resetGame());
+    dispatch(setGameSource('headerMenu'));
+    handleCloseUserMenu(path);
+  }
+
   const userMenuItems = link.submenu?.map(({ title, href, icon }, i) => {
     const isActive = matchPath(href, location.pathname) !== null;
     return (
       <MenuItem
         key={i}
-        onClick={() => handleCloseUserMenu(href)}
+        onClick={() => href.includes('game') ? handleGameLinkClick(href) : handleCloseUserMenu(href)}
         sx={{ color: "primary.main" }}>
-        <ListItemIcon>{icon}</ListItemIcon>
+        <ListItemIcon>{icon && icon()}</ListItemIcon>
         <MenuLinkText title={title} isActive={isActive} isColumn={isColumn}/>
       </MenuItem>)
   })

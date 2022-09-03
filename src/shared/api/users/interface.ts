@@ -50,6 +50,7 @@ export const defaultRegistartionResult: UserRegistrationResult = {
 
 export interface UserRegistrationData extends UserLoginData {
   name: string;
+  avatarUrl?: string;
 }
 
 export const isUserRegistrationData = (obj: unknown): obj is UserRegistrationData => {

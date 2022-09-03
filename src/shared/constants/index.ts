@@ -6,7 +6,7 @@ export const TOTAL_WORDS = 3600;
 export const WORDS_PER_PAGE = 20;
 export const MAX_PAGE = TOTAL_WORDS / TOTAL_GROUPS / WORDS_PER_PAGE - 1;
 export const LEARN_CHAIN = 2;
-export const GAME_COUNTDOWN = 3;
+export const GAME_COUNTDOWN = 1;
 
 export const makeAbsUrl = (url: string) => `${baseUrl}/${url}`;
 
@@ -30,6 +30,7 @@ export enum PAGES {
 export enum GAME {
   AUDIO = 'audio',
   SPRINT = 'sprint',
+  // SAVANAH = 'savannah',
 }
 
 export type MyColor = "error" | "primary" | "inherit" | "success" | "secondary" | "info" | "warning" | undefined;
