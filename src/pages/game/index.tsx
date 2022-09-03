@@ -17,7 +17,7 @@ import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
 import { Box, CircularProgress } from '@mui/material';
 import { AudiocallGame } from 'entities/game/ui/audiocall';
-import { SprintGame } from 'entities/game/ui/sprint/sprint-game';
+import { SprintGame } from 'entities/game/ui/sprint';
 
 export const GamePage = () => {
   const dispatch: AppDispatch = useDispatch();
