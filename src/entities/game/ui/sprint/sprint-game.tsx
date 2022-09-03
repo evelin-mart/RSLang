@@ -22,15 +22,16 @@ export const SprintGame = () => {
   const [imgLink, setImgLink] = useState('');
   const [translate, setTranslate] = useState('');
   const [rightAnswer, setRightAnswer] = useState<null | boolean>(null)
+  const [currentAnswer, setCurrentAnswer] = useState<null | { answer: boolean }>(null)
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [scoreCounter, setScoreCounter] = useState(0);
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [isRight, setIsRight] = useState<boolean | null>(null);
   const [ playSoundEffect ] = useSoundEffect();
-  const [ setLongestChain ] = useLongestChain();
-  const [ chain, setChain] = useState(0);
+  const [ setLongestChain, chainCounter ] = useLongestChain();
+  // const [ chain, setChain] = useState(0);
   const [ startTimer, stopTimer, counter ] = useTimer(GAME_TIME, -1);
-  let userAnswer: boolean | null = null;
+  // let userAnswer: boolean | null = null;
 
   const classes = classNames(style.base, {
     [style.right]: isRight === true,
@@ -61,31 +62,34 @@ export const SprintGame = () => {
       setRightAnswer(false);
       setTranslate(getWrongAnswer().wordTranslate);
     }
+
   }
 
-  const handleAnswer = (answer: boolean) => {
-    userAnswer = answer;
+  const handleAnswer = () => {
+    // userAnswer = answer;
     checkAnswer();
     if (currentWordIndex === words.length - 1) {
       setIsGameOver(true);
       return;
     }
-    setCurrentWordIndex((s) => s + 1);
+    // setCurrentWordIndex((s) => s + 1);
   }
 
   const checkAnswer = () => {
-    if (userAnswer === rightAnswer) {
+    // console.log(words[currentWordIndex].id, words[currentWordIndex].word)
+
+    if (currentAnswer?.answer === rightAnswer) {
       setIsRight(true);
-      setScoreCounter((prev) => prev + (10 * (chain === 0 ? 1 : chain)));
+      setScoreCounter((prev) => prev + (10 * (chainCounter === 0 ? 1 : chainCounter)));
       dispatch(addGameResult({ id: wordId, result: true }))
       setLongestChain((prev) => prev + 1);
-      setChain((prev) => prev + 1);
+      // setChain((prev) => prev + 1);
       playSoundEffect(SOUND_EFFECT.RIGHT);
     } else {
       setIsRight(false);
       dispatch(addGameResult({ id: wordId, result: false }))
       setLongestChain(0)
-      setChain(0);
+      // setChain(0);
       playSoundEffect(SOUND_EFFECT.WRONG);
     }
     const animation = setTimeout(() => setIsRight(null), 300);
@@ -100,30 +104,43 @@ export const SprintGame = () => {
   }, [isGameOver, dispatch]);
 
   React.useEffect(() => {
-      if (!isGameOver) {
-        return createCard;
-      }
+    createCard();
+    // if (!isGameOver) {
+    //   return createCard;
+    // }
   }, [currentWordIndex]);
 
+  React.useEffect(() => {
+    if (currentAnswer !== null) {
+      console.log(currentAnswer)
+      handleAnswer();
+    }
+    // if (!isGameOver) {
+    //   return createCard;
+    // }
+  }, [currentAnswer]);
+
   useEffect(() => {
-    setCurrentWordIndex(1);
+    setCurrentWordIndex(0);
     startTimer(() => setIsGameOver(true));
   }, [words, startTimer])
 
   useEffect(() => {
     dispatch(setGameProgress((counter / GAME_TIME) * 100));
     return () => {
-      dispatch(setGameProgress(0));
+      dispatch(setGameProgress(1));
     }
   }, [counter, dispatch]);
 
   useEffect(() => {
+    console.log(words[currentWordIndex].id, words[currentWordIndex].word)
+
     const onKeyPress = (e: KeyboardEvent) => {
       if (!e.repeat && e.code === 'ArrowRight') {
-        handleAnswer(false);
+        handleBtnClick(false);
       }
       if (!e.repeat && e.code === 'ArrowLeft') {
-        handleAnswer(true)
+        handleBtnClick(true)
       }
     };
 
@@ -132,7 +149,12 @@ export const SprintGame = () => {
     return () => {
       document.removeEventListener('keydown', onKeyPress);
     }
-  }, [rightAnswer])
+  }, [])
+
+  const handleBtnClick = React.useCallback((answer: boolean) => {
+    setCurrentAnswer({ answer });
+    setCurrentWordIndex((s) => s + 1);
+  }, []);
 
   return (
     <Paper 
@@ -150,7 +172,7 @@ export const SprintGame = () => {
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: "center" }}>
             <Box sx={{ display: "flex", flexDirection: {xs: "column", md: "row"}, columnGap: 6, justifyContent: "space-between" }}>
               <Typography sx={{pt: 1}} variant='body1'>Chain length: 
-                <Typography component="span" sx={{pl: 1}} variant='h5' color="primary">{chain}</Typography>
+                <Typography component="span" sx={{pl: 1}} variant='h5' color="primary">{chainCounter}</Typography>
               </Typography>
               <Typography sx={{pt: 1}} variant='body1'>Time left:
                 <Typography component="span" sx={{pl: 1}} variant='h5' color="error">{counter}</Typography>
@@ -176,8 +198,8 @@ export const SprintGame = () => {
               <Typography align='center' color='secondary' variant='h4'>{translate}</Typography>
             </Box>
             <Box sx={{ display: "flex", flexDirection: {xs: "column", md: "row"}, columnGap: 6, justifyContent: "center" }}>
-              <Button variant="contained" color="success" sx={{ mt: 1, pl: 5, pr: 5, textTransform: "none" }} startIcon={<ArrowBackIcon />} onClick={() => {handleAnswer(true)}}>True!</Button>
-              <Button variant="contained" color="error" sx={{ mt: 1, pl: 5, pr: 5, textTransform: "none" }} endIcon={<ArrowForwardIcon />} onClick={() => {handleAnswer(false)}}>False!</Button>
+              <Button variant="contained" color="success" sx={{ mt: 1, pl: 5, pr: 5, textTransform: "none" }} startIcon={<ArrowBackIcon />} onClick={() => {handleBtnClick(true)}}>True!</Button>
+              <Button variant="contained" color="error" sx={{ mt: 1, pl: 5, pr: 5, textTransform: "none" }} endIcon={<ArrowForwardIcon />} onClick={() => {handleBtnClick(false)}}>False!</Button>
             </Box>
           </Box>
     </Paper>
