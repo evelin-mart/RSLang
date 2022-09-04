@@ -12,7 +12,8 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
+  Cell
 } from "recharts";
 
 type LongTermStatsProps = {
@@ -68,8 +69,20 @@ export const LongTermStats = ({ stats }: LongTermStatsProps) => {
             <YAxis />
             <Tooltip />
             <Legend payload={[{ value: 'Увеличение общего количества изученных слов в день', type: 'line' }]} align="right"/>
-            <Bar stackId="learned" dataKey="prevDayLearnedWords" name="Изученные на вчера" barSize={barSize} fill={palette.info.dark} />
-            <Bar stackId="learned" dataKey="learnedWords" name="Изученные на сегодня" barSize={barSize} fill={palette.info.light} />
+            <Bar
+              stackId="learned"
+              dataKey="prevDayLearnedWords"
+              name="Изученные до этого дня"
+              barSize={barSize} fill={palette.info.dark} />
+            <Bar
+              stackId="learned"
+              dataKey="learnedWords"
+              name="Изученные на сегодня"
+              barSize={barSize}>
+              {data.map((entry, key) => (
+                <Cell key={key} fill={entry.learnedWords < 0 ? palette.error.light : palette.info.light }/>
+              ))}
+            </Bar>
             <Line dataKey="learnedOverall" type="monotone" name="Всего изучено" stroke={palette.warning.main} />
           </ComposedChart>
         </ResponsiveContainer>

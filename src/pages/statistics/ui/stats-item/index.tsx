@@ -83,7 +83,7 @@ export const StatsItem = ({ title, rows }: StatsItemProps) => {
   }
 
   return (
-    <Paper elevation={3} sx={{ p: 3, minWidth: 250 }}>
+    <Paper elevation={3} sx={{ p: 3, minWidth: 270 }}>
       <Stack direction="column" spacing={2}>
         <Typography variant="h5">{title}</Typography>
         {renderRows()}
