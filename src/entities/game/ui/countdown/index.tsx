@@ -1,8 +1,7 @@
 import { setGamePhase, GAME_PHASE, useTimer } from 'entities/game';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
-import { Typography } from '@mui/material';
-import { GameInformationWrapper } from '../info-wrapper';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import React from 'react';
 import { GAME_COUNTDOWN } from 'shared/constants';
 
@@ -20,10 +19,17 @@ export const GameCountdown = () => {
   }, [dispatch, startTimer, stopTimer]);
 
   return (
-    <GameInformationWrapper>      
-      <Typography variant="h5" sx={{ textAlign: "center", fontSize: { xs: "1.5rem", sm: "2rem"}, color: "grey.700" }}>
-        Игра начнется через:<br/>{timerCounter} 
+    <Box sx={{ position: "absolute", top: 0, height: "100%", width: 120, display: "flex", alignItems: "center" }}>
+      <CircularProgress color="secondary" variant="determinate" value={(timerCounter / GAME_COUNTDOWN) * 100} size={120} thickness={2}/>
+      <Typography variant="h5" sx={{
+        position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)", width: 120, height: 120,
+        lineHeight: "120px",
+        fontWeight: 400,
+        textAlign: "center",
+        fontSize: "4rem",
+        color: "secondary.main" }}>
+        {timerCounter}
       </Typography>
-    </GameInformationWrapper>
+    </Box>
   )
 }
