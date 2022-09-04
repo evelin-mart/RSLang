@@ -8,6 +8,7 @@ import { UserLoginData } from 'shared/api/users';
 import { submitForm } from 'entities/user';
 import { defaultInputsState, defaulValidationState} from './model';
 import { STATUS } from 'shared/constants';
+import { PasswordFormControl } from 'shared/components/password';
 
 export const LoginForm = () => {
   const [ inputsState, setInputsState ] = React.useState(defaultInputsState);
@@ -46,15 +47,11 @@ export const LoginForm = () => {
         onChange={handleChange('email')}
         error={inputsErrors.email}
       />
-      <TextField
-        required
-        type="password"
-        label="Password"
-        placeholder="Password"
+      <PasswordFormControl
+        required={true}
         value={inputsState.password}
-        onChange={handleChange('password')}
         error={inputsErrors.password}
-      />
+        onChange={handleChange('password')}/>
       <LoadingButton
         type="submit"
         loading={loading}

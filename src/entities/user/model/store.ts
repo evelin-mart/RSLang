@@ -72,7 +72,7 @@ export const submitForm = createAsyncThunk<FormLoadingError | UserRegistrationRe
     }
   } catch (err) {
     if (!(err instanceof HttpError)) throw err;
-    if (formType === 'login') return 'Incorrect login or password';
+    if (formType === 'login' && show) return 'Incorrect login or password';
     const { error } = err;
     submitFormError = typeof error === 'object'
       ? error as usersApi.UserRegistrationError
@@ -133,7 +133,7 @@ const updateUser = async (formData: Partial<usersApi.UserRegistrationData>) => {
   return await usersApi.updateUser(dataToUpdate);
 }
 
-export const getUser = createAsyncThunk<UserData, void, AsyncThunkConfig>('user/get', async () => {
+export const getUser = createAsyncThunk<usersApi.UsetGetResult, void, AsyncThunkConfig>('user/get', async () => {
   const newUserData = await usersApi.getUser();
   return newUserData;
 });
