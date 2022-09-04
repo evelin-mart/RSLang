@@ -6,7 +6,7 @@ import {
 import { Logout as LogoutIcon } from '@mui/icons-material';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
-import { deauthorize, UserState, toggleHeaderMenu, useUser } from 'entities/user';
+import { deauthorize, toggleHeaderMenu, useUser } from 'entities/user';
 import { useNavigate } from 'react-router-dom';
 import { userMenuOptions } from './model';
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Page } from 'pages/page';
 import { AppDispatch, useAppSelector } from 'app/store';
@@ -18,11 +18,12 @@ import Pagination from '@mui/material/Pagination';
 import styles from './styles.module.scss';
 import { STATUS, PAGES } from '../../shared/constants';
 import { play, stop } from './utils';
-import { getHardWords, getWords, setGroup, setLastSeenPage, setPage } from './model';
+import { getHardWords, getWords, rainbow, setGroup, setLastSeenPage, setPage } from './model';
 import { useUser } from 'entities/user/model/hooks';
 import classNames from 'classnames';
 import { setGameSource } from 'entities/game';
 import { useNavigate } from 'react-router-dom';
+import { ReactComponent as Ribbon } from '../../shared/images/ribbon.svg';
 
 export const TextbookPage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -141,6 +142,7 @@ export const TextbookPage = () => {
             title='Спринт'></Box>
         </>
       )}
+      <Ribbon fill={rainbow[group]} className={styles.ribbon} />
     </Page>
   );
 };
