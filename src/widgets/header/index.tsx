@@ -1,5 +1,5 @@
 import { HeaderMenu } from 'widgets/header-menu';
-import { UserToolbar } from 'entities/user';
+import { UserToolbar, useUser } from 'entities/user';
 import { AppLogo } from 'shared/components/app-logo';
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
@@ -16,6 +16,7 @@ export const ResponsiveAppBar = () => {
   const { scrollbarWidth } = useScrollbarWidth();
   const { isBodyOverflow } = useUi();
   const [ anchorElNav, setAnchorElNav ] = React.useState<null | HTMLElement>(null);
+  const user = useUser();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -62,7 +63,7 @@ export const ResponsiveAppBar = () => {
             </Drawer>
           </Box>
           <AppLogo isMobile={true}/>
-          <Box sx={styles.headerMenuBox}>
+          <Box sx={[styles.headerMenuBox, { mr: user.isAuthorized ? 3 : 0}]}>
             <HeaderMenu isColumn={false}/>
           </Box>
           <UserToolbar />

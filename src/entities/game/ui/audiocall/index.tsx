@@ -124,7 +124,7 @@ export const AudiocallGame = () => {
           </Button>
         ))}
       </Box>
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
+      <Box sx={styles.nextButton}>
         {nextButtonState === 'skip'
           ? <Button 
               disabled={!canPlay} 

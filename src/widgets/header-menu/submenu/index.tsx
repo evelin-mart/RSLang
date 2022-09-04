@@ -52,19 +52,20 @@ export const HeaderSubmenu = (props: HeaderSubmenuProps) => {
       <MenuItem
         key={i}
         onClick={() => href.includes('game') ? handleGameLinkClick(href) : handleCloseUserMenu(href)}
-        sx={{ color: "primary.main" }}>
+        sx={{ color: "text.primary" }}>
         <ListItemIcon>{icon && icon()}</ListItemIcon>
         <MenuLinkText title={title} isActive={isActive} isColumn={isColumn}/>
       </MenuItem>)
   })
   
-  const userMenuItemsColumn = link.submenu?.map(({ title, href }, i) => {
+  const userMenuItemsColumn = link.submenu?.map(({ title, href, icon }, i) => {
     const isActive = matchPath(href, location.pathname) !== null;
     return (
       <ListItem 
         key={i}
-        sx={{ color: "primary.main", p: 0 }}>
+        sx={{ p: 0 }}>
         <ListItemButton onClick={() => handleCloseUserMenu(href)} sx={{ color: "primary.contrastText", pl: 3, pr: 3 }}>
+          <ListItemIcon sx={{ minWidth: 35, color: "primary.contrastText" }}>{icon && icon()}</ListItemIcon>
           <ListItemText primary={<MenuLinkText title={title} isActive={isActive} isColumn={isColumn}/>}/>
         </ListItemButton>
       </ListItem>
@@ -80,7 +81,7 @@ export const HeaderSubmenu = (props: HeaderSubmenuProps) => {
           </ListItemButton>
         </ListItem>
         <Collapse in={open} timeout="auto">
-          <List disablePadding sx={{ bgcolor: "primary.main" }}>
+          <List disablePadding sx={{ bgcolor: "primary.light" }}>
             {userMenuItemsColumn}
           </List>
         </Collapse>

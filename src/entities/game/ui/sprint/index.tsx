@@ -65,7 +65,7 @@ export const SprintGame = () => {
 
   const handleAnswer = () => {
     checkAnswer();
-    if (currentWordIndex === words.length - 1) {
+    if (currentWordIndex === words.length) {
       setIsGameOver(true);
       return;
     }
@@ -102,7 +102,6 @@ export const SprintGame = () => {
 
   React.useEffect(() => {
     if (currentAnswer !== null) {
-      console.log(currentAnswer)
       handleAnswer();
     }
   }, [currentAnswer]);
@@ -115,12 +114,11 @@ export const SprintGame = () => {
   useEffect(() => {
     dispatch(setGameProgress((counter / GAME_TIME) * 100));
     return () => {
-      dispatch(setGameProgress(1));
+      dispatch(setGameProgress(0));
     }
   }, [counter, dispatch]);
 
   useEffect(() => {
-    console.log(words[currentWordIndex].id, words[currentWordIndex].word)
 
     const onKeyPress = (e: KeyboardEvent) => {
       if (!e.repeat && e.code === 'ArrowRight') {

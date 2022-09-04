@@ -40,7 +40,7 @@ export const startGame = createAsyncThunk<AggregatedWord[] | void, void, AsyncTh
   }
 
   if (words.length === 0) throw new Error('There are no words to use in game');
-  console.log('Game words:', words.length, words.map(({ word }) => word).join(','))
+  // console.log('Game words:', words.length, words.map(({ word }) => word).join(','))
   dispatch(setWords(words));
 });
 
@@ -83,7 +83,7 @@ const getWordsFromRandomPage = async (group: number, user: UserState, maxWords: 
       page = getRandomInt(0, MAX_PAGE);
     } while (usedPages.includes(page));
 
-    console.log(`Get words from group ${group}, page: ${page}`);
+    // console.log(`Get words from group ${group}, page: ${page}`);
 
     const options = { group, page };
     words = words.concat(await (user.isAuthorized
@@ -114,8 +114,8 @@ export const finishGame = createAsyncThunk<void, void, AsyncThunkConfig>(
   }
 
   const wordsData = processWords(words, results);
-  const { newWords, correctAnswers, percent, learnedWords } = wordsData.stats;
-  console.log(`New: ${newWords}\nCorrect: ${correctAnswers}\nPercent: ${percent}\nLearned: ${learnedWords}`);
+  // const { newWords, correctAnswers, percent, learnedWords } = wordsData.stats;
+  // console.log(`New: ${newWords}\nCorrect: ${correctAnswers}\nPercent: ${percent}\nLearned: ${learnedWords}`);
   try {
     await Promise.all(wordsData.promises);
     if (gameId === null) return;
