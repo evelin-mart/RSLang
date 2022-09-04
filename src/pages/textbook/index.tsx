@@ -20,6 +20,9 @@ import { STATUS, PAGES } from '../../shared/constants';
 import { play, stop } from './utils';
 import { getHardWords, getWords, setGroup, setLastSeenPage, setPage } from './model';
 import { useUser } from 'entities/user/model/hooks';
+import classNames from 'classnames';
+import { setGameSource } from 'entities/game';
+import { useNavigate } from 'react-router-dom';
 
 export const TextbookPage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -28,6 +31,7 @@ export const TextbookPage = () => {
   );
   const { isAuthorized } = useUser();
   const [sounds, setSounds] = useState<HTMLAudioElement[]>([]);
+  const navigate = useNavigate();
   let isLearned = false;
 
   useEffect(() => {
@@ -53,6 +57,11 @@ export const TextbookPage = () => {
 
   const handlePageChange = (_: React.ChangeEvent<unknown>, pageId: number) => {
     dispatch(setPage(pageId - 1));
+  };
+
+  const handleGameClick = (path: string) => {
+    dispatch(setGameSource('textbook'));
+    navigate(path, { replace: true });
   };
 
   let content: JSX.Element | undefined;
@@ -120,10 +129,18 @@ export const TextbookPage = () => {
         </Box>
       )}
       {content}
-      {isLearned && <>
-        <Box className={styles.game}></Box>
-        <Box className={styles.game}></Box>
-      </>}
+      {!isLearned && (
+        <>
+          <Box
+            className={classNames(styles.game, styles.audio)}
+            onClick={() => handleGameClick('/game/audio')}
+            title='Аудиовызов'></Box>
+          <Box
+            className={classNames(styles.game, styles.sprint)}
+            onClick={() => handleGameClick('/game/sprint')}
+            title='Спринт'></Box>
+        </>
+      )}
     </Page>
   );
 };

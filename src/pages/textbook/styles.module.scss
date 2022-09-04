@@ -89,22 +89,29 @@
   width: 80px;
   height: 80px;
   right: 2%;
-  background-color: rgba(#1976d2, 0.6);
   border-radius: 50%;
   cursor: pointer;
-  transition: .3s;
-  &:hover {
-    background-color: #1976d2;
-    transform: scale(1.1);
-  }
+  transition: 0.3s;
   @media (max-width: 768px) {
     width: 60px;
     height: 60px;
   }
-  &:nth-child(1) {
+  &.audio {
     bottom: 20%;
+    background: center / 50px url('../../shared/images/audiocall.svg') no-repeat, rgba(#1976d2, 0.6);
+    @media (max-width: 768px) {
+      background-size: 40px;
+    }
   }
-  &:nth-child(2) {
-    bottom: 30%;
+  &.sprint {
+    bottom: 33%;
+    background: center / 50px url('../../shared/images/sprint.svg') no-repeat, rgba(#1976d2, 0.6);
+    @media (max-width: 768px) {
+      background-size: 40px;
+    }
+  }
+  &:hover {
+    background-color: #1976d2;
+    transform: scale(1.1);
   }
 }
