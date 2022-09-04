@@ -38,6 +38,7 @@ export const GameResults = () => {
   }
 
   const showDivider = correctWords.length !== 0 && failedWords.length !== 0;
+  const isResultsEmpty = !showDivider;
 
   return (
     <GameInformationWrapper>
@@ -59,6 +60,7 @@ export const GameResults = () => {
       </TabPanel>
       <TabPanel value={tabValue} index={TAB.WORDS}>
         <Box sx={styles.wordsList}>
+          {isResultsEmpty && <Typography variant="body1" sx={{ textAlign: "center" }}>Результатов нет</Typography>}
           {failedWords.length !== 0 &&
             <>
               <Typography variant="body2" sx={[{ color: "error.light" }, styles.answersRow]}>

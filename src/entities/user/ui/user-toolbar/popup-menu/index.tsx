@@ -6,7 +6,7 @@ import {
 import { Logout as LogoutIcon } from '@mui/icons-material';
 import { AppDispatch } from 'app/store';
 import { useDispatch } from 'react-redux';
-import { deauthorize, toggleHeaderMenu, useUser } from 'entities/user';
+import { deauthorize, useUser } from 'entities/user';
 import { useNavigate } from 'react-router-dom';
 import { userMenuOptions } from './model';
 
@@ -17,12 +17,10 @@ export const PopupMenu = () => {
   const navigate = useNavigate();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    dispatch(toggleHeaderMenu(true));
     setAnchorElUser(event.currentTarget);
   };
   
   const handleCloseUserMenu = (path?: string) => {
-    dispatch(toggleHeaderMenu(false));
     setAnchorElUser(null);
     if (path !== undefined && typeof path === 'string') {
       navigate(path, { replace: true });

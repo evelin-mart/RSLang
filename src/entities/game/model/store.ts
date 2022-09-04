@@ -175,7 +175,8 @@ const processWords = (words: AggregatedWord[], results: GameResultsData) => {
         return updatePromise;
       }
     });
-  const percent = Math.round(correctAnswers / Object.keys(results).length * 100);
+  const resultsNumber = Object.keys(results).length;
+  const percent = resultsNumber !== 0 ? Math.round(correctAnswers / resultsNumber * 100) : 0;
   return {
     stats: {
       newWords,
