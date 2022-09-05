@@ -9,6 +9,16 @@ export interface TextbookState extends LoadingState {
   words: Word[];
 }
 
+export const rainbow = [
+  'orangered',
+  'darkorange',
+  'greenyellow',
+  'green',
+  'skyblue',
+  'blue',
+  'blueviolet',
+];
+
 export const getLastSeenPage = (group?: number) => {
   const pages = localStorage.getItem('pages');
   if (!pages) {

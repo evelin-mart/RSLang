@@ -1,11 +1,17 @@
 import { addUserWord, updateUserWord, UserWord } from 'shared/api/users-words';
 import { Word } from './interface';
 
-export const getWordProgress = ({ optional }: UserWord) =>
-  (optional.guessed * 100) / optional.totalUsed;
+export const getWordProgress = ({ optional }: UserWord) => {
+  if (optional.totalUsed === 0) {
+    return null;
+  } else if (optional.guessed === 0) {
+    return 0;
+  }
+  return (optional.guessed * 100) / optional.totalUsed;
+};
 
-export const getProgressbarColor = (progress: number) => {
-  if (!progress) return 'inherit';
+export const getProgressbarColor = (progress: number | null) => {
+  if (progress === null) return 'inherit';
   if (progress <= 25) return 'error';
   if (progress <= 75) return 'primary';
   return 'success';
