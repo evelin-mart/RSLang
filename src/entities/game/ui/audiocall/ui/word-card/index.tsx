@@ -16,9 +16,15 @@ type AudiocallWordCardProps = {
 export const AudiocallWordCard = ({ nextButtonState, word, canPlayWordAudio, playSound, timerCounter }: AudiocallWordCardProps) => {
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center", position: "relative", height: 250 }}>
+    <Box sx={{
+      display: "flex",
+      justifyContent: "center",
+      position: "relative",
+      height: { xs: 200, sm: 250 },
+      pb: { xs: 1, sm: 0 } 
+    }}>
       <Zoom in={nextButtonState === 'next'}>
-        <Card sx={{ position: "absolute", top: 0, width: 250 }}>
+        <Card sx={{ position: "absolute", top: 0, width: 250, pb: { xs: 1, sm: 0 }  }}>
           <Fab
             disabled={!canPlayWordAudio}
             size="small"
@@ -37,7 +43,7 @@ export const AudiocallWordCard = ({ nextButtonState, word, canPlayWordAudio, pla
           </CardContent>
           <CardMedia
             component="img"
-            sx={{ height: 150, width: 250 }}
+            sx={{ height: { xs: 90, sm: 150 }, width: { xs: 150, sm: 250 }, margin: "0 auto" }}
             image={makeAbsUrl(word.image)}
             alt={word.word}
           />

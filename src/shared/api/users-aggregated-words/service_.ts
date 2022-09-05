@@ -1,5 +1,5 @@
 import { processAuthorizedRequest } from "../lib";
-import { WORDS_PER_PAGE } from 'shared/constants';
+import { TOTAL_WORDS, WORDS_PER_PAGE } from 'shared/constants';
 import {
   AggregatedWordsQueryOptions,
   AggregatedWordsResult,
@@ -59,5 +59,5 @@ export const _getAggregatedWordById = async (wordId: string) => {
 
 export const _getHardAggregatedWords = async () => {
   const filter = { "userWord.optional.isHard": true };
-  return _getAggregatedWords({ filter: JSON.stringify(filter), wordsPerPage: 0 });
+  return _getAggregatedWords({ filter: JSON.stringify(filter), wordsPerPage: TOTAL_WORDS });
 }

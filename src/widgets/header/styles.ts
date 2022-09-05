@@ -13,7 +13,6 @@ const styles = {
       sm: 'flex',
     },
     justifyContent: 'flex-end',
-    marginRight: 3,
   },
 
   headerMenuBoxColumn: {
@@ -23,7 +22,7 @@ const styles = {
     padding: 3,
     pl: 0,
     pr: 0,
-    backgroundColor: 'primary.dark',
+    backgroundColor: 'primary.main',
   },
 
   menuOpenedStyles: (scrollbarWidth: number) => ({

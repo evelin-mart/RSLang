@@ -9,11 +9,12 @@ import { startGame, setGameGroup } from 'entities/game';
 import { STATUS } from 'shared/constants';
 import { LoadingButton } from '@mui/lab';
 import { useUser } from 'entities/user';
+import { groups, GROUP } from 'shared/constants/groups';
 
 export const GameStartScreen = () => {
   const dispatch: AppDispatch = useDispatch();
   const { gameId, loadingProcess, group, words, source } = useGame();
-  const { group: textbookGroup } = useAppSelector((state) => state.textbook);
+  const { page, group: textbookGroup } = useAppSelector((state) => state.textbook);
   const user = useUser();
   
   React.useEffect(() => {
@@ -41,46 +42,52 @@ export const GameStartScreen = () => {
     dispatch(startGame());
   }
 
-  const groups = ['Раздел 1', 'Раздел 2', 'Раздел 3', 'Раздел 4', 'Раздел 5', 'Раздел 6'];
-  if (user.isAuthorized) {
-    groups.push('Сложные слова');
-  }
-
   const renderDifficultyOptions = () => {
-    return groups.map((value, i) => (
-      <MenuItem key={i} value={String(i)}>{value}</MenuItem>
-    ))
+    return groups
+      .filter((group, i) => user.isAuthorized || i !== GROUP.HARD)
+      .map(({ title }, i) => (
+        <MenuItem key={i} value={String(i)}>{title}</MenuItem>
+      ))
   }
-
+  
+  const isTextbook = source === "textbook";
   return (
     <GameInformationWrapper title={title}>
       <Typography variant="body1" sx={{ fontSize: 18, color: "grey.700" }}>{description}</Typography>
       <Box sx={{ width: "100%" }}>
-        <FormControl fullWidth variant="standard" color="secondary" sx={{ mb: 3 }}>
-          <Select
-            disabled={source === "textbook"}
-            defaultValue="0"
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={String(group)}
-            label="Сложность"
-            onChange={handleGroupChange}
-            sx={{ fontSize: "1.2rem", color: "grey.900"}}
-          >
-            {renderDifficultyOptions()}
-          </Select>
-        </FormControl>
+        {!isTextbook &&
+          <FormControl fullWidth variant="standard" color="secondary" sx={{ mb: 3 }}>
+            <Select
+              MenuProps={{ disableScrollLock: true }}
+              defaultValue="0"
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={String(group)}
+              label="Сложность"
+              onChange={handleGroupChange}
+              sx={{ fontSize: "1.2rem", color: "grey.900"}}
+            >
+              {renderDifficultyOptions()}
+            </Select>
+          </FormControl>}
         {loadingProcess.status === STATUS.FAIL &&
           <Typography sx={{ color: "error.light", textAlign: "center", mb: 1 }}>Извините, но слов нет!</Typography>
         }
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
           <LoadingButton
+            sx={{ width: 175 }}
             loading={loading}
             color="secondary"
             variant="outlined"
             onClick={handleStartGame}
             startIcon={<VideogameAssetIcon />}
-          >Играть ({groups[group]})</LoadingButton>
+          >
+            Играть
+          </LoadingButton>
+          {isTextbook &&
+            <Typography component="div" sx={{ color: "grey.500", textTransform: "none", fontSize: "14px", mt: 1 }}>
+              {`${groups[group].title}${isTextbook && group !== GROUP.HARD ? `, cтраница ${page + 1}` : ''}`}
+            </Typography>}
         </Box>
       </Box>
     </GameInformationWrapper>

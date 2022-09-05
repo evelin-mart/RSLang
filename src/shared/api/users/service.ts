@@ -4,7 +4,8 @@ import {
   UserLoginData,
   UserTokens,
   UserRegistrationResult,
-  UserRegistrationData } from './interface';
+  UserRegistrationData, 
+  UsetGetResult} from './interface';
 import { processRequest, processAuthorizedRequest, withToken } from '../lib';
 import { UserData } from 'entities/user';
 
@@ -39,7 +40,7 @@ export const createUser = async (userData: UserRegistrationData) => {
 }
 
 export const getUser = async () => {
-  return await processAuthorizedRequest<UserData>();
+  return await processAuthorizedRequest<UsetGetResult>();
 }
 
 export const updateUser = async (userData: Partial<UserData>) => {

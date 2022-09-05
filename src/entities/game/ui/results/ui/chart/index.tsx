@@ -43,6 +43,7 @@ export const GameResultsChart = ({ setTabValue }: GameResultsProps) => {
         <ResponsiveContainer width={"99%"} height={"100%"}>
           <PieChart>
             <Pie
+              animationDuration={600}
               data={data}
               innerRadius={70}
               outerRadius={80}

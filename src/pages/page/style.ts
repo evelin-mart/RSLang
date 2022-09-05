@@ -4,6 +4,7 @@ const styles = {
     position: 'fixed',
     top: 'var(--header-height)',
     width: '100%',
+    zIndex: -1,
   },
 
   menuOpenedBgStyles: (scrollbarWidth: number) => ({

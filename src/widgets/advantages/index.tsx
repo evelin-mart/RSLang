@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Theme, Typography } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React from 'react'
 import { advantages } from 'shared/constants/advanages'
@@ -7,7 +7,10 @@ export const Advantages = () => {
 
   return (
     <>
-      <Typography sx={{typography: { xs: 'h6', md: 'h4'}}}>
+      <Typography component="h3" sx={{ 
+        typography: { xs: 'h6', md: 'h4'},
+        textShadow: ({ palette }: Theme) => `1px 1px 3px ${palette.text.primary}`,
+      }}>
         Наши преимущества:
       </Typography>
       <div style={{margin: '5vh auto', width: '80%'}}>

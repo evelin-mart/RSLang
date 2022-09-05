@@ -7,11 +7,11 @@ export type FormData = Record<FormType, {
 
 export const formData: FormData = {
   'login': {
-    buttonText: "Зарегистрироваться",
+    buttonText: "Регистрация",
     title: "Авторизация",
   },
   'registration': {
-    buttonText: "Уже зарегистрирован? Войти",
+    buttonText: "Авторизация",
     title: "Регистрация",
   }
 }

@@ -12,7 +12,7 @@ export const AppLogo = (props: {isMobile: boolean}) => {
     }} to='/'>
       <Typography
         variant="h1"
-        style={{display: props.isMobile ? 'block' : 'none'}}
+        sx={{ display: props.isMobile ? "block" : "none", fontSize: "2.2rem"}}
       >
         RSLang
       </Typography>

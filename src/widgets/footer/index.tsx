@@ -16,7 +16,7 @@ export const Footer = () => {
 
   return (
     <Box ref={footerContainer} sx={[
-      { bgcolor: "primary.dark" },
+      { bgcolor: "grey.700" },
       isBodyOverflow && menuOpenedStyles
     ]}>
       <Container maxWidth="lg" sx={{

@@ -38,7 +38,7 @@ export const GameResults = () => {
   }
 
   const showDivider = correctWords.length !== 0 && failedWords.length !== 0;
-  const isResultsEmpty = !showDivider;
+  const isResultsEmpty = correctWords.length === 0 && failedWords.length === 0;
 
   return (
     <GameInformationWrapper>

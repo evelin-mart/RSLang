@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import { Page } from 'pages/page';
 import { AppDispatch, useAppSelector } from 'app/store';
 import { WordCard } from 'entities/word';
-import { Loader } from 'shared/components/loader';
 import {
   List,
   ListItem,
@@ -13,6 +12,7 @@ import {
   Typography,
   Box,
   Grid,
+  CircularProgress,
 } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import styles from './styles.module.scss';
@@ -24,6 +24,8 @@ import classNames from 'classnames';
 import { setGameSource } from 'entities/game';
 import { useNavigate } from 'react-router-dom';
 import { ReactComponent as Ribbon } from '../../shared/images/ribbon.svg';
+import { useUi } from 'shared/lib/store/ui';
+import { useScrollbarWidth } from 'shared/lib';
 
 export const TextbookPage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -33,6 +35,9 @@ export const TextbookPage = () => {
   const { isAuthorized } = useUser();
   const [sounds, setSounds] = useState<HTMLAudioElement[]>([]);
   const navigate = useNavigate();
+  const { scrollbarWidth } = useScrollbarWidth();
+  const { isBodyOverflow } = useUi();
+  
   let isLearned = false;
 
   useEffect(() => {
@@ -68,7 +73,11 @@ export const TextbookPage = () => {
   let content: JSX.Element | undefined;
 
   if (status === STATUS.LOADING) {
-    content = <Loader />;
+    content = (
+      <Box sx={{ height: "calc(100% - var(--header-height))", display: "flex", justifyContent: "center"}}>
+        <CircularProgress sx={{ color: rainbow[group] }} size={60} thickness={2}/>
+      </Box>
+    );
   }
 
   if (status === STATUS.SUCCESS) {
@@ -112,8 +121,8 @@ export const TextbookPage = () => {
 
   return (
     <Page pageName={PAGES.TEXTBOOK}>
-      <Grid sm='auto'>
-        <Select value={String(group)} sx={{ width: 250, m: 1 }} onChange={handleGroupChange}>
+      <Grid>
+        <Select value={String(group)} sx={{ width: 250, m: 1, "& .MuiOutlinedInput-notchedOutline" : { borderColor: rainbow[group] } }} onChange={handleGroupChange}>
           <MenuItem value={0}>Раздел 1</MenuItem>
           <MenuItem value={1}>Раздел 2</MenuItem>
           <MenuItem value={2}>Раздел 3</MenuItem>
@@ -142,7 +151,15 @@ export const TextbookPage = () => {
             title='Спринт'></Box>
         </>
       )}
-      <Ribbon fill={rainbow[group]} className={styles.ribbon} />
+
+      <Box sx={{
+          position: isBodyOverflow ? "fixed" : "absolute",
+          top: "calc(var(--header-height) - 2px)",
+          right: isBodyOverflow ? `calc(2% + ${scrollbarWidth}px)` : "2%",
+          zIndex: -1,
+      }}>
+        <Ribbon fill={rainbow[group]} className={styles.ribbon} />
+      </Box>
     </Page>
   );
 };

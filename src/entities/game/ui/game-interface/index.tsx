@@ -56,7 +56,7 @@ export const GameInterface = ({ children }: React.PropsWithChildren) => {
           </IconButton>
         </Tooltip>
       </Box>
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, mt: 3 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", flexGrow: 1, mt: { xs: 0, sm: 3 } }}>
         {children}
       </Box>
     </Grid>

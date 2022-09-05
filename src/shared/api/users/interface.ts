@@ -32,6 +32,8 @@ export interface UserRegistrationResult extends Pick<UserData, 'email' | 'name'>
   error: UserRegistrationError | string | null;
 }
 
+export type UsetGetResult = Omit<UserRegistrationResult, "error">;
+
 export const isUserRegistrationResult = (obj: unknown): obj is UserRegistrationResult => {
   const props = ['id', 'email', 'name'];
   return (

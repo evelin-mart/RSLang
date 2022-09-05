@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { matchPath } from 'react-router';
-import { Box, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { Box, List, ListItem, ListItemButton, ListItemText, useMediaQuery } from '@mui/material';
 import { links } from 'shared/constants/menu-links';
 import styles from './styles';
 import { HeaderSubmenu } from './submenu';
@@ -11,6 +11,7 @@ export const HeaderMenu = (props: {isColumn: boolean, handleCloseNavMenu?: () =>
   const { isColumn, handleCloseNavMenu } = props;
   const location = useLocation();
   const navigate = useNavigate();
+  const widthMatches = useMediaQuery('(min-width:700px)');
   
   const handleMenuItemClick = (path?: string) => {
     if (path !== undefined && typeof path === 'string') {
@@ -36,6 +37,7 @@ export const HeaderMenu = (props: {isColumn: boolean, handleCloseNavMenu?: () =>
     <Box component="nav">
       <List sx={[
         styles.headerMenu,
+        { columnGap: widthMatches ? 2 : 0 },
         isColumn && styles.headerMenu_column
       ]}>
         {linksRendered}

@@ -25,7 +25,12 @@ export const UserToolbar = () => {
             aria-label="Войти"
             variant="outlined"
             endIcon={<LoginIcon />}
-            sx={{ color: "primary.contrastText"}}>
+            sx={{
+              color: "primary.contrastText",
+              textTransform: "none",
+              fontWeight: 400,
+              fontSize: "1rem"
+            }}>
             Войти
           </Button>
         : <PopupMenu />}

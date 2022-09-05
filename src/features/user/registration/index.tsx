@@ -10,6 +10,7 @@ import * as usersApi from 'shared/api/users';
 import { submitForm } from 'entities/user';
 import { defaultInputsState, defaulValidationState } from './model';
 import { FormErrors } from './ui';
+import { PasswordFormControl } from 'shared/components/password';
 import { STATUS } from 'shared/constants';
 import { AvatarUpload } from './ui/avatar_upload';
 import { AvatarUrl } from './ui/avatar_upload/interface';
@@ -20,7 +21,7 @@ export const RegistrationForm = () => {
   const { requestState, error } = useAppSelector((state) => state.user.formLoading);
   const [ avatarUrl, setAvatarUrl ] = React.useState<AvatarUrl>(null);
   const loading = requestState.status === STATUS.LOADING;
-  
+
   const dispatch: AppDispatch = useDispatch();
 
   const handleSubmit = (e: React.SyntheticEvent) => {
@@ -74,15 +75,11 @@ export const RegistrationForm = () => {
         onChange={handleChange('email')}
         error={inputsErrors.email}
       />
-      <TextField
-        required
-        type="password"
-        label="Password"
-        placeholder="Password"
+      <PasswordFormControl
+        required={true}
         value={inputsState.password}
-        onChange={handleChange('password')}
         error={inputsErrors.password}
-      />
+        onChange={handleChange('password')}/>
       <LoadingButton
         type="submit"
         loading={loading}

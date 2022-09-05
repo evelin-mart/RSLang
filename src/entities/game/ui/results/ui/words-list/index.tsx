@@ -11,9 +11,9 @@ type WordsListProps = {
 }
 
 export const ResultsWordsList = ({ words, playSound, isPlaying }: WordsListProps) => {
-  const listItems = words.map((word) => {
+  const listItems = words.map((word, i) => {
     return (
-      <ListItem key={word.id} sx={{ p: 0, mb: 1 }} >
+      <ListItem key={`${word.id}${i}`} sx={{ p: 0, mb: 1 }} >
         <IconButton
           disabled={isPlaying}
           size="small"

@@ -1,6 +1,5 @@
 const styles = {
   gameContainer: {
-    // height: 'calc(100% - var(--header-height))',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
@@ -13,7 +12,7 @@ const styles = {
     columnGap: 2,
     justifyContent: "center",
     flexWrap: "wrap",
-    mt: 5,
+    mt: { xs: 1, sm: 5 },
     width: '100%',
   },
 
@@ -22,6 +21,12 @@ const styles = {
     textTransform: "none",
     minWidth: "fit-content",
     maxWidth: 200,
+  },
+
+  nextButton: {
+    display: "flex",
+    justifyContent: "center",
+    mt: { xs: 1, sm: 5 },
   }
 }
 

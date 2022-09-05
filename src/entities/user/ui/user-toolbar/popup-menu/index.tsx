@@ -49,7 +49,12 @@ export const PopupMenu = () => {
     <Box sx={{ flexGrow: 0 }}>
       <Tooltip title="Меню пользователя">
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar alt={name} src={avatarUrl || "#"} />
+          <Avatar sx={{
+            border: "2px solid",
+            borderColor: "primary.dark",
+            transition: "border-color 250ms",
+            "&:hover": { borderColor: "primary.light" }
+          }} alt={name} src={avatarUrl || "#"} />
         </IconButton>
       </Tooltip>
       <Menu
