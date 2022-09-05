@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/RSLang/static/css/main.46d511d8.css",
+    "main.js": "/RSLang/static/js/main.69a48825.js",
+    "static/js/787.0c3f432a.chunk.js": "/RSLang/static/js/787.0c3f432a.chunk.js",
+    "static/media/avatar3.jpg": "/RSLang/static/media/avatar3.5234b56b88f5b3824ed2.jpg",
+    "static/media/main-background-image.jpg": "/RSLang/static/media/main-background-image.e82607dc7df7ab804128.jpg",
+    "static/media/avatar1.jpg": "/RSLang/static/media/avatar1.45be9f7e4459bcd83fe9.jpg",
+    "static/media/avatar2.jpg": "/RSLang/static/media/avatar2.f16bf1fc06c4db38390b.jpg",
+    "static/media/right.mp3": "/RSLang/static/media/right.56989e26d15bd60cde78.mp3",
+    "static/media/wrong.mp3": "/RSLang/static/media/wrong.614a135d2abda8fb5868.mp3",
+    "static/media/audiocall.svg": "/RSLang/static/media/audiocall.f79801edfaa9bea3b9a2.svg",
+    "static/media/sprint.svg": "/RSLang/static/media/sprint.eddaf003a78b5bdfc4f2.svg",
+    "static/media/github.svg": "/RSLang/static/media/github.a61b960f2ce17e7b773b.svg",
+    "index.html": "/RSLang/index.html",
+    "static/media/icon-reverse.svg": "/RSLang/static/media/icon-reverse.97be468179275534f5a7a36e13d2e5e9.svg",
+    "static/media/ribbon.svg": "/RSLang/static/media/ribbon.6170022f8c6c429b62bb64bb1f226690.svg",
+    "main.46d511d8.css.map": "/RSLang/static/css/main.46d511d8.css.map",
+    "main.69a48825.js.map": "/RSLang/static/js/main.69a48825.js.map",
+    "787.0c3f432a.chunk.js.map": "/RSLang/static/js/787.0c3f432a.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.46d511d8.css",
+    "static/js/main.69a48825.js"
+  ]
+}
