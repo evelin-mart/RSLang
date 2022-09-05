@@ -1,13 +1,12 @@
-import avatarPlaceholder from 'shared/images/avatar-placeholder.jpg';
+import avatar1 from 'shared/images/avatar1.jpg';
 import avatar2 from 'shared/images/avatar2.jpg';
 import avatar3 from 'shared/images/avatar3.jpg';
 
 export const ourTeam = [
   {
-    image: avatarPlaceholder,
+    image: avatar1,
     name: 'Эвелин Мартина',
-    description: `Some text about developer
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, repellendus!`,
+    description: `Учебник и карточки слов.`,
   },
   {
     image: avatar2,
@@ -18,5 +17,5 @@ export const ourTeam = [
     image: avatar3,
     name: 'Дмитрий Романенков. Разработчик.',
     description: `Главная страница. Игра "Спринт"`,
-  }
-]
+  },
+];

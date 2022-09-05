@@ -94,7 +94,7 @@ export const SprintGame = () => {
       dispatch(setGamePhase(GAME_PHASE.LOADING));
       dispatch(finishGame());
     }
-  }, [isGameOver, dispatch]);
+  }, [isGameOver, dispatch, stopTimer]);
 
   React.useEffect(() => {
     createCard();
@@ -118,14 +118,18 @@ export const SprintGame = () => {
     }
   }, [counter, dispatch]);
 
-  useEffect(() => {
+  const handleBtnClick = React.useCallback((answer: boolean) => {
+    setCurrentAnswer({ answer });
+    setCurrentWordIndex((s) => s + 1);
+  }, []);
 
+  useEffect(() => {
     const onKeyPress = (e: KeyboardEvent) => {
       if (!e.repeat && e.code === 'ArrowRight') {
         handleBtnClick(false);
       }
       if (!e.repeat && e.code === 'ArrowLeft') {
-        handleBtnClick(true)
+        handleBtnClick(true);
       }
     };
 
@@ -133,13 +137,8 @@ export const SprintGame = () => {
 
     return () => {
       document.removeEventListener('keydown', onKeyPress);
-    }
-  }, [])
-
-  const handleBtnClick = React.useCallback((answer: boolean) => {
-    setCurrentAnswer({ answer });
-    setCurrentWordIndex((s) => s + 1);
-  }, []);
+    };
+  }, [handleBtnClick]);
 
   return (
     <Paper 
