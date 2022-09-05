@@ -9,6 +9,17 @@ export interface TextbookState extends LoadingState {
   words: Word[];
 }
 
+// https://materialui.co/colors/ - 600
+export const rainbow = [
+  '#757575',
+  '#43A047',
+  '#1E88E5',
+  '#FFEB3B',
+  '#FB8C00',
+  '#EC407A',
+  '#E53935',
+];
+
 export const getLastSeenPage = (group?: number) => {
   const pages = localStorage.getItem('pages');
   if (!pages) {

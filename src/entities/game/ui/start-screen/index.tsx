@@ -73,7 +73,7 @@ export const GameStartScreen = () => {
         {loadingProcess.status === STATUS.FAIL &&
           <Typography sx={{ color: "error.light", textAlign: "center", mb: 1 }}>Извините, но слов нет!</Typography>
         }
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
           <LoadingButton
             sx={{ width: 175 }}
             loading={loading}
@@ -82,12 +82,12 @@ export const GameStartScreen = () => {
             onClick={handleStartGame}
             startIcon={<VideogameAssetIcon />}
           >
-            Играть&nbsp;
-            {!loading &&
-              <Typography component="span" sx={{ color: "grey.500", textTransform: "none", fontSize: "12px" }}>
-                ({`${groups[group].title}${isTextbook ? `, cтр. ${page + 1}` : ''}`})
-              </Typography>}
+            Играть
           </LoadingButton>
+          {isTextbook &&
+            <Typography component="div" sx={{ color: "grey.500", textTransform: "none", fontSize: "14px", mt: 1 }}>
+              {`${groups[group].title}${isTextbook && group !== GROUP.HARD ? `, cтраница ${page + 1}` : ''}`}
+            </Typography>}
         </Box>
       </Box>
     </GameInformationWrapper>
