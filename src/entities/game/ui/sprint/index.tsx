@@ -98,12 +98,14 @@ export const SprintGame = () => {
 
   React.useEffect(() => {
     createCard();
+    // eslint-disable-next-line
   }, [currentWordIndex]);
 
   React.useEffect(() => {
     if (currentAnswer !== null) {
       handleAnswer();
     }
+    // eslint-disable-next-line
   }, [currentAnswer]);
 
   useEffect(() => {

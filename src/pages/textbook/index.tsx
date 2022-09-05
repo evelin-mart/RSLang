@@ -37,7 +37,7 @@ export const TextbookPage = () => {
   const navigate = useNavigate();
   const { scrollbarWidth } = useScrollbarWidth();
   const { isBodyOverflow } = useUi();
-  
+
   let isLearned = false;
 
   useEffect(() => {
@@ -74,8 +74,13 @@ export const TextbookPage = () => {
 
   if (status === STATUS.LOADING) {
     content = (
-      <Box sx={{ height: "calc(100% - var(--header-height))", display: "flex", justifyContent: "center"}}>
-        <CircularProgress sx={{ color: rainbow[group] }} size={60} thickness={2}/>
+      <Box
+        sx={{
+          height: 'calc(100% - var(--header-height))',
+          display: 'flex',
+          justifyContent: 'center',
+        }}>
+        <CircularProgress sx={{ color: rainbow[group] }} size={60} thickness={2} />
       </Box>
     );
   }
@@ -122,7 +127,14 @@ export const TextbookPage = () => {
   return (
     <Page pageName={PAGES.TEXTBOOK}>
       <Grid>
-        <Select value={String(group)} sx={{ width: 250, m: 1, "& .MuiOutlinedInput-notchedOutline" : { borderColor: rainbow[group] } }} onChange={handleGroupChange}>
+        <Select
+          value={String(group)}
+          sx={{
+            width: 250,
+            m: 1,
+            '& .MuiOutlinedInput-notchedOutline': { borderColor: rainbow[group] },
+          }}
+          onChange={handleGroupChange}>
           <MenuItem value={0}>Раздел 1</MenuItem>
           <MenuItem value={1}>Раздел 2</MenuItem>
           <MenuItem value={2}>Раздел 3</MenuItem>
@@ -152,12 +164,13 @@ export const TextbookPage = () => {
         </>
       )}
 
-      <Box sx={{
-          position: isBodyOverflow ? "fixed" : "absolute",
-          top: "calc(var(--header-height) - 2px)",
-          right: isBodyOverflow ? `calc(2% + ${scrollbarWidth}px)` : "2%",
+      <Box
+        sx={{
+          position: isBodyOverflow ? 'fixed' : 'absolute',
+          top: 'calc(var(--header-height) - 2px)',
+          right: isBodyOverflow ? `calc(2% + ${scrollbarWidth}px)` : '2%',
           zIndex: -1,
-      }}>
+        }}>
         <Ribbon fill={rainbow[group]} className={styles.ribbon} />
       </Box>
     </Page>

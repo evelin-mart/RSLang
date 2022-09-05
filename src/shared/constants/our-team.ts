@@ -5,7 +5,7 @@ import avatar3 from 'shared/images/avatar3.jpg';
 export const ourTeam = [
   {
     image: avatar1,
-    name: 'Эвелин Мартина',
+    name: 'Эвелин Мартина. Разработчик.',
     description: `Учебник и карточки слов.`,
   },
   {
