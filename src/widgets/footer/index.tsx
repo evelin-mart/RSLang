@@ -15,8 +15,8 @@ export const Footer = () => {
   }
 
   return (
-    <Box ref={footerContainer} sx={[
-      { bgcolor: "grey.700" },
+    <Box ref={footerContainer} boxShadow={12} sx={[
+      { bgcolor: "grey.700", zIndex: 1 },
       isBodyOverflow && menuOpenedStyles
     ]}>
       <Container maxWidth="lg" sx={{
@@ -36,13 +36,13 @@ export const Footer = () => {
               title='source code'>
               <div className={styles.github}></div>
             </Link>
-            <Link
+            {/* <Link
               href='https://www.youtube.com/'
               target='_blank'
               rel='noreferrer'
               title='presentation'>
               <div className={styles.youtube}></div>
-            </Link>
+            </Link> */}
           </Stack>
         </Stack>
         <List className={styles.githubLinksList}>

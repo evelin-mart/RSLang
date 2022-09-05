@@ -11,6 +11,9 @@ const backgrounds: Partial<Record<PAGES, { bg?: string | ((theme: Theme) => stri
   },
   [PAGES.STATISTICS]: {
     bg: ({ palette }: Theme) => `${palette.grey[50]}`
+  },
+  [PAGES.PROFILE]: {
+    bg: ({ palette }: Theme) => `${palette.grey[50]}`
   }
 }
 

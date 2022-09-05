@@ -31,7 +31,7 @@ export const ResponsiveAppBar = () => {
       position="static"
       color="primary"
       sx={[
-        { height: "var(--header-height)",  },
+        { height: "var(--header-height)", zIndex: 1, },
         isBodyOverflow && styles.menuOpenedStyles(scrollbarWidth),
       ]}>
       <Container maxWidth="lg" sx={{ height: "100%" }}>
