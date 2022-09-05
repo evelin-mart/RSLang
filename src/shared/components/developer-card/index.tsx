@@ -18,7 +18,7 @@ export const DeveloperCard = (props: {name: string, image: string, description: 
         </Box>
         <Box className={styles.back} sx={{ bgcolor: "background.default"}}>
           <div className={styles.imageWrapper}>
-            <img src={require(`../../images/${props.image}`)} alt="avatar" className={styles.avatar} />
+            <img src={props.image} alt="avatar" className={styles.avatar} />
           </div>
           <div className={styles.content}>
             <h4>

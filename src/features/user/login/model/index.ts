@@ -1,7 +1,7 @@
 import { UserLoginData } from "shared/api/users";
 
 export const defaultInputsState: UserLoginData = {
-  email: 'test@test.ru',
+  email: '',
   password: '',
 }
 

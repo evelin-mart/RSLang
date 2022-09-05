@@ -1,9 +1,9 @@
 import * as usersApi from 'shared/api/users';
 
 export const defaultInputsState: usersApi.UserRegistrationData = {
-  name: 'tester',
-  email: 'tester@test',
-  password: '1234',
+  name: '',
+  email: '',
+  password: '',
 }
 
 export interface ValidationState {
