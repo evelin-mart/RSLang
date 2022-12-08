@@ -1,4 +1,4 @@
-export const baseUrl = 'https://react-learnwords-jsfe2022.herokuapp.com';
+export const baseUrl = 'https://rslang-be-nxby.onrender.com';
 
 export const TOTAL_GROUPS = 6;
 export const TOTAL_WORDS = 3600;
@@ -31,6 +31,14 @@ export enum GAME {
   SPRINT = 'sprint',
 }
 
-export type MyColor = "error" | "primary" | "inherit" | "success" | "secondary" | "info" | "warning" | undefined;
+export type MyColor =
+  | 'error'
+  | 'primary'
+  | 'inherit'
+  | 'success'
+  | 'secondary'
+  | 'info'
+  | 'warning'
+  | undefined;
 
 export type Sound = HTMLAudioElement | null;
